@@ -47,13 +47,32 @@ export interface PatchPointInput {
   note?: string | null;
 }
 
-/** Component "channel_strip": One input channel of a console: what it is called today, where its signal comes from and where it is routed */
+/** Component "channel_strip": One input channel of a console: what it is called today, where its signal comes from, where it is routed, and where every knob was left — a recall sheet for a desk that has no recall of its own. */
 export interface ChannelStrip {
   number: number;
   label?: string | null;
   source?: "mic" | "line" | "tape" | null;
+  gain?: number | null;
+  phantom?: boolean | null;
+  input_reverse?: boolean | null;
+  eq_in?: boolean | null;
+  hf?: number | null;
+  mid?: number | null;
+  mid_freq?: number | null;
+  lf?: number | null;
+  lf_freq?: number | null;
+  aux1?: number | null;
+  aux2?: number | null;
+  aux3?: number | null;
+  aux4?: number | null;
+  aux34_path?: "channel" | "monitor" | null;
+  cue?: number | null;
   route?: string | null;
   direct?: boolean | null;
+  pan?: number | null;
+  fader?: number | null;
+  pfl?: boolean | null;
+  mute?: boolean | null;
   aux?: string | null;
   color?: string | null;
   note?: string | null;
@@ -64,8 +83,27 @@ export interface ChannelStripInput {
   number: number;
   label?: string | null;
   source?: "mic" | "line" | "tape" | null;
+  gain?: number | null;
+  phantom?: boolean | null;
+  input_reverse?: boolean | null;
+  eq_in?: boolean | null;
+  hf?: number | null;
+  mid?: number | null;
+  mid_freq?: number | null;
+  lf?: number | null;
+  lf_freq?: number | null;
+  aux1?: number | null;
+  aux2?: number | null;
+  aux3?: number | null;
+  aux4?: number | null;
+  aux34_path?: "channel" | "monitor" | null;
+  cue?: number | null;
   route?: string | null;
   direct?: boolean | null;
+  pan?: number | null;
+  fader?: number | null;
+  pfl?: boolean | null;
+  mute?: boolean | null;
   aux?: string | null;
   color?: string | null;
   note?: string | null;

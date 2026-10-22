@@ -45,6 +45,8 @@ export interface StripView {
   /** Where this channel's signal leaves the desk, given its routing. */
   outputs: string[];
   loop: boolean;
+  /** Everything stored for the channel, including the recall sheet's knobs. */
+  data?: ChannelStrip;
 }
 
 export interface Section {
@@ -341,6 +343,7 @@ export function consoleView(device: PlanDevice, stripData: ChannelStrip[], devic
       sockets,
       outputs: stripOutputs(device, s ?? { number: n }, shape),
       loop: sockets.some((k) => k.ends.some((e) => loopCables.has(e.cableId))),
+      data: s,
     });
   }
   return {

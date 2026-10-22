@@ -81,6 +81,8 @@ export const GLOSSARY_IDS = [
   "aux",
   "direct-out",
   "strip",
+  "pfl",
+  "recall",
   "port",
   "revision",
 ] as const;

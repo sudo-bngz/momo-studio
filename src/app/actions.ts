@@ -657,7 +657,44 @@ export async function saveChannelStrips(_prev: FormState, form: FormData): Promi
       const text = (k: string) => (typeof item[k] === "string" && (item[k] as string).trim() ? (item[k] as string).trim().slice(0, 120) : undefined);
       const source = item.source === "mic" || item.source === "line" || item.source === "tape" ? (item.source as "mic" | "line" | "tape") : undefined;
       const color = typeof item.color === "string" && HEX.test(item.color) ? item.color : undefined;
-      const s = compact({ number, label: text("label"), source, route: text("route"), direct: item.direct === true ? true : undefined, aux: text("aux"), color, note: text("note") });
+      // The recall sheet: a knob that was never moved is left out rather than
+      // stored as 0, so an untouched channel stays an empty entry.
+      const num = (k: string, min: number, max: number) => {
+        const v = Number(item[k]);
+        return Number.isFinite(v) ? Math.min(max, Math.max(min, Number(v.toFixed(2)))) : undefined;
+      };
+      const yes = (k: string) => (item[k] === true ? true : undefined);
+      const sends = [num("aux1", 0, 10), num("aux2", 0, 10), num("aux3", 0, 10), num("aux4", 0, 10)];
+      const s = compact({
+        number,
+        label: text("label"),
+        source,
+        gain: num("gain", 0, 10),
+        phantom: yes("phantom"),
+        input_reverse: yes("input_reverse"),
+        eq_in: yes("eq_in"),
+        hf: num("hf", -14, 14),
+        mid: num("mid", -14, 14),
+        mid_freq: num("mid_freq", 300, 12000),
+        lf: num("lf", -14, 14),
+        lf_freq: num("lf_freq", 20, 600),
+        aux1: sends[0],
+        aux2: sends[1],
+        aux3: sends[2],
+        aux4: sends[3],
+        aux34_path: item.aux34_path === "monitor" ? ("monitor" as const) : undefined,
+        cue: num("cue", 0, 10),
+        route: text("route"),
+        direct: yes("direct"),
+        pan: num("pan", -5, 5),
+        fader: num("fader", -70, 10),
+        pfl: yes("pfl"),
+        mute: yes("mute"),
+        // `aux` is the summary the signal tracer reads: which sends are open.
+        aux: sends.map((v, i) => (v && v > 0 ? i + 1 : 0)).filter(Boolean).join(",") || undefined,
+        color,
+        note: text("note"),
+      });
       if (Object.keys(s).length > 1) strips.push(s);
     }
     await withSession(async (g) => {

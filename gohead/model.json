@@ -109,7 +109,7 @@
       }
     },
     "channel_strip": {
-      "description": "One input channel of a console: what it is called today, where its signal comes from and where it is routed",
+      "description": "One input channel of a console: what it is called today, where its signal comes from, where it is routed, and where every knob was left \u2014 a recall sheet for a desk that has no recall of its own.",
       "attributes": {
         "number": {
           "type": "int",
@@ -128,11 +128,117 @@
             "tape"
           ]
         },
+        "gain": {
+          "type": "float",
+          "min": 0,
+          "max": 10,
+          "description": "Mic/line gain trim, as the knob reads (0-10)"
+        },
+        "phantom": {
+          "type": "bool",
+          "description": "48V on this mic input"
+        },
+        "input_reverse": {
+          "type": "bool",
+          "description": "Line input swapped with the monitor's tape return"
+        },
+        "eq_in": {
+          "type": "bool",
+          "description": "EQ in circuit"
+        },
+        "hf": {
+          "type": "float",
+          "min": -14,
+          "max": 14,
+          "description": "HF shelf at 12 kHz, dB"
+        },
+        "mid": {
+          "type": "float",
+          "min": -14,
+          "max": 14,
+          "description": "Swept mid, dB"
+        },
+        "mid_freq": {
+          "type": "int",
+          "min": 300,
+          "max": 12000,
+          "description": "Mid frequency, Hz (300 Hz - 12 kHz)"
+        },
+        "lf": {
+          "type": "float",
+          "min": -14,
+          "max": 14,
+          "description": "Swept LF, dB"
+        },
+        "lf_freq": {
+          "type": "int",
+          "min": 20,
+          "max": 600,
+          "description": "LF frequency, Hz (20 - 600 Hz)"
+        },
+        "aux1": {
+          "type": "float",
+          "min": 0,
+          "max": 10,
+          "description": "Aux 1 send, as the knob reads (post-fade)"
+        },
+        "aux2": {
+          "type": "float",
+          "min": 0,
+          "max": 10,
+          "description": "Aux 2 send, as the knob reads (post-fade)"
+        },
+        "aux3": {
+          "type": "float",
+          "min": 0,
+          "max": 10,
+          "description": "Aux 3 send, as the knob reads (post-fade)"
+        },
+        "aux4": {
+          "type": "float",
+          "min": 0,
+          "max": 10,
+          "description": "Aux 4 send, as the knob reads (post-fade)"
+        },
+        "aux34_path": {
+          "type": "enum",
+          "options": [
+            "channel",
+            "monitor"
+          ],
+          "description": "Whether auxes 3 and 4 are fed from the channel path or the monitor path"
+        },
+        "cue": {
+          "type": "float",
+          "min": 0,
+          "max": 10,
+          "description": "Pre-fade cue send, for foldback"
+        },
         "route": {
           "type": "string"
         },
         "direct": {
           "type": "bool"
+        },
+        "pan": {
+          "type": "float",
+          "min": -5,
+          "max": 5,
+          "description": "Pan: -5 hard left, 0 centre, +5 hard right"
+        },
+        "fader": {
+          "type": "float",
+          "min": -70,
+          "max": 10,
+          "description": "Fader, dB (-70 reads as off)"
+        },
+        "pfl": {
+          "type": "bool",
+          "description": "Pre-fade listen pressed: changes what the control room hears, not the signal"
+        },
+        "mute": {
+          "type": "bool",
+          "description": "Channel muted"
         },
         "aux": {
           "type": "string"

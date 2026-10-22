@@ -223,7 +223,7 @@ export const en: HelpContent = {
 
   console: {
     title: "The console, and the Allen & Heath GS3",
-    lede: "The desk has two layers here: its ports, which are the back panel and never change, and its channel strips, which are what the desk is doing today.",
+    lede: "The desk has three layers here: its ports, which are the back panel and never change; its routing, which is what the desk is doing today; and the recall sheet — every knob of the channel, because the GS3 has no recall of its own.",
     points: [
       { term: "Ports vs strips", text: "A port is a socket you can patch a cable into. A strip is a label, a source, a routing and a set of aux sends — the session, not the hardware. Repatching means editing cables; renaming a channel means editing a strip." },
       { term: "Source in use", text: "Mic, line or tape. A GS3 channel has all three wired at once often enough that the app can't guess; telling it which one is live is what makes the trace follow the right path." },
@@ -231,6 +231,9 @@ export const en: HelpContent = {
       { term: "Aux sends up", text: "Which auxes this channel feeds. Used for one thing above all: catching an aux that comes back into a channel sending to the same aux." },
       { term: "Insert", text: "Tip send, ring return. A compressor patched into channel 4's insert shows up inside channel 4's chain when you trace it, not as a separate island." },
       { term: "Track Out", text: "On an in-line desk like the GS3 this socket does two jobs — the channel's direct out, or a group. Which one depends on the routing you set." },
+      { term: "The knobs", text: "Gain, the three EQ bands with their two swept frequencies, the four aux sends on their dual-concentric spindles, the cue, the pan and the fader. Turn them to where they were on the desk and the sheet keeps them — drag, roll the wheel, or focus one and use the arrow keys." },
+      { term: "PFL", text: "Pre-fade listen. It puts this channel in the control room and the phones and changes nothing else: nothing downstream hears it, so you can press it in the middle of a take." },
+      { term: "Where this channel goes", text: "The diagram beside the strip lights the path the signal really takes with those settings, and names the sockets it leaves by. A muted channel stops at the fader; the PFL tap carries on regardless, because it comes off before it." },
       { term: "Paste from a sheet", text: "One column at a time — labels, sources, routings, auxes, notes — starting at whichever channel you choose. The old spreadsheet goes in in four pastes." },
     ],
     long: [
@@ -240,6 +243,8 @@ export const en: HelpContent = {
       "**The insert is pre-EQ** and wired tip send, ring return on a single TRS jack. In the app the insert is a port with direction In/Out: a signal that arrives there leaves by whatever the strip's routing says, so the outboard you patch into it becomes part of that channel's chain when you follow the signal rather than a dead end.",
       "**Auxes 1 to 4 are post-fade**, and 3 and 4 can be switched to follow the monitor path. The app doesn't model the switch — it models the consequence. If Aux 2 Out goes to a delay, the delay comes back into channel 7's line input, and channel 7's strip says it sends to Aux 2, you have built an oscillator. That is what the red strips and the loop warning are: the trace follows Aux 2 Out through every pedal and patchbay in the way, and if it arrives back at a channel that feeds Aux 2, it says so, names the channels and tells you which send to pull down.",
       "**The FX returns and the mix insert land on the mix.** A signal entering FX Return 3 leaves by Mix Out L and R, so a reverb returned there is followed through to the monitors rather than stopping at the return.",
+      "**A recall sheet, because the desk hasn't got one.** The GS3 is analogue: when the session ends, the settings are gone unless somebody wrote them down. So the strip here is the real one — gain, the HF shelf at 12 kHz, the swept mid from 300 Hz to 12 kHz, the swept LF from 20 Hz to 600 Hz, the four post-fade auxes on two dual-concentric spindles, the pre-fade cue, pan, PFL, mute and the fader — and what you set is stored with the channel and comes back next time. There is no pad and no phase switch on this desk, so there is none here either.",
+      "**PFL is the one control on the strip that changes nothing.** Pre-fade listen taps the channel ahead of the fader and ahead of the mute and sends it to the control room and the phones. The groups, the mix and the auxes never see it, which is why you can press it mid-take to check a source, set a gain or chase a hum. It is also why the board tells you which channels have it up: a PFL left down is the usual reason the control room sounds wrong while the mix is perfectly fine.",
       "**Filling the desk in.** Add the console as an asset with the category Mixer and fill its ports from the Allen & Heath GS3 24/8/2 template: 163 ports, correctly named, including the four auxes, eight group inserts, four stereo FX returns, two 2-track machines, both monitor pairs and the MIDI mute processor. The 16-channel GS3 is there too. If your unit differs — a modified insert, a dead channel — fix those ports by hand afterwards; the template is a starting point, not a contract.",
     ],
     see: ["consoles", "patchbays", "plan"],
@@ -374,6 +379,14 @@ export const en: HelpContent = {
   aux: { term: "Aux send", text: "A separate mix taken off the channels, for effects or for a musician's headphones. Post-fade on the GS3." },
   "direct-out": { term: "Direct out", text: "A channel's own signal, straight out, bypassing the groups and the mix. On the GS3 it shares the track-out socket with the groups." },
   strip: { term: "Channel strip", text: "In this app: the label, source, routing, aux sends, colour and note of one channel. The session's state, not the hardware's." },
+  pfl: {
+    term: "PFL",
+    text: "Pre-fade listen: a tap taken before the fader and the mute that goes only to the control room and the phones. It never touches the signal the desk is sending.",
+  },
+  recall: {
+    term: "Recall sheet",
+    text: "Where every knob of a channel was left. An analogue desk forgets at the end of the session; the sheet is what lets you put it back.",
+  },
   port: { term: "Port", text: "One physical socket on a machine, with a name, a direction, a signal and a connector." },
   revision: { term: "Revision", text: "A recorded version of an entry, written by the CMS in the same transaction as the change." },
   },

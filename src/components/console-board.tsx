@@ -13,26 +13,17 @@ import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useMemo, useState } from "react";
 
 import { saveChannelStrips } from "@/app/actions";
-import { Tip } from "@/components/help";
 import { useI18n } from "@/lib/i18n/client";
 import type { MessageKey } from "@/lib/i18n/messages";
 import type { T } from "@/lib/i18n/translate";
 import { splitPasted } from "@/lib/patchbay";
+import { auxFromText, auxOpen, auxText, ConsoleStrip, DEFAULT_SEND, emptyRecall, isNeutral, NEUTRAL, RoutingSchema, type Recall } from "@/components/console-strip";
 import type { ConsoleView, Socket, SocketRole, StripView } from "@/lib/console";
 
-interface Editable {
-  number: number;
-  label: string;
-  source: "" | "mic" | "line" | "tape";
-  route: string;
-  direct: boolean;
-  aux: string;
-  color: string;
-  note: string;
-}
+type Editable = Recall;
 
-const FIELDS = ["label", "source", "route", "direct", "aux", "color", "note"] as const;
-type Field = Exclude<(typeof FIELDS)[number], "direct">;
+/** The columns the paste-from-a-sheet table fills. */
+type Field = "label" | "source" | "route" | "aux" | "color" | "note";
 const SWATCHES = ["#e9c46a", "#f4a261", "#e76f51", "#d4a5c7", "#a78bfa", "#7aa7d9", "#5ec8d8", "#8fc79a", "#f0e68c", "#bdbdbd"];
 const SOURCES = ["", "mic", "line", "tape"] as const;
 
@@ -56,20 +47,53 @@ const SECTION_KEYS: Record<string, MessageKey> = {
   Other: "console.section.other",
 };
 
-const toEditable = (s: StripView): Editable => ({
-  number: s.number,
-  label: s.label,
-  source: s.source ?? "",
-  route: s.route,
-  direct: s.direct,
-  aux: s.aux.join(","),
-  color: s.color,
-  note: s.note,
-});
-const empty = (n: number): Editable => ({ number: n, label: "", source: "", route: "", direct: false, aux: "", color: "", note: "" });
+const toEditable = (s: StripView): Editable => {
+  const d = s.data;
+  const n = <K extends keyof typeof NEUTRAL>(k: K, v: number | null | undefined) =>
+    (typeof v === "number" ? v : NEUTRAL[k]) as number;
+  return {
+    ...emptyRecall(s.number),
+    label: s.label,
+    source: s.source ?? "",
+    route: s.route,
+    direct: s.direct,
+    color: s.color,
+    note: s.note,
+    gain: n("gain", d?.gain),
+    phantom: !!d?.phantom,
+    input_reverse: !!d?.input_reverse,
+    eq_in: !!d?.eq_in,
+    hf: n("hf", d?.hf),
+    mid: n("mid", d?.mid),
+    mid_freq: n("mid_freq", d?.mid_freq),
+    lf: n("lf", d?.lf),
+    lf_freq: n("lf_freq", d?.lf_freq),
+    // A desk filled in before the recall sheet existed knows which sends were
+    // up but not how far: open those knobs to a usable level rather than
+    // losing the information the first time someone saves.
+    ...(() => {
+      const stored = [d?.aux1, d?.aux2, d?.aux3, d?.aux4];
+      const anySet = stored.some((v) => typeof v === "number" && v > 0);
+      const up = new Set(s.aux);
+      return {
+        aux1: anySet ? n("aux1", d?.aux1) : up.has(1) ? DEFAULT_SEND : 0,
+        aux2: anySet ? n("aux2", d?.aux2) : up.has(2) ? DEFAULT_SEND : 0,
+        aux3: anySet ? n("aux3", d?.aux3) : up.has(3) ? DEFAULT_SEND : 0,
+        aux4: anySet ? n("aux4", d?.aux4) : up.has(4) ? DEFAULT_SEND : 0,
+      };
+    })(),
+    aux34_path: d?.aux34_path === "monitor" ? "monitor" : "channel",
+    cue: n("cue", d?.cue),
+    pan: n("pan", d?.pan),
+    fader: n("fader", d?.fader),
+    pfl: !!d?.pfl,
+    mute: !!d?.mute,
+  };
+};
+const empty = emptyRecall;
 
 export function ConsoleBoard({ view, editable = false }: { view: ConsoleView; editable?: boolean }) {
-  const { t } = useI18n();
+  const { t, p } = useI18n();
   const router = useRouter();
   const initial = useMemo(() => view.strips.map(toEditable), [view]);
   const [channels, setChannels] = useState(view.channels || 16);
@@ -94,6 +118,8 @@ export function ConsoleBoard({ view, editable = false }: { view: ConsoleView; ed
   const views = new Map(view.strips.map((s) => [s.number, s]));
   const dirty = channels !== (view.channels || 16) || JSON.stringify(normalize(strips)) !== JSON.stringify(normalize(initial));
   const list = Array.from({ length: channels }, (_, i) => i + 1);
+  // What the control room is hearing instead of the mix.
+  const pflUp = strips.filter((s) => s.pfl && s.number <= channels).map((s) => s.number).sort((a, b) => a - b);
 
   const save = () => {
     const data = new FormData();
@@ -115,6 +141,7 @@ export function ConsoleBoard({ view, editable = false }: { view: ConsoleView; ed
           ))}
         </div>
         {view.strips.some((s) => s.loop) ? <p className="mt-3 text-xs text-bad">{t("console.loopNote")}</p> : null}
+        {pflUp.length ? <p className="mt-3 text-xs text-info">{p("console.pfl.active", pflUp.length, { list: pflUp.join(", ") })}</p> : null}
       </div>
 
       {editable ? (
@@ -176,9 +203,9 @@ export function ConsoleBoard({ view, editable = false }: { view: ConsoleView; ed
 
 function normalize(strips: Editable[]) {
   return [...strips]
-    .filter((s) => FIELDS.some((f) => (f === "direct" ? s.direct : s[f] !== "")))
-    .sort((a, b) => a.number - b.number)
-    .map((s) => ({ ...s, label: s.label.trim(), route: s.route.trim(), aux: s.aux.trim(), note: s.note.trim() }));
+    .map((s) => ({ ...s, label: s.label.trim(), route: s.route.trim(), note: s.note.trim() }))
+    .filter((s) => !isNeutral(s))
+    .sort((a, b) => a.number - b.number);
 }
 
 // ---- One strip ----
@@ -200,7 +227,7 @@ function Strip({ n, value, view, active, onClick }: { n: number; value: Editable
   const routeText = [
     value.direct ? t("console.legend.direct") : "",
     value.route.toUpperCase(),
-    value.aux ? t("console.legend.aux", { list: value.aux }) : "",
+    auxOpen(value).length ? t("console.legend.aux", { list: auxText(value) }) : "",
   ]
     .filter(Boolean)
     .join(" · ");
@@ -239,10 +266,30 @@ function Strip({ n, value, view, active, onClick }: { n: number; value: Editable
           <span className={insert.ends.length ? "text-info" : "text-faint"}>{insert.ends.length ? insert.ends[0]!.deviceName : t("state.none")}</span>
         </div>
       ) : null}
-      {/* Fader area: routing */}
+      {/* Fader area: routing, with the two lamps you look for across a desk */}
       <div className="flex min-h-14 flex-1 flex-col items-center justify-end gap-1 border-t border-line px-1 py-1.5">
-        <span className="line-clamp-2 text-center font-mono text-[8.5px] leading-tight text-amber">{routeText || t("console.legend.mix")}</span>
-        <span className="h-6 w-1.5 rounded-sm bg-line-strong" aria-hidden />
+        {value.pfl || value.mute ? (
+          <span className="flex gap-1">
+            {value.pfl ? (
+              <span className="rounded-sm bg-info/20 px-1 text-[7.5px] font-bold uppercase tracking-wider text-info" title={t("console.recall.pfl.help")}>
+                {t("console.pfl.badge")}
+              </span>
+            ) : null}
+            {value.mute ? (
+              <span className="rounded-sm bg-bad/20 px-1 text-[7.5px] font-bold uppercase tracking-wider text-bad" title={t("console.recall.mute.help")}>
+                {t("console.recall.mute")}
+              </span>
+            ) : null}
+          </span>
+        ) : null}
+        <span className={`line-clamp-2 text-center font-mono text-[8.5px] leading-tight ${value.mute ? "text-faint line-through" : "text-amber"}`}>
+          {routeText || t("console.legend.mix")}
+        </span>
+        <span
+          className="w-1.5 rounded-sm bg-line-strong"
+          style={{ height: `${6 + Math.max(0, Math.min(1, (value.fader + 70) / 80)) * 18}px` }}
+          aria-hidden
+        />
       </div>
       {/* Out */}
       {out ? (
@@ -317,142 +364,61 @@ function StripEditor({
   onMove: (n: number) => void;
 }) {
   const { t } = useI18n();
-  const groupPairs: string[] = [];
-  for (let g = 1; g <= groups; g += 2) groupPairs.push(g + 1 <= groups ? `${g}-${g + 1}` : `${g}`);
-  const auxList = Array.from({ length: auxes }, (_, i) => i + 1);
-  const auxOn = new Set((value.aux.match(/\d+/g) ?? []).map(Number));
   return (
     <div className="rounded-lg border border-line bg-panel p-4">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-semibold">
           {t("console.channel", { n })} {value.label ? <span className="text-dim">· {value.label}</span> : null}
         </h3>
-        <div className="flex gap-1">
-          <button type="button" disabled={n <= 1} onClick={() => onMove(n - 1)} className="rounded border border-line-strong px-2 py-1 text-sm disabled:opacity-40">←</button>
-          <button type="button" disabled={n >= total} onClick={() => onMove(n + 1)} className="rounded border border-line-strong px-2 py-1 text-sm disabled:opacity-40">→</button>
+        <div className="flex items-center gap-3">
+          {value.pfl ? <span className="rounded border border-info/40 bg-info/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-info">{t("console.pfl.badge")}</span> : null}
+          {value.mute ? <span className="rounded border border-bad/40 bg-bad/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-bad">{t("console.recall.mute")}</span> : null}
+          <div className="flex gap-1">
+            <button type="button" disabled={n <= 1} onClick={() => onMove(n - 1)} className="rounded border border-line-strong px-2 py-1 text-sm disabled:opacity-40" aria-label={t("console.previousChannel")}>←</button>
+            <button type="button" disabled={n >= total} onClick={() => onMove(n + 1)} className="rounded border border-line-strong px-2 py-1 text-sm disabled:opacity-40" aria-label={t("console.nextChannel")}>→</button>
+          </div>
         </div>
       </div>
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="space-y-4">
-          <label className="block">
-            <span className="mb-1 block text-xs font-medium text-dim">{t("console.field.label")}</span>
-            <input className="control" value={value.label} onChange={(e) => onChange({ label: e.target.value })} placeholder={t("console.field.label.placeholder")} />
-          </label>
-          <div>
-            <span className="mb-1 block text-xs font-medium text-dim">{t("console.field.source")}</span>
-            <div className="inline-flex overflow-hidden rounded-md border border-line-strong">
-              {SOURCES.map((s) => (
-                <button key={s || "none"} type="button" onClick={() => onChange({ source: s })} className={`px-3 py-1.5 text-sm ${value.source === s ? "bg-raised text-amber" : "text-dim hover:text-ink"}`}>
-                  {sourceLabel(t, s)}
-                </button>
-              ))}
-            </div>
-            <p className="mt-1 text-[11px] text-faint">
-              {t("console.field.source.hint")}{" "}
-              <Tip term="in-line" label={t("console.term.monitorPath")} />
-              {t("console.field.source.hintEnd")}
-            </p>
-          </div>
-          <div>
-            <span className="mb-1 block text-xs font-medium text-dim">{t("console.field.route")}</span>
-            <div className="flex flex-wrap gap-1.5">
-              <label className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-sm ${value.direct ? "border-amber text-amber" : "border-line-strong text-dim"}`}>
-                <input type="checkbox" className="accent-amber" checked={value.direct} onChange={(e) => onChange({ direct: e.target.checked })} />
-                {t("console.route.direct")}
-              </label>
-              <button type="button" onClick={() => onChange({ route: value.route.toLowerCase().includes("mix") ? value.route.replace(/\s*\+?\s*mix/i, "").trim() : [value.route, "mix"].filter(Boolean).join(" + ") })} className={`rounded-md border px-2.5 py-1 text-sm ${/mix/i.test(value.route) ? "border-amber text-amber" : "border-line-strong text-dim"}`}>
-                {t("console.route.mix")}
-              </button>
-              {groupPairs.map((g) => {
-                const on = value.route.split(/[\s,+]+/).includes(g);
-                return (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => {
-                      const parts = value.route.split(/[\s,+]+/).filter(Boolean);
-                      onChange({ route: (on ? parts.filter((p) => p !== g) : [...parts, g]).join(" + ") });
-                    }}
-                    className={`rounded-md border px-2.5 py-1 text-sm ${on ? "border-amber text-amber" : "border-line-strong text-dim"}`}
-                  >
-                    {t("console.route.group", { g })}
-                  </button>
-                );
-              })}
-            </div>
-            <input className="control mt-2" value={value.route} onChange={(e) => onChange({ route: e.target.value })} placeholder={t("console.field.route.placeholder")} />
-            <p className="mt-1 text-[11px] text-faint">
-              {inline ? (
-                <>
-                  <Tip term="direct-out" label={t("console.term.directOut")} /> {t("console.route.hint.inline.a")}{" "}
-                  <Tip term="track-out" label={t("console.term.trackOut")} />
-                  {t("console.route.hint.inline.b")}
-                </>
-              ) : (
-                <>
-                  <Tip term="direct-out" label={t("console.term.directOut")} /> {t("console.route.hint.split.a")}{" "}
-                  <Tip term="group" label={t("console.term.group")} /> {t("console.route.hint.split.b")}
-                </>
-              )}
-            </p>
-          </div>
-          {auxes ? (
-            <div>
-              <span className="mb-1 block text-xs font-medium text-dim">{t("console.field.aux")}</span>
-              <div className="flex flex-wrap gap-1.5">
-                {auxList.map((a) => (
-                  <button
-                    key={a}
-                    type="button"
-                    onClick={() => {
-                      const next = new Set(auxOn);
-                      if (next.has(a)) next.delete(a);
-                      else next.add(a);
-                      onChange({ aux: [...next].sort((x, y) => x - y).join(",") });
-                    }}
-                    className={`rounded-md border px-2.5 py-1 text-sm ${auxOn.has(a) ? "border-amber text-amber" : "border-line-strong text-dim"}`}
-                  >
-                    {t("console.aux.n", { n: a })}
-                  </button>
-                ))}
-              </div>
-              <p className="mt-1 text-[11px] text-faint">{t("console.field.aux.hint")}</p>
-            </div>
-          ) : null}
-          <div>
+
+      <div className="flex flex-wrap gap-5">
+        {/* The channel, as it stands on the desk. */}
+        <div>
+          <ConsoleStrip value={value} onChange={onChange} groups={groups} auxes={auxes} />
+          <div className="mt-3 w-[154px]">
             <span className="mb-1 block text-xs font-medium text-dim">{t("console.field.color")}</span>
             <div className="flex flex-wrap items-center gap-1.5">
-              <button type="button" onClick={() => onChange({ color: "" })} className={`h-6 rounded border px-2 text-xs ${value.color === "" ? "border-amber text-amber" : "border-line-strong text-dim"}`}>{t("console.color.none")}</button>
+              <button type="button" onClick={() => onChange({ color: "" })} className={`h-6 rounded border px-2 text-xs ${value.color === "" ? "border-amber text-amber" : "border-line-strong text-dim"}`}>
+                {t("state.none")}
+              </button>
               {SWATCHES.map((c) => (
-                <button key={c} type="button" onClick={() => onChange({ color: c })} className={`size-6 rounded border-2 ${value.color === c ? "border-white" : "border-transparent"}`} style={{ background: c }} aria-label={t("console.color.swatch", { color: c })} />
+                <button key={c} type="button" onClick={() => onChange({ color: c })} className={`size-5 rounded border-2 ${value.color === c ? "border-white" : "border-transparent"}`} style={{ background: c }} aria-label={t("console.aria.color", { n })} />
               ))}
             </div>
+            <label className="mt-3 block">
+              <span className="mb-1 block text-xs font-medium text-dim">{t("console.field.note")}</span>
+              <input className="control" value={value.note} onChange={(e) => onChange({ note: e.target.value })} />
+            </label>
           </div>
-          <label className="block">
-            <span className="mb-1 block text-xs font-medium text-dim">{t("console.field.note")}</span>
-            <input className="control" value={value.note} onChange={(e) => onChange({ note: e.target.value })} />
-          </label>
         </div>
-        <div>
-          <span className="mb-1 block text-xs font-medium text-dim">{t("console.sockets", { n })}</span>
-          {view?.sockets.length ? (
-            <ul className="space-y-1.5">
-              {view.sockets.map((s) => (
-                <SocketLine key={s.port} s={s} consoleId={consoleId} />
-              ))}
-            </ul>
-          ) : (
-            <p className="text-xs text-warn">{t("console.noPorts", { n })}</p>
-          )}
-          {view?.outputs.length ? (
-            <p className="mt-4 text-xs text-dim">
-              {t("console.leavesBy")} <span className="text-ink">{view.outputs.join(", ")}</span>
-              {t("console.leavesBy.end")}
-              {inline && view.outputs.length > 1 ? (
-                <span className="mt-1 block text-faint">{t("console.leavesBy.many")}</span>
-              ) : null}
-            </p>
-          ) : null}
+
+        {/* Where that puts the signal, and what is plugged into the channel. */}
+        <div className="min-w-[320px] flex-1 space-y-4">
+          <div>
+            <span className="mb-1.5 block text-xs font-medium text-dim">{t("console.schema.title")}</span>
+            <RoutingSchema value={value} view={view} inline={inline} />
+          </div>
+          <div>
+            <span className="mb-1 block text-xs font-medium text-dim">{t("console.sockets", { n })}</span>
+            {view?.sockets.length ? (
+              <ul className="space-y-1.5">
+                {view.sockets.map((k) => (
+                  <SocketLine key={k.port} s={k} consoleId={consoleId} />
+                ))}
+              </ul>
+            ) : (
+              <p className="text-xs text-warn">{t("console.noPorts", { n })}</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -502,7 +468,8 @@ function TableEditor({
         else if (field === "route") {
           s.route = v.replace(/direct/i, "").trim();
           if (/direct/i.test(v)) s.direct = true;
-        } else s[field] = v;
+        } else if (field === "aux") Object.assign(s, auxFromText(s, v));
+        else s[field] = v;
         next.set(n, s);
       });
       return [...next.values()];
@@ -584,7 +551,7 @@ function TableEditor({
                   <td className="text-xs text-dim">{ins ? ins.main : t("state.none")}</td>
                   <td className="text-center"><input type="checkbox" className="mt-2 size-4 accent-amber" checked={v.direct} onChange={(e) => set(n, { direct: e.target.checked })} aria-label={t("console.aria.direct", { n })} /></td>
                   <td className="min-w-24"><input className="control" value={v.route} onChange={(e) => set(n, { route: e.target.value })} placeholder="1-2, mix" aria-label={t("console.aria.route", { n })} /></td>
-                  <td><input className="control w-16" value={v.aux} onChange={(e) => set(n, { aux: e.target.value })} placeholder="1,3" aria-label={t("console.aria.aux", { n })} /></td>
+                  <td><input className="control w-16" value={auxText(v)} onChange={(e) => set(n, auxFromText(v, e.target.value))} placeholder="1,3" aria-label={t("console.aria.aux", { n })} /></td>
                   <td className="text-xs text-dim">{out ? `${out.main} · ${out.sub}` : t("state.none")}</td>
                   <td><input type="color" value={v.color || "#24262a"} onChange={(e) => set(n, { color: e.target.value })} className="h-8 w-10 cursor-pointer rounded border border-line-strong bg-transparent" aria-label={t("console.aria.color", { n })} /></td>
                   <td className="min-w-28"><input className="control" value={v.note} onChange={(e) => set(n, { note: e.target.value })} aria-label={t("console.aria.note", { n })} /></td>

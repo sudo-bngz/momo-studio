@@ -219,7 +219,7 @@ export const fr: HelpContent = {
 
   console: {
     title: "La console, et l'Allen & Heath GS3",
-    lede: "Ici la console a deux couches : ses points, qui sont le panneau arrière et ne changent jamais, et ses tranches, qui sont ce que la console fait aujourd'hui.",
+    lede: "Ici la console a trois couches : ses points, qui sont le panneau arrière et ne changent jamais ; son routage, qui est ce que la console fait aujourd'hui ; et la feuille de rappel — chaque bouton de la voie, parce que la GS3 n'a aucun rappel à elle.",
     points: [
       { term: "Points et tranches", text: "Un point est une prise où tu peux brancher un câble. Une tranche, c'est un nom, une source, un routage et des départs auxiliaires — la session, pas le matériel. Rebrancher, c'est modifier des câbles ; renommer une voie, c'est modifier une tranche." },
       { term: "Source utilisée", text: "Mic, ligne ou magnéto. Sur la GS3, une voie a souvent ses trois sources câblées en même temps — l'app ne peut pas deviner ; lui dire laquelle est en service, c'est ce qui fait que le tracé du signal prend le bon chemin." },
@@ -227,6 +227,9 @@ export const fr: HelpContent = {
       { term: "Départs auxiliaires ouverts", text: "Les aux que cette voie alimente. Ça sert surtout à une chose : repérer un aux qui revient dans une voie qui envoie dans ce même aux." },
       { term: "Insert", text: "Départ sur la pointe, retour sur la bague. Un compresseur branché dans l'insert de la voie 4 apparaît dans la chaîne de la voie 4 quand tu suis le signal, pas comme un îlot à part." },
       { term: "Sortie de piste (Track Out)", text: "Sur une console in-line comme la GS3, cette prise fait deux métiers — la sortie directe de la voie, ou un sous-groupe. Lequel des deux dépend du routage que tu règles." },
+      { term: "Les boutons", text: "Le gain, les trois bandes d'EQ avec leurs deux fréquences balayables, les quatre départs auxiliaires sur leurs axes concentriques, le cue, le pan et le fader. Remets-les où ils étaient sur la console et la feuille les garde — à la souris, à la molette, ou au clavier avec les flèches." },
+      { term: "PFL", text: "Pre-fade listen. Ça met cette voie dans la régie et dans le casque et ne change rien d'autre : personne en aval ne l'entend, donc tu peux l'enclencher en plein take." },
+      { term: "Où part cette voie", text: "Le schéma à côté de la tranche allume le trajet que le signal prend vraiment avec ces réglages, et nomme les prises par lesquelles il sort. Une voie coupée s'arrête au fader ; le PFL continue quand même, puisqu'il est pris avant." },
       { term: "Coller depuis un tableur", text: "Une colonne à la fois — les noms, les sources, les routages, les aux, les notes — à partir de la voie que tu veux. Le vieux tableau y passe en quatre collages." },
     ],
     long: [
@@ -236,6 +239,8 @@ export const fr: HelpContent = {
       "**L'insert est avant l'EQ**, câblé départ sur la pointe et retour sur la bague, sur un seul jack TRS. Dans l'app, l'insert est un point en Entrée/Sortie : un signal qui y arrive repart par ce que dit le routage de la tranche, si bien que le périphérique que tu y branches devient un morceau de la chaîne de cette voie quand tu suis le signal, au lieu d'être un cul-de-sac.",
       "**Les aux 1 à 4 sont post-fader**, et les 3 et 4 peuvent être basculés sur la voie d'écoute. L'app ne modélise pas le commutateur — elle modélise la conséquence. Si Aux 2 Out part dans un delay, que le delay revient dans l'entrée ligne de la voie 7, et que la tranche de la voie 7 dit qu'elle envoie dans l'Aux 2, tu as construit un oscillateur. C'est à ça que servent les tranches en rouge et l'avertissement de boucle : le tracé part d'Aux 2 Out, traverse chaque pédale et chaque baie de brassage sur son passage, et s'il revient sur une voie qui alimente l'Aux 2, il le signale, nomme les voies et te dit quel départ baisser.",
       "**Les retours d'effet et l'insert du mix tombent sur le mix.** Un signal qui entre par FX Return 3 ressort par Mix Out L et Mix Out R : une reverb renvoyée là est suivie jusqu'aux enceintes au lieu de s'arrêter au retour.",
+      "**Une feuille de rappel, parce que la console n'en a pas.** La GS3 est analogique : la session finie, les réglages sont perdus si personne ne les a notés. La tranche ici est donc la vraie — gain, le shelf HF à 12 kHz, le médium balayable de 300 Hz à 12 kHz, le LF balayable de 20 Hz à 600 Hz, les quatre aux post-fader sur deux axes concentriques, le cue pré-fader, le pan, le PFL, le mute et le fader — et ce que tu règles est enregistré avec la voie et revient la fois suivante. Cette console n'a ni pad ni inverseur de phase, donc il n'y en a pas ici non plus.",
+      "**Le PFL est le seul réglage de la tranche qui ne change rien.** Le pre-fade listen prend la voie avant le fader et avant le mute et l'envoie dans la régie et dans le casque. Les sous-groupes, le mix et les aux ne le voient jamais : c'est pour ça que tu peux l'enclencher en plein take pour vérifier une source, régler un gain ou traquer un ronflement. C'est aussi pour ça que le plateau te dit quelles voies l'ont enclenché : un PFL resté enfoncé est la raison habituelle pour laquelle la régie sonne faux alors que le mix, lui, va très bien.",
       "**Remplir la console.** Ajoute-la comme matériel dans la catégorie Console et remplis ses points depuis le modèle Allen & Heath GS3 24/8/2 : 163 points, correctement nommés, avec les quatre aux, les huit inserts de sous-groupe, les quatre retours d'effet stéréo, les deux magnétos 2-pistes, les deux paires d'écoutes et le processeur de mute MIDI. La GS3 16 voies y est aussi. Si ton exemplaire diffère — un insert modifié, une voie morte — corrige ces points à la main après coup ; le modèle est un point de départ, pas un contrat.",
     ],
     see: ["consoles", "patchbays", "plan"],
@@ -370,6 +375,14 @@ export const fr: HelpContent = {
   aux: { term: "Départ auxiliaire", text: "Un mix à part prélevé sur les voies, pour les effets ou pour le casque d'un musicien. Post-fader sur la GS3." },
   "direct-out": { term: "Sortie directe", text: "Le signal propre d'une voie, droit en sortie, sans passer par les sous-groupes ni par le mix. Sur la GS3, elle partage la prise de sortie de piste avec les sous-groupes." },
   strip: { term: "Tranche", text: "Dans cette app : le nom, la source, le routage, les départs auxiliaires, la couleur et la note d'une voie. L'état de la session, pas celui du matériel." },
+  pfl: {
+    term: "PFL",
+    text: "Pre-fade listen : une prise faite avant le fader et le mute, qui ne part que vers la régie et le casque. Ça ne touche jamais au signal que la console envoie.",
+  },
+  recall: {
+    term: "Feuille de rappel",
+    text: "Où chaque bouton d'une voie a été laissé. Une console analogique oublie tout en fin de session ; la feuille est ce qui permet de la remettre.",
+  },
   port: { term: "Point", text: "Une prise physique sur une machine, avec un nom, un sens, un signal et un connecteur." },
   revision: { term: "Version", text: "Une version enregistrée d'une entrée, écrite par le CMS dans la même transaction que la modification." },
   },
