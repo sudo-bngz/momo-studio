@@ -1,0 +1,83 @@
+# Deploy the studio manager to Render, in your own account:
+# https://render.com/deploy?repo=https://github.com/sudo-bngz/momo-studio
+#
+# Two web services in the same region, talking over Render's private network:
+#
+#   studio-cms   GoHead: the API, its admin UI, and a 1 GB disk holding the
+#                SQLite database, the uploaded photos and the JWT secret.
+#   studio       this app, the only one you open day to day.
+#
+# About $14.25 a month (two instances at $7, plus $0.25 for the disk). Render's
+# free instances have no disk and can't be reached on the private network, so
+# the CMS has to be a paid one; the app can be `free` if a cold start after
+# 15 minutes of inactivity is fine (see `plan` below).
+#
+# After the first deploy, push the content model from your machine:
+#   GOHEAD_URL=https://<cms-url> GOHEAD_PASSWORD=<what you typed> npm run gohead:push
+#   GOHEAD_URL=https://<cms-url> GOHEAD_PASSWORD=<what you typed> npm run gohead:access
+services:
+  - type: web
+    name: studio-cms
+    runtime: docker
+    dockerfilePath: ./deploy/render/Dockerfile
+    dockerContext: ./deploy/render
+    region: frankfurt
+    plan: 0.5c-512mb
+    # The CMS is rebuilt when you ask for it, not on every commit to this app.
+    autoDeployTrigger: "off"
+    healthCheckPath: /_health
+    disk:
+      name: gohead-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      # Render forwards traffic to $PORT; GoHead listens on 8080.
+      - key: PORT
+        value: "8080"
+      # The first administrator, created on the first start, on an empty
+      # database. Render asks for the two `sync: false` values when you create
+      # the Blueprint. The password needs 12 characters or more, and changing
+      # it here later does nothing: change it in GoHead's admin UI.
+      - key: GOHEAD_ADMIN_USERNAME
+        value: admin
+      - key: GOHEAD_ADMIN_EMAIL
+        sync: false
+      - key: GOHEAD_ADMIN_PASSWORD
+        sync: false
+      - key: GOHEAD_JWT_SECRET
+        generateValue: true
+      # Requests arrive through Render's proxy: trust its private addresses so
+      # rate limits see the visitor's IP rather than the proxy's.
+      - key: GOHEAD_TRUSTED_PROXIES
+        value: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.64.0.0/10
+
+  - type: web
+    name: studio
+    runtime: node
+    region: frankfurt
+    # `free` also works and saves $7: the app then sleeps after 15 minutes and
+    # takes about a minute to wake up. The CMS must stay on a paid instance.
+    plan: 0.5c-512mb
+    autoDeployTrigger: commit
+    # --include=dev: the build needs TypeScript, Tailwind and Next itself.
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /login
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # The CMS's address on the private network, as "host:port". The app turns
+      # it into GOHEAD_URL (src/lib/session.ts), so GoHead is reached without
+      # leaving Render. Photos are streamed through the app's /media route.
+      - key: GOHEAD_HOSTPORT
+        fromService:
+          type: web
+          name: studio-cms
+          property: hostport
+      - key: STUDIO_TIMEZONE
+        value: Europe/Paris
+      - key: STUDIO_CURRENCY
+        value: EUR
+      # GOHEAD_USERNAME / GOHEAD_PASSWORD are deliberately absent: the app
+      # never acts as the administrator. People sign in with their own GoHead
+      # account, and the setup scripts run from your machine.

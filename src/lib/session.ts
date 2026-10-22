@@ -13,7 +13,16 @@ import { createClient, isGoHeadError, type GoHeadClient } from "@gohead-cms/clie
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export const GOHEAD_URL = (process.env.GOHEAD_URL || "http://localhost:8080").replace(/\/+$/, "");
+/**
+ * Where GoHead is, as this server reaches it. On Render, the blueprint sets
+ * GOHEAD_HOSTPORT from the CMS service's private address, so the two talk
+ * over the private network and GOHEAD_URL stays unset.
+ */
+export const GOHEAD_URL = (
+  process.env.GOHEAD_URL ||
+  (process.env.GOHEAD_HOSTPORT ? `http://${process.env.GOHEAD_HOSTPORT}` : "") ||
+  "http://localhost:8080"
+).replace(/\/+$/, "");
 export const SESSION_COOKIE = "studio_session";
 /** GoHead's tokens live 72 hours. */
 const SESSION_MAX_AGE = 72 * 60 * 60;

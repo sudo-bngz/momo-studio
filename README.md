@@ -138,11 +138,58 @@ To change the model: edit `gohead/model.json`, then `npm run gohead:push && npm 
 
 ## Deploying
 
-GoHead's `standalone` mode (one process, SQLite, about 45 MB of memory) and this app both fit on a Raspberry Pi or a small VPS:
+### Render, in a few minutes
 
-1. Run GoHead as in `docker-compose.yml`, with your own admin password, and back up its `/data` volume: it is your inventory.
-2. `npm run build && npm start` with `GOHEAD_URL` pointing at it (or containerize the app). Photos are streamed through the app's `/media` route, so GoHead itself doesn't have to be public.
-3. Put both behind HTTPS (the session cookie is `secure` in production).
+[`render.yaml`](render.yaml) is a Blueprint that brings up both halves:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sudo-bngz/momo-studio)
+
+1. Click the button, sign in to Render, and give it the two values it asks for:
+   `GOHEAD_ADMIN_EMAIL` and `GOHEAD_ADMIN_PASSWORD` (**12 characters or more** — GoHead
+   refuses to start with a shorter one). The username is `admin`, and the JWT secret is
+   generated for you.
+2. **Deploy Blueprint**. The first build takes a few minutes and creates:
+   - **studio-cms** — GoHead with a 1 GB disk at `/data` holding the SQLite database, the
+     uploaded photos and the secrets;
+   - **studio** — this app, which reaches the CMS over Render's private network, so only the
+     app really needs to be open to the world.
+3. Push the content model from your machine, once:
+
+   ```bash
+   export GOHEAD_URL=https://studio-cms-xxxx.onrender.com   # the CMS service's URL
+   export GOHEAD_USERNAME=admin GOHEAD_PASSWORD='what you typed in step 1'
+   npm run gohead:push     # the collections and components
+   npm run gohead:access   # the studio-staff role
+   npm run gohead:seed     # optional: the sample studio
+   ```
+
+4. Open the **studio** service's URL and sign in with `admin` and that password.
+
+About **$14.25 a month**: two instances at $7 and $0.25 for the disk. Render's free instances
+have no disk and can't be reached on the private network, so the CMS has to be a paid one; set
+the app's `plan` to `free` to save $7 if you don't mind it sleeping after 15 minutes and taking
+about a minute to wake. The Blueprint uses the `frankfurt` region — Render can't move a service
+later, so change it in `render.yaml` before deploying if you want another one.
+
+Pushing to `main` redeploys the app. The CMS has `autoDeployTrigger: "off"` so it isn't rebuilt
+every time; to move it to a newer GoHead, use **Manual Deploy → Clear build cache & deploy**.
+
+Render snapshots the disk every 24 hours and keeps it at least seven days; restore one from the
+service's **Disk** page. That disk is your whole inventory, so check the snapshots exist before
+you rely on them.
+
+### Anywhere else
+
+GoHead's `standalone` mode (one process, SQLite, about 45 MB of memory) and this app both fit
+on a Raspberry Pi or a small VPS:
+
+1. Run GoHead as in `docker-compose.yml`, with your own admin password, and back up its `/data`
+   volume.
+2. `npm ci && npm run build && npm start` with `GOHEAD_URL` pointing at it (or containerize the
+   app). Photos are streamed through the app's `/media` route, so GoHead itself doesn't have to
+   be public.
+3. Put the app behind HTTPS: the session cookie is `secure` in production, so sign-in silently
+   fails over plain HTTP.
 
 ## Project structure
 
