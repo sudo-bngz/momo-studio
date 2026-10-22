@@ -3,6 +3,8 @@
  * free, and what looks wrong. Pure functions over plain data, used by the
  * server pages and by the plan diagram in the browser.
  */
+import type { ChannelStrip } from "@/gohead";
+import { findConsoleLoops, internalOutputs, isConsole } from "@/lib/console";
 import { PASS_THROUGH, type Category, type Direction, type PatchMode, type Signal } from "@/lib/vocab";
 
 export interface PlanPort {
@@ -22,6 +24,13 @@ export interface PlanDevice {
   ports: PlanPort[];
   /** Patchbays: their columns and how each is normalled. */
   patch?: { columns: number; modes: Record<number, PatchMode | undefined> };
+  /** Consoles: each channel's routing. */
+  strips?: ChannelStrip[];
+}
+
+/** Console strips by device, for following a signal through a desk. */
+export function stripsOf(devices: PlanDevice[]): Map<number, Map<number, ChannelStrip>> {
+  return new Map(devices.filter((d) => d.strips?.length).map((d) => [d.id, new Map(d.strips!.map((s) => [s.number, s]))]));
 }
 
 export interface PlanCable {
@@ -115,7 +124,7 @@ export function findIssues(devices: PlanDevice[], cables: PlanCable[]): Issue[] 
       issues.push({ kind: "direction", cable: c, message: `${c.code} joins two ${a.direction === "in" ? "inputs" : "outputs"}` });
     }
   }
-  return [...findLoops(devices, cables), ...issues];
+  return [...findLoops(devices, cables), ...findConsoleLoops(devices, cables, stripsOf(devices)), ...issues];
 }
 
 // ---- Signal flow, through patchbay normals ----
@@ -435,17 +444,19 @@ export function layoutPlan(devices: PlanDevice[], cables: PlanCable[], opts: Lay
     }
     height = Math.max(height, y);
   });
-  // Normalled patchbay columns: the input-side rear point joins the output side.
+  // What goes on inside a box: normalled patchbay columns, a console's
+  // routing from each channel to its outs. Drawn between the ports shown.
+  const allStrips = stripsOf(devices);
   for (const b of boxes.values()) {
-    const patch = b.device.patch;
-    if (!patch) continue;
-    for (let n = 1; n <= patch.columns; n++) {
-      if (!isNormalled(patch.modes[n])) continue;
-      const names = [`Top ${n}`, `Bottom ${n}`];
-      const i = b.inputs.find((p) => names.includes(p.port.name));
-      const o = b.outputs.find((p) => names.includes(p.port.name) && p.port.name !== i?.port.name);
-      if (i && o) b.links.push({ y1: i.y, y2: o.y, column: n });
-    }
+    const d = b.device;
+    if (!d.patch && !isConsole(d)) continue;
+    const strips = allStrips.get(d.id) ?? new Map<number, ChannelStrip>();
+    b.inputs.forEach((i, k) => {
+      for (const outName of internalOutputs(d, i.port.name, strips)) {
+        const o = b.outputs.find((p) => p.port.name === outName);
+        if (o && o.port.name !== i.port.name) b.links.push({ y1: i.y, y2: o.y, column: k + 1 });
+      }
+    });
   }
   const width = MARGIN * 2 + colIndexes.length * NODE_W + Math.max(0, colIndexes.length - 1) * COL_GAP;
 

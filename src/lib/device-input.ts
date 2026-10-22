@@ -28,6 +28,8 @@ export function toDeviceInput(d: DeviceEntry): DeviceInput {
     ports: (d.ports ?? []).map(strip),
     patch_columns: d.patch_columns ?? undefined,
     patch_points: d.patch_points ? d.patch_points.map(strip) : undefined,
+    console_channels: d.console_channels ?? undefined,
+    channel_strips: d.channel_strips ? d.channel_strips.map(strip) : undefined,
     serial_number: d.serial_number ?? undefined,
     purchase_date: d.purchase_date ? d.purchase_date.slice(0, 10) : undefined,
     purchase_price: d.purchase_price ?? undefined,

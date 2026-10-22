@@ -47,6 +47,30 @@ export interface PatchPointInput {
   note?: string | null;
 }
 
+/** Component "channel_strip": One input channel of a console: what it is called today, where its signal comes from and where it is routed */
+export interface ChannelStrip {
+  number: number;
+  label?: string | null;
+  source?: "mic" | "line" | "tape" | null;
+  route?: string | null;
+  direct?: boolean | null;
+  aux?: string | null;
+  color?: string | null;
+  note?: string | null;
+}
+
+/** Values written to component "channel_strip" */
+export interface ChannelStripInput {
+  number: number;
+  label?: string | null;
+  source?: "mic" | "line" | "tape" | null;
+  route?: string | null;
+  direct?: boolean | null;
+  aux?: string | null;
+  color?: string | null;
+  note?: string | null;
+}
+
 // ---- Collections ----
 
 /** An entry of the "rooms" collection: Rooms of the studio: control room, live room, booth */
@@ -131,6 +155,8 @@ export interface Device {
   ports?: Port[];
   patch_columns?: number | null;
   patch_points?: PatchPoint[];
+  console_channels?: number | null;
+  channel_strips?: ChannelStrip[];
   serial_number?: string | null;
   /** date */
   purchase_date?: string | null;
@@ -162,6 +188,8 @@ export interface DeviceInput {
   ports?: PortInput[];
   patch_columns?: number | null;
   patch_points?: PatchPointInput[];
+  console_channels?: number | null;
+  channel_strips?: ChannelStripInput[];
   serial_number?: string | null;
   /** date */
   purchase_date?: string | null;

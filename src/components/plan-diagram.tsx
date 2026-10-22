@@ -172,14 +172,14 @@ export function PlanDiagram({ devices, cables, focus: initialFocus }: { devices:
                   <line x1={n.x} x2={n.x + n.width} y1={n.y + 38} y2={n.y + 38} stroke="#2c2f34" />
                   {n.links.map((l) => (
                     <path
-                      key={`n${l.column}`}
+                      key={`n${l.column}-${l.y2}`}
                       d={`M${n.x + 62},${l.y1} C${n.x + n.width / 2},${l.y1} ${n.x + n.width / 2},${l.y2} ${n.x + n.width - 66},${l.y2}`}
                       stroke="#4ade80"
                       strokeOpacity={0.45}
                       strokeDasharray="2 3"
                       fill="none"
                     >
-                      <title>{`Column ${l.column} normalled`}</title>
+                      <title>{n.device.patch ? `Column ${l.column} normalled` : "Routed inside the desk"}</title>
                     </path>
                   ))}
                   {n.inputs.map((p) => (

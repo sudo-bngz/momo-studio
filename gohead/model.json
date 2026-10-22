@@ -107,6 +107,44 @@
           "type": "string"
         }
       }
+    },
+    "channel_strip": {
+      "description": "One input channel of a console: what it is called today, where its signal comes from and where it is routed",
+      "attributes": {
+        "number": {
+          "type": "int",
+          "required": true,
+          "min": 1,
+          "max": 128
+        },
+        "label": {
+          "type": "string"
+        },
+        "source": {
+          "type": "enum",
+          "options": [
+            "mic",
+            "line",
+            "tape"
+          ]
+        },
+        "route": {
+          "type": "string"
+        },
+        "direct": {
+          "type": "bool"
+        },
+        "aux": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
     }
   },
   "collections": {
@@ -315,7 +353,7 @@
           "type": "component",
           "component": "port",
           "repeatable": true,
-          "max": 128
+          "max": 256
         },
         "patch_columns": {
           "type": "int",
@@ -327,6 +365,17 @@
           "component": "patch_point",
           "repeatable": true,
           "max": 96
+        },
+        "console_channels": {
+          "type": "int",
+          "min": 1,
+          "max": 128
+        },
+        "channel_strips": {
+          "type": "component",
+          "component": "channel_strip",
+          "repeatable": true,
+          "max": 128
         },
         "serial_number": {
           "type": "string"

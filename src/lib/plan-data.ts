@@ -19,6 +19,7 @@ export function toPlanDevice(d: DeviceEntry): PlanDevice {
             modes: Object.fromEntries((d.patch_points ?? []).map((p) => [p.column, p.mode ?? undefined])),
           }
         : undefined,
+    strips: d.category === "mixer" && d.channel_strips?.length ? d.channel_strips : undefined,
   };
 }
 

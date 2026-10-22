@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/racks", label: "Racks & places" },
   { href: "/cables", label: "Cables" },
   { href: "/patchbays", label: "Patchbays" },
+  { href: "/consoles", label: "Consoles" },
   { href: "/plan", label: "Patch plan" },
   { href: "/bookings", label: "Bookings" },
   { href: "/clients", label: "Clients" },

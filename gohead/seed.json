@@ -835,35 +835,51 @@
      },
      {
       "column": 9,
-      "mode": "thru"
+      "mode": "thru",
+      "bottom_label": "GS3 Input 9",
+      "color": "#e9c46a"
      },
      {
       "column": 10,
-      "mode": "thru"
+      "mode": "thru",
+      "bottom_label": "GS3 Input 10",
+      "color": "#e9c46a"
      },
      {
       "column": 11,
-      "mode": "thru"
+      "mode": "thru",
+      "bottom_label": "GS3 Input 11",
+      "color": "#e9c46a"
      },
      {
       "column": 12,
-      "mode": "thru"
+      "mode": "thru",
+      "bottom_label": "GS3 Input 12",
+      "color": "#e9c46a"
      },
      {
       "column": 13,
-      "mode": "thru"
+      "mode": "thru",
+      "bottom_label": "GS3 Input 13",
+      "color": "#e9c46a"
      },
      {
       "column": 14,
-      "mode": "thru"
+      "mode": "thru",
+      "bottom_label": "GS3 Input 14",
+      "color": "#e9c46a"
      },
      {
       "column": 15,
-      "mode": "thru"
+      "mode": "thru",
+      "bottom_label": "GS3 Input 15",
+      "color": "#e9c46a"
      },
      {
       "column": 16,
-      "mode": "thru"
+      "mode": "thru",
+      "bottom_label": "GS3 Input 16",
+      "color": "#e9c46a"
      },
      {
       "column": 17,
@@ -1301,60 +1317,56 @@
      {
       "column": 1,
       "mode": "normal",
-      "daw_track": "1/2",
       "color": "#f4a261"
      },
      {
       "column": 2,
       "mode": "normal",
-      "daw_track": "1/2",
       "color": "#f4a261"
      },
      {
       "column": 3,
       "mode": "normal",
-      "daw_track": "3/4",
       "color": "#f4a261"
      },
      {
       "column": 4,
       "mode": "normal",
-      "daw_track": "3/4",
       "color": "#f4a261"
      },
      {
       "column": 5,
-      "mode": "thru",
+      "mode": "normal",
       "color": "#f0e68c",
       "note": "TR-8S assign out"
      },
      {
       "column": 6,
-      "mode": "thru",
+      "mode": "normal",
       "color": "#f0e68c",
       "note": "TR-8S assign out"
      },
      {
       "column": 7,
-      "mode": "thru",
+      "mode": "normal",
       "color": "#f0e68c",
       "note": "TR-8S assign out"
      },
      {
       "column": 8,
-      "mode": "thru",
+      "mode": "normal",
       "color": "#f0e68c",
       "note": "TR-8S assign out"
      },
      {
       "column": 9,
-      "mode": "thru",
+      "mode": "normal",
       "color": "#f0e68c",
       "note": "TR-8S assign out"
      },
      {
       "column": 10,
-      "mode": "thru",
+      "mode": "normal",
       "color": "#f0e68c",
       "note": "TR-8S assign out"
      },
@@ -2852,191 +2864,1236 @@
     ]
    },
    {
-    "$id": "zed",
-    "name": "Allen & Heath ZED-22FX",
+    "$id": "gs3",
+    "name": "Allen & Heath GS3",
     "code": "MIX-01",
     "brand": "Allen & Heath",
-    "model": "ZED-22FX",
+    "model": "GS3 24/8/2",
     "category": "mixer",
     "state": "in_use",
     "location": "@ref:locations/desk",
-    "purchase_price": 850,
+    "purchase_price": 1800,
+    "current_value": 1500,
     "map_x": 50,
-    "map_y": 55,
+    "map_y": 50,
+    "notes": "In-line 24:8:2, the heart of the studio with the patchbays. Track outs carry direct out or group (groups on 1/9/17, 2/10/18…).",
     "ports": [
      {
-      "name": "Input 1",
+      "name": "Ch 1 Mic",
       "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 2",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 3",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 4",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 5",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 6",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 7",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 8",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 9",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 10",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 11",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 12",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 13",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 14",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 15",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Input 16",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Aux Send 1",
-      "direction": "out",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Aux Send 2",
-      "direction": "out",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Return 1 L",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Return 1 R",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Return 2 L",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Return 2 R",
-      "direction": "in",
-      "signal": "audio",
-      "connector": "jack_trs",
-      "balanced": true
-     },
-     {
-      "name": "Main Out L",
-      "direction": "out",
       "signal": "audio",
       "connector": "xlr",
       "balanced": true
      },
      {
-      "name": "Main Out R",
-      "direction": "out",
+      "name": "Ch 2 Mic",
+      "direction": "in",
       "signal": "audio",
       "connector": "xlr",
       "balanced": true
      },
      {
-      "name": "Power",
+      "name": "Ch 3 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 4 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 5 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 6 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 7 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 8 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 9 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 10 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 11 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 12 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 13 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 14 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 15 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 16 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 17 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 18 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 19 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 20 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 21 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 22 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 23 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 24 Mic",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Ch 1 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 2 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 3 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 4 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 5 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 6 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 7 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 8 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 9 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 10 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 11 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 12 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 13 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 14 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 15 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 16 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 17 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 18 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 19 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 20 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 21 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 22 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 23 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 24 Line",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ch 1 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 2 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 3 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 4 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 5 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 6 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 7 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 8 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 9 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 10 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 11 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 12 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 13 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 14 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 15 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 16 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 17 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 18 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 19 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 20 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 21 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 22 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 23 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 24 Tape In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "monitor path / track return"
+     },
+     {
+      "name": "Ch 1 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 2 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 3 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 4 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 5 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 6 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 7 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 8 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 9 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 10 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 11 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 12 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 13 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 14 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 15 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 16 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 17 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 18 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 19 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 20 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 21 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 22 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 23 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 24 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "note": "tip send, ring return, pre-EQ"
+     },
+     {
+      "name": "Ch 1 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 1"
+     },
+     {
+      "name": "Ch 2 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 2"
+     },
+     {
+      "name": "Ch 3 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 3"
+     },
+     {
+      "name": "Ch 4 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 4"
+     },
+     {
+      "name": "Ch 5 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 5"
+     },
+     {
+      "name": "Ch 6 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 6"
+     },
+     {
+      "name": "Ch 7 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 7"
+     },
+     {
+      "name": "Ch 8 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 8"
+     },
+     {
+      "name": "Ch 9 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 1"
+     },
+     {
+      "name": "Ch 10 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 2"
+     },
+     {
+      "name": "Ch 11 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 3"
+     },
+     {
+      "name": "Ch 12 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 4"
+     },
+     {
+      "name": "Ch 13 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 5"
+     },
+     {
+      "name": "Ch 14 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 6"
+     },
+     {
+      "name": "Ch 15 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 7"
+     },
+     {
+      "name": "Ch 16 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 8"
+     },
+     {
+      "name": "Ch 17 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 1"
+     },
+     {
+      "name": "Ch 18 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 2"
+     },
+     {
+      "name": "Ch 19 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 3"
+     },
+     {
+      "name": "Ch 20 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 4"
+     },
+     {
+      "name": "Ch 21 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 5"
+     },
+     {
+      "name": "Ch 22 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 6"
+     },
+     {
+      "name": "Ch 23 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 7"
+     },
+     {
+      "name": "Ch 24 Track Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "direct out, or group 8"
+     },
+     {
+      "name": "Group 1 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Group 2 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Group 3 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Group 4 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Group 5 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Group 6 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Group 7 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Group 8 Insert",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Aux 1 Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Aux 2 Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Aux 3 Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Aux 4 Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Cue Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Cue Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Mix Insert L",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Mix Insert R",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Mix Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Mix Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "FX Return 1 L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "FX Return 2 L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "FX Return 3 L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "FX Return 4 L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "FX Return 1 R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "FX Return 2 R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "FX Return 3 R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "FX Return 4 R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "2-Track A In L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "2-Track A In R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "2-Track A Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "2-Track A Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "2-Track B In L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "2-Track B In R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "2-Track B Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "2-Track B Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Monitor Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Monitor Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Alt Monitor Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Alt Monitor Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Headphones",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5",
+      "note": "mute processor"
+     },
+     {
+      "name": "MIDI Out",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Thru",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "PSU",
       "direction": "in",
       "signal": "power",
-      "connector": "iec"
+      "connector": "other",
+      "note": "external power supply"
+     }
+    ],
+    "console_channels": 24,
+    "channel_strips": [
+     {
+      "number": 1,
+      "label": "Prophet",
+      "source": "line",
+      "direct": true,
+      "aux": "1",
+      "color": "#e9c46a"
+     },
+     {
+      "number": 2,
+      "label": "Juno",
+      "source": "line",
+      "direct": true,
+      "color": "#e9c46a"
+     },
+     {
+      "number": 3,
+      "label": "MS-20",
+      "source": "line",
+      "route": "1-2",
+      "aux": "2",
+      "color": "#e9c46a"
+     },
+     {
+      "number": 4,
+      "label": "JV L",
+      "source": "line",
+      "route": "3-4",
+      "color": "#7aa7d9"
+     },
+     {
+      "number": 5,
+      "label": "JV R",
+      "source": "line",
+      "route": "3-4",
+      "color": "#7aa7d9"
+     },
+     {
+      "number": 6,
+      "label": "Blofeld L",
+      "source": "line",
+      "route": "3-4",
+      "color": "#7aa7d9"
+     },
+     {
+      "number": 7,
+      "label": "Blofeld R",
+      "source": "line",
+      "route": "3-4",
+      "color": "#7aa7d9"
+     },
+     {
+      "number": 8,
+      "label": "Euro",
+      "source": "line",
+      "direct": true,
+      "aux": "2",
+      "color": "#f0e68c"
+     },
+     {
+      "number": 9,
+      "label": "Digitakt L",
+      "source": "line",
+      "route": "5-6",
+      "color": "#f4a261"
+     },
+     {
+      "number": 10,
+      "label": "Digitakt R",
+      "source": "line",
+      "route": "5-6",
+      "color": "#f4a261"
+     },
+     {
+      "number": 11,
+      "label": "TR-8S L",
+      "source": "line",
+      "route": "7-8",
+      "color": "#f4a261"
+     },
+     {
+      "number": 12,
+      "label": "TR-8S R",
+      "source": "line",
+      "route": "7-8",
+      "color": "#f4a261"
+     },
+     {
+      "number": 13,
+      "label": "TR-8S 1",
+      "source": "line",
+      "direct": true,
+      "color": "#e76f51"
+     },
+     {
+      "number": 14,
+      "label": "TR-8S 2",
+      "source": "line",
+      "direct": true,
+      "color": "#e76f51"
+     },
+     {
+      "number": 15,
+      "label": "TR-8S 3",
+      "source": "line",
+      "direct": true,
+      "color": "#e76f51"
+     },
+     {
+      "number": 16,
+      "label": "TR-8S 4",
+      "source": "line",
+      "direct": true,
+      "color": "#e76f51"
+     },
+     {
+      "number": 17,
+      "label": "TR-8S 5",
+      "source": "line",
+      "direct": true,
+      "color": "#e76f51"
+     },
+     {
+      "number": 18,
+      "label": "TR-8S 6",
+      "source": "line",
+      "direct": true,
+      "color": "#e76f51"
+     },
+     {
+      "number": 19,
+      "label": "Vocal",
+      "source": "mic",
+      "route": "mix",
+      "aux": "1",
+      "color": "#d4a5c7",
+      "note": "SM7B when tracking"
      }
     ]
    },
@@ -3285,11 +4342,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb1",
     "from_port": "Bottom 1",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Line In 5",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 1 Line",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3298,11 +4355,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb1",
     "from_port": "Bottom 2",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Line In 6",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 2 Line",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3311,11 +4368,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb1",
     "from_port": "Bottom 3",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Line In 7",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 3 Line",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3324,11 +4381,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb1",
     "from_port": "Bottom 4",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Line In 8",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 4 Line",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3337,11 +4394,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb1",
     "from_port": "Bottom 5",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Line In 9",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 5 Line",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3350,11 +4407,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb1",
     "from_port": "Bottom 6",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Line In 10",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 6 Line",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3363,11 +4420,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb1",
     "from_port": "Bottom 7",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Line In 11",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 7 Line",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3376,11 +4433,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb1",
     "from_port": "Bottom 8",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Line In 12",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 8 Line",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3519,11 +4576,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb2",
     "from_port": "Bottom 1",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Mic/Line In 1",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 9 Line",
     "connector_a": "jack_trs",
-    "connector_b": "xlr",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3532,11 +4589,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb2",
     "from_port": "Bottom 2",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Mic/Line In 2",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 10 Line",
     "connector_a": "jack_trs",
-    "connector_b": "xlr",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3545,11 +4602,11 @@
     "state": "connected",
     "from_device": "@ref:devices/pb2",
     "from_port": "Bottom 3",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Mic/Line In 3",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 11 Line",
     "connector_a": "jack_trs",
-    "connector_b": "xlr",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
@@ -3558,28 +4615,262 @@
     "state": "connected",
     "from_device": "@ref:devices/pb2",
     "from_port": "Bottom 4",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Mic/Line In 4",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 12 Line",
     "connector_a": "jack_trs",
-    "connector_b": "xlr",
-    "length_m": 0.5,
+    "connector_b": "jack_ts",
+    "length_m": 1,
     "color": "grey"
    },
    {
     "code": "C-031",
     "signal": "audio",
     "state": "connected",
-    "from_device": "@ref:devices/zed",
-    "from_port": "Aux Send 1",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 5",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 13 Line",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 1,
+    "color": "grey"
+   },
+   {
+    "code": "C-032",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 6",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 14 Line",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 1,
+    "color": "grey"
+   },
+   {
+    "code": "C-033",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 7",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 15 Line",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 1,
+    "color": "grey"
+   },
+   {
+    "code": "C-034",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 8",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 16 Line",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 1,
+    "color": "grey"
+   },
+   {
+    "code": "C-035",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 9",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 17 Line",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 1,
+    "color": "grey"
+   },
+   {
+    "code": "C-036",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 10",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "Ch 18 Line",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 1,
+    "color": "grey"
+   },
+   {
+    "code": "C-037",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Ch 1 Track Out",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 5",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-038",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Ch 2 Track Out",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 6",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-039",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Ch 3 Track Out",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 7",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-040",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Ch 4 Track Out",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 8",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-041",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Ch 5 Track Out",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 9",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-042",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Ch 6 Track Out",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 10",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-043",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Ch 7 Track Out",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 11",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-044",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Ch 8 Track Out",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 12",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-045",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Mix Out L",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 1",
+    "connector_a": "jack_ts",
+    "connector_b": "xlr",
+    "length_m": 1.5,
+    "color": "white"
+   },
+   {
+    "code": "C-046",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Mix Out R",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 2",
+    "connector_a": "jack_ts",
+    "connector_b": "xlr",
+    "length_m": 1.5,
+    "color": "white"
+   },
+   {
+    "code": "C-047",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/rme",
+    "from_port": "Line Out 1",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "2-Track A In L",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 1.5,
+    "color": "white"
+   },
+   {
+    "code": "C-048",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/rme",
+    "from_port": "Line Out 2",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "2-Track A In R",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 1.5,
+    "color": "white"
+   },
+   {
+    "code": "C-049",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Aux 1 Out",
     "to_device": "@ref:devices/pb3",
     "to_port": "Top 1",
-    "connector_a": "jack_trs",
+    "connector_a": "jack_ts",
     "connector_b": "jack_trs",
     "length_m": 3,
     "color": "purple"
    },
    {
-    "code": "C-032",
+    "code": "C-050",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/pb3",
@@ -3592,7 +4883,7 @@
     "color": "purple"
    },
    {
-    "code": "C-033",
+    "code": "C-051",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/muff",
@@ -3605,33 +4896,33 @@
     "color": "purple"
    },
    {
-    "code": "C-034",
+    "code": "C-052",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/pb3",
     "from_port": "Bottom 2",
-    "to_device": "@ref:devices/zed",
-    "to_port": "Return 1 L",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "FX Return 1 L",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
+    "connector_b": "jack_ts",
     "length_m": 3,
     "color": "purple"
    },
    {
-    "code": "C-035",
+    "code": "C-053",
     "signal": "audio",
     "state": "connected",
-    "from_device": "@ref:devices/zed",
-    "from_port": "Aux Send 2",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Aux 2 Out",
     "to_device": "@ref:devices/pb3",
     "to_port": "Top 3",
-    "connector_a": "jack_trs",
+    "connector_a": "jack_ts",
     "connector_b": "jack_trs",
     "length_m": 3,
     "color": "pink"
    },
    {
-    "code": "C-036",
+    "code": "C-054",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/pb3",
@@ -3644,7 +4935,7 @@
     "color": "pink"
    },
    {
-    "code": "C-037",
+    "code": "C-055",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/flanger",
@@ -3657,20 +4948,20 @@
     "color": "pink"
    },
    {
-    "code": "C-038",
+    "code": "C-056",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/pb3",
     "from_port": "Bottom 4",
-    "to_device": "@ref:devices/zed",
-    "to_port": "Return 2 L",
+    "to_device": "@ref:devices/gs3",
+    "to_port": "FX Return 2 L",
     "connector_a": "jack_trs",
-    "connector_b": "jack_trs",
+    "connector_b": "jack_ts",
     "length_m": 3,
     "color": "pink"
    },
    {
-    "code": "C-039",
+    "code": "C-057",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/dd3",
@@ -3683,7 +4974,7 @@
     "color": "green"
    },
    {
-    "code": "C-040",
+    "code": "C-058",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/pb3",
@@ -3696,33 +4987,33 @@
     "color": "green"
    },
    {
-    "code": "C-041",
+    "code": "C-059",
     "signal": "audio",
     "state": "connected",
-    "from_device": "@ref:devices/rme",
-    "from_port": "Line Out 1",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Monitor Out L",
     "to_device": "@ref:devices/genelec-l",
     "to_port": "Input",
-    "connector_a": "jack_trs",
+    "connector_a": "jack_ts",
     "connector_b": "xlr",
     "length_m": 5,
     "color": "white"
    },
    {
-    "code": "C-042",
+    "code": "C-060",
     "signal": "audio",
     "state": "connected",
-    "from_device": "@ref:devices/rme",
-    "from_port": "Line Out 2",
+    "from_device": "@ref:devices/gs3",
+    "from_port": "Monitor Out R",
     "to_device": "@ref:devices/genelec-r",
     "to_port": "Input",
-    "connector_a": "jack_trs",
+    "connector_a": "jack_ts",
     "connector_b": "xlr",
     "length_m": 5,
     "color": "white"
    },
    {
-    "code": "C-043",
+    "code": "C-061",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/rme",
@@ -3735,7 +5026,7 @@
     "color": "orange"
    },
    {
-    "code": "C-044",
+    "code": "C-062",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/rme",
@@ -3748,7 +5039,33 @@
     "color": "orange"
    },
    {
-    "code": "C-045",
+    "code": "C-063",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/heat",
+    "from_port": "Main Out L",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 3",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 1,
+    "color": "orange"
+   },
+   {
+    "code": "C-064",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/heat",
+    "from_port": "Main Out R",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 4",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 1,
+    "color": "orange"
+   },
+   {
+    "code": "C-065",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3761,7 +5078,7 @@
     "color": "purple"
    },
    {
-    "code": "C-046",
+    "code": "C-066",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3774,7 +5091,7 @@
     "color": "purple"
    },
    {
-    "code": "C-047",
+    "code": "C-067",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3787,7 +5104,7 @@
     "color": "purple"
    },
    {
-    "code": "C-048",
+    "code": "C-068",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3800,7 +5117,7 @@
     "color": "purple"
    },
    {
-    "code": "C-049",
+    "code": "C-069",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3813,7 +5130,7 @@
     "color": "purple"
    },
    {
-    "code": "C-050",
+    "code": "C-070",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3826,7 +5143,7 @@
     "color": "purple"
    },
    {
-    "code": "C-051",
+    "code": "C-071",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3839,7 +5156,7 @@
     "color": "purple"
    },
    {
-    "code": "C-052",
+    "code": "C-072",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3852,7 +5169,7 @@
     "color": "purple"
    },
    {
-    "code": "C-053",
+    "code": "C-073",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/keystep",
@@ -3865,7 +5182,7 @@
     "color": "purple"
    },
    {
-    "code": "C-054",
+    "code": "C-074",
     "signal": "cv",
     "state": "connected",
     "from_device": "@ref:devices/keystep",
@@ -3878,7 +5195,7 @@
     "color": "yellow"
    },
    {
-    "code": "C-055",
+    "code": "C-075",
     "signal": "gate",
     "state": "connected",
     "from_device": "@ref:devices/keystep",
@@ -3891,7 +5208,7 @@
     "color": "yellow"
    },
    {
-    "code": "C-056",
+    "code": "C-076",
     "signal": "clock",
     "state": "connected",
     "from_device": "@ref:devices/keystep",
@@ -3904,7 +5221,7 @@
     "color": "yellow"
    },
    {
-    "code": "C-057",
+    "code": "C-077",
     "signal": "usb",
     "state": "connected",
     "from_device": "@ref:devices/rme",
@@ -3916,7 +5233,7 @@
     "length_m": 2
    },
    {
-    "code": "C-058",
+    "code": "C-078",
     "signal": "usb",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3928,7 +5245,7 @@
     "length_m": 2
    },
    {
-    "code": "C-059",
+    "code": "C-079",
     "signal": "network",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -3941,7 +5258,7 @@
     "notes": "RTP-MIDI to the laptop rig"
    },
    {
-    "code": "C-060",
+    "code": "C-080",
     "signal": "audio",
     "state": "spare",
     "from_device": "@ref:devices/re201",

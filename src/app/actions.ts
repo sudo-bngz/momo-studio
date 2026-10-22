@@ -9,7 +9,7 @@ import { isGoHeadError } from "@gohead-cms/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import type { BookingInput, CableInput, ClientInput, DeviceInput, LocationInput, MaintenanceInput, PatchPointInput, PortInput, RoomInput } from "@/gohead";
+import type { BookingInput, CableInput, ChannelStripInput, ClientInput, DeviceInput, LocationInput, MaintenanceInput, PatchPointInput, PortInput, RoomInput } from "@/gohead";
 import { getBookings, getCables, getDevices, refId } from "@/lib/data";
 import { toDeviceInput, toLocationInput, toRoomInput } from "@/lib/device-input";
 import { compact, failure, FieldError, Fields, type FormState } from "@/lib/form";
@@ -117,6 +117,9 @@ export async function saveDevice(_prev: FormState, form: FormData): Promise<Form
         rack_height: f.int("rack_height"),
         midi_channel: f.int("midi_channel"),
         ports,
+        // Set by a template; otherwise kept from the current entry (above) or edited on their own pages.
+        patch_columns: f.int("patch_columns"),
+        console_channels: f.int("console_channels"),
         serial_number: f.str("serial_number"),
         purchase_date: f.str("purchase_date"),
         purchase_price: f.num("purchase_price"),
@@ -131,8 +134,10 @@ export async function saveDevice(_prev: FormState, form: FormData): Promise<Form
       if (id) {
         // The patchbay layout is edited on its own page: keep it.
         const current = await devices.findOne(id, { level: 0 });
-        if (current.patch_columns) data.patch_columns = current.patch_columns;
+        if (current.patch_columns && !data.patch_columns) data.patch_columns = current.patch_columns;
         if (current.patch_points?.length) data.patch_points = toDeviceInput(current).patch_points;
+        if (current.channel_strips?.length) data.channel_strips = toDeviceInput(current).channel_strips;
+        if (current.console_channels && !data.console_channels) data.console_channels = current.console_channels;
         // So is its place on the studio map.
         if (current.map_x != null) data.map_x = current.map_x;
         if (current.map_y != null) data.map_y = current.map_y;
@@ -578,6 +583,48 @@ export async function saveMapLayout(_prev: FormState, form: FormData): Promise<F
         const current = await g.collection("devices").findOne(d.id, { level: 0 });
         await g.collection("devices").update(d.id, { ...toDeviceInput(current), map_x: clampInt(d.x, 0, 100), map_y: clampInt(d.y, 0, 100) }, { level: 0 });
       }
+    });
+  } catch (err) {
+    return failure(err);
+  }
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+// ---- Consoles ----
+
+/** Saves a console's channel count and every strip's label, source, routing, auxes, color and note. */
+export async function saveChannelStrips(_prev: FormState, form: FormData): Promise<FormState> {
+  const f = new Fields(form);
+  const id = f.id("id");
+  if (!id) return { error: "Missing console." };
+  try {
+    const channels = f.int("channels");
+    if (!channels || channels < 1 || channels > 128) throw new FieldError("A console has between 1 and 128 channels.");
+    let raw: unknown;
+    try {
+      raw = JSON.parse(f.str("strips") ?? "[]");
+    } catch {
+      throw new FieldError("The strips could not be read.");
+    }
+    const strips: ChannelStripInput[] = [];
+    for (const item of Array.isArray(raw) ? (raw as Array<Record<string, unknown>>) : []) {
+      const number = Number(item.number);
+      if (!Number.isInteger(number) || number < 1 || number > channels) continue;
+      const text = (k: string) => (typeof item[k] === "string" && (item[k] as string).trim() ? (item[k] as string).trim().slice(0, 120) : undefined);
+      const source = item.source === "mic" || item.source === "line" || item.source === "tape" ? (item.source as "mic" | "line" | "tape") : undefined;
+      const color = typeof item.color === "string" && HEX.test(item.color) ? item.color : undefined;
+      const s = compact({ number, label: text("label"), source, route: text("route"), direct: item.direct === true ? true : undefined, aux: text("aux"), color, note: text("note") });
+      if (Object.keys(s).length > 1) strips.push(s);
+    }
+    await withSession(async (g) => {
+      const devices = g.collection("devices");
+      const current = await devices.findOne(id, { level: 0 });
+      if (current.category !== "mixer") throw new FieldError("This device isn't a console.");
+      const data = toDeviceInput(current);
+      data.console_channels = channels;
+      data.channel_strips = strips.sort((a, b) => a.number - b.number);
+      await devices.update(id, data, { level: 0 });
     });
   } catch (err) {
     return failure(err);

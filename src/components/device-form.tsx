@@ -1,6 +1,6 @@
 import { saveDevice } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
-import { PortsEditor } from "@/components/ports-editor";
+import { PortsWithTemplate } from "@/components/template-picker";
 import { ButtonLink, Card, Checkbox, Field, Input, Select, Textarea } from "@/components/ui";
 import type { DeviceEntry, LocationEntry } from "@/lib/data";
 import { refId } from "@/lib/data";
@@ -76,7 +76,7 @@ export function DeviceForm({ device, locations, category }: { device?: DeviceEnt
         <p className="mb-4 text-sm text-dim">
           The sockets you patch. Cables plug into ports by name, so name them as printed on the device (“Out L”, “MIDI In”, “CV In 2”).
         </p>
-        <PortsEditor initial={device?.ports ?? []} />
+        <PortsWithTemplate initial={device?.ports ?? []} isNew={!device} />
       </Card>
 
       <Card title="Purchase & value" className="mt-6">

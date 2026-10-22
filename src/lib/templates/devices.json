@@ -1,0 +1,149 @@
+{
+  "$comment": "Device templates: every socket of a known piece of gear. A port with `each` is repeated for n = from…to, with {n} in its name and, for groups paralleled on track outs, {g}. `params` are asked for before expanding a generic template.",
+  "templates": [
+    {
+      "id": "allen-heath-gs3-24",
+      "name": "Allen & Heath GS3 24/8/2",
+      "brand": "Allen & Heath",
+      "model": "GS3 24/8/2",
+      "category": "mixer",
+      "console": { "channels": 24, "groups": 8, "auxes": 4, "fx_returns": 4, "groups_on_track_outs": true },
+      "notes": "In-line 24:8:2. Each channel's Track Out carries its direct out, or its group: groups are paralleled on channels 1/9/17, 2/10/18… Aux 1–4 post-fade; Aux 3/4 can follow the monitor path. Mute processor on MIDI channel 16.",
+      "ports": [
+        { "each": [1, 24], "name": "Ch {n} Mic", "direction": "in", "signal": "audio", "connector": "xlr", "balanced": true },
+        { "each": [1, 24], "name": "Ch {n} Line", "direction": "in", "signal": "audio", "connector": "jack_ts" },
+        { "each": [1, 24], "name": "Ch {n} Tape In", "direction": "in", "signal": "audio", "connector": "jack_ts", "note": "monitor path / track return" },
+        { "each": [1, 24], "name": "Ch {n} Insert", "direction": "io", "signal": "audio", "connector": "jack_trs", "note": "tip send, ring return, pre-EQ" },
+        { "each": [1, 24], "name": "Ch {n} Track Out", "direction": "out", "signal": "audio", "connector": "jack_ts", "note": "direct out, or group {g}" },
+        { "each": [1, 8], "name": "Group {n} Insert", "direction": "io", "signal": "audio", "connector": "jack_trs" },
+        { "each": [1, 4], "name": "Aux {n} Out", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Cue Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Cue Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Mix Insert L", "direction": "io", "signal": "audio", "connector": "jack_trs" },
+        { "name": "Mix Insert R", "direction": "io", "signal": "audio", "connector": "jack_trs" },
+        { "name": "Mix Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Mix Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "each": [1, 4], "name": "FX Return {n} L", "direction": "in", "signal": "audio", "connector": "jack_ts" },
+        { "each": [1, 4], "name": "FX Return {n} R", "direction": "in", "signal": "audio", "connector": "jack_ts" },
+        { "name": "2-Track A In L", "direction": "in", "signal": "audio", "connector": "jack_ts" },
+        { "name": "2-Track A In R", "direction": "in", "signal": "audio", "connector": "jack_ts" },
+        { "name": "2-Track A Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "2-Track A Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "2-Track B In L", "direction": "in", "signal": "audio", "connector": "jack_ts" },
+        { "name": "2-Track B In R", "direction": "in", "signal": "audio", "connector": "jack_ts" },
+        { "name": "2-Track B Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "2-Track B Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Monitor Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Monitor Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Alt Monitor Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Alt Monitor Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Headphones", "direction": "out", "signal": "audio", "connector": "jack_trs" },
+        { "name": "MIDI In", "direction": "in", "signal": "midi", "connector": "din5", "note": "mute processor" },
+        { "name": "MIDI Out", "direction": "out", "signal": "midi", "connector": "din5" },
+        { "name": "MIDI Thru", "direction": "out", "signal": "midi", "connector": "din5" },
+        { "name": "PSU", "direction": "in", "signal": "power", "connector": "other", "note": "external power supply" }
+      ]
+    },
+    {
+      "id": "allen-heath-gs3-16",
+      "name": "Allen & Heath GS3 16/8/2",
+      "brand": "Allen & Heath",
+      "model": "GS3 16/8/2",
+      "category": "mixer",
+      "console": { "channels": 16, "groups": 8, "auxes": 4, "fx_returns": 4, "groups_on_track_outs": true },
+      "extends": "allen-heath-gs3-24",
+      "params": { "channels": 16 }
+    },
+    {
+      "id": "generic-console",
+      "name": "Console (choose channels, groups, auxes)",
+      "category": "mixer",
+      "params": { "channels": 16, "groups": 4, "auxes": 4, "fx_returns": 2 },
+      "console": { "channels": "{channels}", "groups": "{groups}", "auxes": "{auxes}", "fx_returns": "{fx_returns}", "groups_on_track_outs": false },
+      "ports": [
+        { "each": [1, "{channels}"], "name": "Ch {n} Mic", "direction": "in", "signal": "audio", "connector": "xlr", "balanced": true },
+        { "each": [1, "{channels}"], "name": "Ch {n} Line", "direction": "in", "signal": "audio", "connector": "jack_trs", "balanced": true },
+        { "each": [1, "{channels}"], "name": "Ch {n} Insert", "direction": "io", "signal": "audio", "connector": "jack_trs" },
+        { "each": [1, "{channels}"], "name": "Ch {n} Direct Out", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
+        { "each": [1, "{groups}"], "name": "Group {n} Insert", "direction": "io", "signal": "audio", "connector": "jack_trs" },
+        { "each": [1, "{groups}"], "name": "Group {n} Out", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
+        { "each": [1, "{auxes}"], "name": "Aux {n} Out", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
+        { "each": [1, "{fx_returns}"], "name": "FX Return {n} L", "direction": "in", "signal": "audio", "connector": "jack_trs" },
+        { "each": [1, "{fx_returns}"], "name": "FX Return {n} R", "direction": "in", "signal": "audio", "connector": "jack_trs" },
+        { "name": "Mix Insert L", "direction": "io", "signal": "audio", "connector": "jack_trs" },
+        { "name": "Mix Insert R", "direction": "io", "signal": "audio", "connector": "jack_trs" },
+        { "name": "Mix Out L", "direction": "out", "signal": "audio", "connector": "xlr", "balanced": true },
+        { "name": "Mix Out R", "direction": "out", "signal": "audio", "connector": "xlr", "balanced": true },
+        { "name": "Monitor Out L", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
+        { "name": "Monitor Out R", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
+        { "name": "2-Track In L", "direction": "in", "signal": "audio", "connector": "rca" },
+        { "name": "2-Track In R", "direction": "in", "signal": "audio", "connector": "rca" },
+        { "name": "Headphones", "direction": "out", "signal": "audio", "connector": "jack_trs" },
+        { "name": "Power", "direction": "in", "signal": "power", "connector": "iec" }
+      ]
+    },
+    {
+      "id": "generic-interface",
+      "name": "Audio interface (choose ins and outs)",
+      "category": "audio_interface",
+      "params": { "mic_ins": 4, "line_ins": 8, "line_outs": 8, "adat": 1 },
+      "ports": [
+        { "each": [1, "{mic_ins}"], "name": "Mic/Line In {n}", "direction": "in", "signal": "audio", "connector": "xlr", "balanced": true },
+        { "each": ["{mic_ins}+1", "{mic_ins}+{line_ins}"], "name": "Line In {n}", "direction": "in", "signal": "audio", "connector": "jack_trs", "balanced": true },
+        { "each": [1, "{line_outs}"], "name": "Line Out {n}", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
+        { "each": [1, "{adat}"], "name": "ADAT In {n}", "direction": "in", "signal": "digital_audio", "connector": "adat" },
+        { "each": [1, "{adat}"], "name": "ADAT Out {n}", "direction": "out", "signal": "digital_audio", "connector": "adat" },
+        { "name": "Word Clock In", "direction": "in", "signal": "clock", "connector": "bnc" },
+        { "name": "MIDI In", "direction": "in", "signal": "midi", "connector": "din5" },
+        { "name": "MIDI Out", "direction": "out", "signal": "midi", "connector": "din5" },
+        { "name": "USB", "direction": "io", "signal": "usb", "connector": "usb_c" },
+        { "name": "Power", "direction": "in", "signal": "power", "connector": "iec" }
+      ]
+    },
+    {
+      "id": "patchbay-48",
+      "name": "Patchbay, 48 points (24 columns)",
+      "category": "patchbay",
+      "patch_columns": 24,
+      "ports": [
+        { "each": [1, 24], "name": "Top {n}", "direction": "io", "signal": "audio", "connector": "jack_trs", "balanced": true, "note": "rear" },
+        { "each": [1, 24], "name": "Bottom {n}", "direction": "io", "signal": "audio", "connector": "jack_trs", "balanced": true, "note": "rear" }
+      ]
+    },
+    {
+      "id": "patchbay-32",
+      "name": "Patchbay, 32 points (16 columns)",
+      "category": "patchbay",
+      "patch_columns": 16,
+      "ports": [
+        { "each": [1, 16], "name": "Top {n}", "direction": "io", "signal": "audio", "connector": "jack_trs", "balanced": true, "note": "rear" },
+        { "each": [1, 16], "name": "Bottom {n}", "direction": "io", "signal": "audio", "connector": "jack_trs", "balanced": true, "note": "rear" }
+      ]
+    },
+    {
+      "id": "synth-stereo",
+      "name": "Synth, stereo out + MIDI + USB",
+      "category": "synth",
+      "ports": [
+        { "name": "Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Headphones", "direction": "out", "signal": "audio", "connector": "jack_trs" },
+        { "name": "MIDI In", "direction": "in", "signal": "midi", "connector": "din5" },
+        { "name": "MIDI Out", "direction": "out", "signal": "midi", "connector": "din5" },
+        { "name": "MIDI Thru", "direction": "out", "signal": "midi", "connector": "din5" },
+        { "name": "USB", "direction": "io", "signal": "usb", "connector": "usb_b" },
+        { "name": "Power", "direction": "in", "signal": "power", "connector": "dc" }
+      ]
+    },
+    {
+      "id": "pedal-mono",
+      "name": "Pedal, mono in/out",
+      "category": "effect",
+      "ports": [
+        { "name": "In", "direction": "in", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Out", "direction": "out", "signal": "audio", "connector": "jack_ts" },
+        { "name": "Power", "direction": "in", "signal": "power", "connector": "dc" }
+      ]
+    }
+  ]
+}
