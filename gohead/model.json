@@ -143,6 +143,26 @@
           "allowed_types": [
             "image/*"
           ]
+        },
+        "map_x": {
+          "type": "int",
+          "min": -5000,
+          "max": 5000
+        },
+        "map_y": {
+          "type": "int",
+          "min": -5000,
+          "max": 5000
+        },
+        "width_cm": {
+          "type": "int",
+          "min": 50,
+          "max": 5000
+        },
+        "depth_cm": {
+          "type": "int",
+          "min": 50,
+          "max": 5000
         }
       }
     },
@@ -177,6 +197,31 @@
         },
         "notes": {
           "type": "text"
+        },
+        "map_x": {
+          "type": "int",
+          "min": -5000,
+          "max": 5000
+        },
+        "map_y": {
+          "type": "int",
+          "min": -5000,
+          "max": 5000
+        },
+        "width_cm": {
+          "type": "int",
+          "min": 5,
+          "max": 2000
+        },
+        "depth_cm": {
+          "type": "int",
+          "min": 5,
+          "max": 2000
+        },
+        "rotation": {
+          "type": "int",
+          "min": 0,
+          "max": 359
         }
       }
     },
@@ -250,6 +295,16 @@
           "type": "int",
           "min": 1,
           "max": 12
+        },
+        "map_x": {
+          "type": "int",
+          "min": 0,
+          "max": 100
+        },
+        "map_y": {
+          "type": "int",
+          "min": 0,
+          "max": 100
         },
         "midi_channel": {
           "type": "int",

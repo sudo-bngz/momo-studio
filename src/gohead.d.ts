@@ -60,6 +60,10 @@ export interface Room {
   daily_rate?: number | null;
   bookable?: boolean | null;
   photo?: Media | number | null;
+  map_x?: number | null;
+  map_y?: number | null;
+  width_cm?: number | null;
+  depth_cm?: number | null;
 }
 
 /** Values written to entries of the "rooms" collection */
@@ -73,6 +77,10 @@ export interface RoomInput {
   daily_rate?: number | null;
   bookable?: boolean | null;
   photo?: number | null;
+  map_x?: number | null;
+  map_y?: number | null;
+  width_cm?: number | null;
+  depth_cm?: number | null;
 }
 
 /** An entry of the "locations" collection: Where gear lives: a rack, a desk, a shelf, a flight case */
@@ -83,6 +91,11 @@ export interface Location {
   room?: Entry<Room> | number | null;
   rack_units?: number | null;
   notes?: string | null;
+  map_x?: number | null;
+  map_y?: number | null;
+  width_cm?: number | null;
+  depth_cm?: number | null;
+  rotation?: number | null;
 }
 
 /** Values written to entries of the "locations" collection */
@@ -92,6 +105,11 @@ export interface LocationInput {
   room?: number | RoomInput | null;
   rack_units?: number | null;
   notes?: string | null;
+  map_x?: number | null;
+  map_y?: number | null;
+  width_cm?: number | null;
+  depth_cm?: number | null;
+  rotation?: number | null;
 }
 
 /** An entry of the "devices" collection: Every piece of gear: synths, expanders, drum machines, audio interfaces, outboard, monitors */
@@ -107,6 +125,8 @@ export interface Device {
   location?: Entry<Location> | number | null;
   rack_position?: number | null;
   rack_height?: number | null;
+  map_x?: number | null;
+  map_y?: number | null;
   midi_channel?: number | null;
   ports?: Port[];
   patch_columns?: number | null;
@@ -136,6 +156,8 @@ export interface DeviceInput {
   location?: number | LocationInput | null;
   rack_position?: number | null;
   rack_height?: number | null;
+  map_x?: number | null;
+  map_y?: number | null;
   midi_channel?: number | null;
   ports?: PortInput[];
   patch_columns?: number | null;

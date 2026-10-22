@@ -85,6 +85,7 @@ export default async function DevicePage({ params }: { params: Promise<{ id: str
         actions={
           <>
             {device.category === "patchbay" ? <ButtonLink href={`/patchbays/${device.id}`}>Patchbay view</ButtonLink> : null}
+            {location ? <ButtonLink href={`/map?place=${location.id}`}>On the map</ButtonLink> : null}
             <ButtonLink href={`/plan?focus=${device.id}`}>Show in plan</ButtonLink>
             <ButtonLink href={`/gear/${device.id}/edit`} primary>
               Edit

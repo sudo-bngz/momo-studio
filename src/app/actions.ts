@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 
 import type { BookingInput, CableInput, ClientInput, DeviceInput, LocationInput, MaintenanceInput, PatchPointInput, PortInput, RoomInput } from "@/gohead";
 import { getBookings, getCables, getDevices, refId } from "@/lib/data";
-import { toDeviceInput } from "@/lib/device-input";
+import { toDeviceInput, toLocationInput, toRoomInput } from "@/lib/device-input";
 import { compact, failure, FieldError, Fields, type FormState } from "@/lib/form";
 import { cablesByPort, portKey } from "@/lib/patch";
 import { toPlanCable } from "@/lib/plan-data";
@@ -133,6 +133,9 @@ export async function saveDevice(_prev: FormState, form: FormData): Promise<Form
         const current = await devices.findOne(id, { level: 0 });
         if (current.patch_columns) data.patch_columns = current.patch_columns;
         if (current.patch_points?.length) data.patch_points = toDeviceInput(current).patch_points;
+        // So is its place on the studio map.
+        if (current.map_x != null) data.map_x = current.map_x;
+        if (current.map_y != null) data.map_y = current.map_y;
       }
       const saved = id ? await devices.update(id, data, { level: 0 }) : await devices.create(data, { level: 0 });
       return saved.id;
@@ -376,7 +379,12 @@ export async function saveRoom(_prev: FormState, form: FormData): Promise<FormSt
       bookable: f.bool("bookable"),
       photo: f.id("photo_id"),
     });
-    await withSession((g) => (id ? g.collection("rooms").update(id, data, { level: 0 }) : g.collection("rooms").create(data, { level: 0 })));
+    await withSession(async (g) => {
+      if (!id) return g.collection("rooms").create(data, { level: 0 });
+      // Keep the room's size and place on the studio map, edited there.
+      const { map_x, map_y, width_cm, depth_cm } = toRoomInput(await g.collection("rooms").findOne(id, { level: 0 }));
+      return g.collection("rooms").update(id, compact({ ...data, map_x, map_y, width_cm, depth_cm }), { level: 0 });
+    });
   } catch (err) {
     return failure(err);
   }
@@ -395,7 +403,11 @@ export async function saveLocation(_prev: FormState, form: FormData): Promise<Fo
       rack_units: f.int("rack_units"),
       notes: f.str("notes"),
     });
-    await withSession((g) => (id ? g.collection("locations").update(id, data, { level: 0 }) : g.collection("locations").create(data, { level: 0 })));
+    await withSession(async (g) => {
+      if (!id) return g.collection("locations").create(data, { level: 0 });
+      const { map_x, map_y, width_cm, depth_cm, rotation } = toLocationInput(await g.collection("locations").findOne(id, { level: 0 }));
+      return g.collection("locations").update(id, compact({ ...data, map_x, map_y, width_cm, depth_cm, rotation }), { level: 0 });
+    });
   } catch (err) {
     return failure(err);
   }
@@ -505,6 +517,67 @@ export async function createRearPorts(_prev: FormState, form: FormData): Promise
       data.ports = [...ports.filter((p) => !rear(p)), ...ports.filter(rear).sort((a, b) => key(a) - key(b))];
       data.patch_columns = columns;
       await devices.update(id, data, { level: 0 });
+    });
+  } catch (err) {
+    return failure(err);
+  }
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+// ---- Studio map ----
+
+interface LayoutChange {
+  rooms?: Array<{ id: number; x: number; y: number; w: number; d: number }>;
+  locations?: Array<{ id: number; room?: number; x: number; y: number; w: number; d: number; rot: number }>;
+  devices?: Array<{ id: number; x: number; y: number }>;
+}
+
+const clampInt = (v: unknown, min: number, max: number) => {
+  const n = Math.round(Number(v));
+  if (!Number.isFinite(n)) throw new FieldError("A position could not be read.");
+  return Math.min(max, Math.max(min, n));
+};
+
+/** Saves what was moved on the studio map: rooms, places, and devices on their place. */
+export async function saveMapLayout(_prev: FormState, form: FormData): Promise<FormState> {
+  let change: LayoutChange;
+  try {
+    change = JSON.parse(new Fields(form).str("layout") ?? "{}") as LayoutChange;
+  } catch {
+    return { error: "The layout could not be read." };
+  }
+  try {
+    await withSession(async (g) => {
+      for (const r of change.rooms ?? []) {
+        const current = await g.collection("rooms").findOne(r.id, { level: 0 });
+        await g.collection("rooms").update(
+          r.id,
+          { ...toRoomInput(current), map_x: clampInt(r.x, -5000, 5000), map_y: clampInt(r.y, -5000, 5000), width_cm: clampInt(r.w, 50, 5000), depth_cm: clampInt(r.d, 50, 5000) },
+          { level: 0 },
+        );
+      }
+      for (const l of change.locations ?? []) {
+        const current = await g.collection("locations").findOne(l.id, { level: 0 });
+        const input = toLocationInput(current);
+        await g.collection("locations").update(
+          l.id,
+          compact({
+            ...input,
+            room: l.room === undefined ? input.room : l.room > 0 ? l.room : undefined,
+            map_x: clampInt(l.x, -5000, 5000),
+            map_y: clampInt(l.y, -5000, 5000),
+            width_cm: clampInt(l.w, 5, 2000),
+            depth_cm: clampInt(l.d, 5, 2000),
+            rotation: ((clampInt(l.rot, -720, 720) % 360) + 360) % 360,
+          }),
+          { level: 0 },
+        );
+      }
+      for (const d of change.devices ?? []) {
+        const current = await g.collection("devices").findOne(d.id, { level: 0 });
+        await g.collection("devices").update(d.id, { ...toDeviceInput(current), map_x: clampInt(d.x, 0, 100), map_y: clampInt(d.y, 0, 100) }, { level: 0 });
+      }
     });
   } catch (err) {
     return failure(err);

@@ -5,6 +5,7 @@ A private back-office for an electronic music studio, built on [GoHead](https://
 - **Gear**: every synth, expander, drum machine, interface, patchbay and monitor, with its code, location, rack position, serial, purchase price, value, warranty, photo and maintenance log.
 - **Ports**: each device lists its sockets (name, in/out, signal, connector). Cables plug into ports by name.
 - **Cables**: every cable has a label code (`C-001`) and joins two ports. The app refuses a cable into a port that is already taken, refuses renaming a port that still has a cable, and flags anything odd: wrong signal, two outputs joined, unknown ports.
+- **Studio map**: a floor plan of the rooms, with every rack, desk, stand and pedalboard where it really is, and the cable runs between them bundled by signal (hover a bundle for its cables). Click a place to zoom in: a rack opens as a front view, unit by unit; a desk or stand shows its machines, the cables between them, and where the others go. Edit the layout by dragging, resizing and turning places, moving them between rooms, and placing machines on a desk.
 - **Patchbays**: each patchbay drawn like the hardware, two rows of jacks numbered like the front panel (1–24 on top, 25–48 below), the label of every point, its mode (Normal, Half-normal, Thru), its DAW track and a group color. A point is named by the cable plugged in its rear (“Big Muff · Out”), or by a typed label for gear you haven't added. Edit one column, or every column as a table, and paste rows straight from Google Sheets or Excel. Print the designation strips at your jacks' real spacing.
 - **Loop guard**: a pedal whose output comes back to its input, through a normalled column or a chain of effects, is flagged in red with the column to switch to Thru.
 - **Patch plan**: the whole studio as a signal-flow diagram (sources on the left, what they feed on the right), filterable by signal, focusable on one device, downloadable as SVG.
@@ -31,7 +32,7 @@ Sign in with a GoHead account: `admin` / `gohead-local-password` locally (the de
 
 Starting with your own studio rather than the sample: skip `gohead:seed`, then in this order
 
-1. **Racks & places → Rooms & locations**: your rooms, then your racks (with their height in U), desks, shelves, cases.
+1. **Racks & places → Rooms & locations**: your rooms, then your racks (with their height in U), desks, shelves, cases. Then **Studio map → Edit layout**: set each room's size, and drag every place where it stands.
 2. **Gear → Add gear**: each device with its ports. The port editor has presets (stereo out, MIDI in/out/thru…) and numbered batches (“Line In × 8”).
 3. **Patchbays**: open each one, set its columns, paste your sheet's rows (labels, modes, Ableton tracks) under *All columns · paste from a sheet*, then **Add the rear ports**.
 4. **Cables → Add cable**, *patch it* next to a free port on a device's page, or *Patch the rear* on a patchbay column. Write the code on both ends, or print the labels.
@@ -61,8 +62,8 @@ The setup scripts sign in with `GOHEAD_USERNAME` / `GOHEAD_PASSWORD` from `.env.
 
 | GoHead collection | What it holds |
 |-------------------|---------------|
-| `rooms` | Bookable rooms, with rates and a calendar color |
-| `locations` | Racks (with their height in U), desks, shelves, cases, storage; each in a room |
+| `rooms` | Bookable rooms, with rates, a calendar color, and their size and place on the studio map |
+| `locations` | Racks (with their height in U), desks, shelves, cases, storage; each in a room, with its footprint, position and rotation on the map (cm) |
 | `devices` | The gear. `ports` is a repeatable `port` component: name, direction, signal, connector, balanced, note. Patchbays also have `patch_columns` and `patch_points` (a repeatable `patch_point`: column, top and bottom labels, mode, DAW track, color, note) |
 | `cables` | Label code, signal, state (connected / spare / broken), `from_device` + `from_port`, `to_device` + `to_port`, plugs, length, color |
 | `maintenance` | Repairs, services and calibrations of a device |
@@ -108,6 +109,7 @@ src/
   lib/data.ts                  every read
   lib/patch.ts                 the cable graph: port usage, issues, signal through normals, loops, plan layout
   lib/patchbay.ts              a patchbay as columns, labels from rear cables, pasting from a sheet
+  lib/studio-map.ts            the floor plan: default layout, cable bundles between places, zoom cards
   lib/session.ts               sign-in and the per-user GoHead client
   lib/time.ts                  studio time zone
   proxy.ts                     redirects visitors without a session to /login

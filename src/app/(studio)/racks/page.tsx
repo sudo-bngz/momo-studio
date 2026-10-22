@@ -104,7 +104,12 @@ export default async function RacksPage() {
       <PageHeader
         title="Racks & places"
         subtitle="Where every machine sits. Rack positions count from U1 at the top."
-        actions={<ButtonLink href="/places">Rooms & locations</ButtonLink>}
+        actions={
+          <>
+            <ButtonLink href="/map">Studio map</ButtonLink>
+            <ButtonLink href="/places">Rooms & locations</ButtonLink>
+          </>
+        }
       />
       {locations.length === 0 ? <Empty>No locations yet: add your racks, desks and shelves under Rooms & locations.</Empty> : null}
       {[...rooms.entries()].map(([room, locs]) => (

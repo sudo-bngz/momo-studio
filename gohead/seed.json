@@ -9,7 +9,11 @@
     "description": "Mixing desk, monitors, the main racks and most of the synths.",
     "hourly_rate": 45,
     "daily_rate": 320,
-    "bookable": true
+    "bookable": true,
+    "map_x": 0,
+    "map_y": 0,
+    "width_cm": 600,
+    "depth_cm": 450
    },
    {
     "$id": "live",
@@ -19,50 +23,101 @@
     "description": "Tracking room for vocals and live machines sets.",
     "hourly_rate": 30,
     "daily_rate": 220,
-    "bookable": true
+    "bookable": true,
+    "map_x": 620,
+    "map_y": 0,
+    "width_cm": 400,
+    "depth_cm": 450
    }
   ],
   "locations": [
    {
     "$id": "rack-a",
-    "name": "Rack A",
+    "name": "Rack A · interface",
     "kind": "rack",
     "room": "@ref:rooms/control",
     "rack_units": 12,
-    "notes": "Left of the desk: interface, patchbays, MIDI, power."
+    "notes": "Left of the desk: interface, patchbays, MIDI, power.",
+    "map_x": 40,
+    "map_y": 30,
+    "width_cm": 60,
+    "depth_cm": 60
    },
    {
     "$id": "rack-b",
-    "name": "Rack B",
+    "name": "Rack B · expanders",
     "kind": "rack",
     "room": "@ref:rooms/control",
     "rack_units": 8,
-    "notes": "Right of the desk: expanders and outboard."
+    "notes": "Right of rack A: expanders and outboard.",
+    "map_x": 110,
+    "map_y": 30,
+    "width_cm": 60,
+    "depth_cm": 60
    },
    {
     "$id": "desk",
     "name": "Mix desk",
     "kind": "desk",
-    "room": "@ref:rooms/control"
+    "room": "@ref:rooms/control",
+    "map_x": 190,
+    "map_y": 180,
+    "width_cm": 220,
+    "depth_cm": 90
    },
    {
     "$id": "shelf",
-    "name": "Synth stand",
+    "name": "Synth rack",
     "kind": "shelf",
     "room": "@ref:rooms/control",
-    "notes": "Two-tier stand behind the desk."
+    "notes": "Two-tier stand behind the desk.",
+    "map_x": 200,
+    "map_y": 360,
+    "width_cm": 180,
+    "depth_cm": 55
+   },
+   {
+    "$id": "drums",
+    "name": "Drum rack",
+    "kind": "shelf",
+    "room": "@ref:rooms/control",
+    "notes": "Drum machines, right of the desk.",
+    "map_x": 400,
+    "map_y": 205,
+    "width_cm": 130,
+    "depth_cm": 50,
+    "rotation": 90
+   },
+   {
+    "$id": "pedals",
+    "name": "Pedal rack",
+    "kind": "case",
+    "room": "@ref:rooms/control",
+    "notes": "Pedalboard, sends and returns through Patchbay III.",
+    "map_x": 60,
+    "map_y": 220,
+    "width_cm": 90,
+    "depth_cm": 45
    },
    {
     "$id": "case",
     "name": "Eurorack case",
     "kind": "case",
-    "room": "@ref:rooms/control"
+    "room": "@ref:rooms/control",
+    "map_x": 470,
+    "map_y": 40,
+    "width_cm": 85,
+    "depth_cm": 45
    },
    {
     "$id": "storage",
     "name": "Storage cupboard",
     "kind": "storage",
-    "room": "@ref:rooms/live"
+    "room": "@ref:rooms/live",
+    "map_x": 30,
+    "map_y": 30,
+    "width_cm": 120,
+    "depth_cm": 55
    }
   ],
   "devices": [
@@ -2394,7 +2449,7 @@
     "model": "Digitakt",
     "category": "sampler",
     "state": "in_use",
-    "location": "@ref:locations/desk",
+    "location": "@ref:locations/drums",
     "midi_channel": 10,
     "ports": [
      {
@@ -2463,7 +2518,7 @@
     "model": "TR-8S",
     "category": "drum_machine",
     "state": "in_use",
-    "location": "@ref:locations/desk",
+    "location": "@ref:locations/drums",
     "midi_channel": 11,
     "ports": [
      {
@@ -2607,6 +2662,8 @@
     "category": "sequencer",
     "state": "in_use",
     "location": "@ref:locations/desk",
+    "map_x": 22,
+    "map_y": 72,
     "ports": [
      {
       "name": "CV Out 1",
@@ -2692,6 +2749,8 @@
     "state": "in_use",
     "location": "@ref:locations/desk",
     "purchase_price": 1150,
+    "map_x": 8,
+    "map_y": 22,
     "ports": [
      {
       "name": "Input",
@@ -2718,6 +2777,8 @@
     "state": "in_use",
     "location": "@ref:locations/desk",
     "purchase_price": 1150,
+    "map_x": 92,
+    "map_y": 22,
     "ports": [
      {
       "name": "Input",
@@ -2743,6 +2804,8 @@
     "category": "computer",
     "state": "in_use",
     "location": "@ref:locations/desk",
+    "map_x": 80,
+    "map_y": 70,
     "ports": [
      {
       "name": "USB-C 1",
@@ -2798,6 +2861,8 @@
     "state": "in_use",
     "location": "@ref:locations/desk",
     "purchase_price": 850,
+    "map_x": 50,
+    "map_y": 55,
     "ports": [
      {
       "name": "Input 1",
@@ -2983,7 +3048,7 @@
     "model": "Big Muff Pi",
     "category": "effect",
     "state": "in_use",
-    "location": "@ref:locations/desk",
+    "location": "@ref:locations/pedals",
     "ports": [
      {
       "name": "In",
@@ -3013,7 +3078,7 @@
     "model": "Electric Mistress",
     "category": "effect",
     "state": "in_use",
-    "location": "@ref:locations/desk",
+    "location": "@ref:locations/pedals",
     "ports": [
      {
       "name": "In",
@@ -3043,7 +3108,7 @@
     "model": "DD-3",
     "category": "effect",
     "state": "in_use",
-    "location": "@ref:locations/desk",
+    "location": "@ref:locations/pedals",
     "ports": [
      {
       "name": "In",
