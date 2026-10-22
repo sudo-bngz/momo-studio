@@ -32,6 +32,51 @@ npm run dev                 # http://localhost:3000
 
 Sign in with a GoHead account: `admin` / `gohead-local-password` locally (the defaults of `docker-compose.yml`, change them before exposing anything).
 
+Run the four commands one at a time: if `npm install` fails, everything after it fails too
+(`gohead-client: command not found`, `next: command not found`) because there is no
+`node_modules/`.
+
+### `npm install` fails with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`
+
+Something between you and `registry.npmjs.org` is re-signing TLS (a company proxy such as
+Zscaler or Netskope, a VPN, an antivirus). macOS trusts its root certificate, but Node ships
+its own list and ignores the keychain, so `npm` refuses the connection while Docker and the
+browser work.
+
+Check who signed the connection:
+
+```bash
+openssl s_client -connect registry.npmjs.org:443 </dev/null 2>/dev/null \
+  | openssl x509 -noout -issuer
+```
+
+A public CA (DigiCert, Let's Encrypt…) means something else is wrong; a company or product
+name confirms it. Then let Node trust the same roots as the system:
+
+```bash
+# Node 22.15+ / 24+
+export NODE_OPTIONS=--use-system-ca
+npm install
+```
+
+On an older Node, export the roots once and point Node at them:
+
+```bash
+security find-certificate -a -p /System/Library/Keychains/SystemRootCertificates.keychain > ~/.node-ca.pem
+security find-certificate -a -p /Library/Keychains/System.keychain >> ~/.node-ca.pem
+export NODE_EXTRA_CA_CERTS=~/.node-ca.pem
+npm install
+```
+
+Add the `export` line to `~/.zshrc` to keep it. `NODE_EXTRA_CA_CERTS` adds to Node's list;
+`npm config set cafile` *replaces* it, so only use that with a file that also holds the public
+roots. `npm config set strict-ssl false` turns the check off altogether: it gets you unblocked,
+but you are then downloading code over a connection nobody is checking, so turn it back on
+(`npm config delete strict-ssl`) once the certificate is in place.
+
+The `npm warn ERESOLVE overriding peer dependency` lines are unrelated and expected: ESLint 10
+is newer than what `eslint-plugin-import` declares. The install works.
+
 Starting with your own studio rather than the sample: skip `gohead:seed`, then in this order
 
 1. **Racks & places → Rooms & locations**: your rooms, then your racks (with their height in U), desks, shelves, cases. Then **Studio map → Edit layout**: set each room's size, and drag every place where it stands.
