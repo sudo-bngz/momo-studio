@@ -5,16 +5,29 @@ import { notFound } from "next/navigation";
 import { Help } from "@/components/help";
 import { RestoreButton } from "@/components/restore-button";
 import { Badge, ButtonLink, Card, Empty, PageHeader } from "@/components/ui";
-import { ACTION_LABEL, AUDITED, TYPE_LABEL, describeData, entryHref, getHistory, getRevision } from "@/lib/audit";
+import {
+  AUDITED,
+  actionBadge,
+  actorKindLabel,
+  describeData,
+  entryHref,
+  getHistory,
+  getRevision,
+  typeLabel,
+} from "@/lib/audit";
 import { entryNames } from "@/lib/audit-names";
-import { formatDateTime } from "@/lib/time";
+import { getI18n } from "@/lib/i18n";
+import type { P, T } from "@/lib/i18n/translate";
 
-export const metadata: Metadata = { title: "History" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("ops.meta.history") };
+}
 
 /** A value as a short piece of text, whatever shape it has. */
-function show(v: unknown): string {
-  if (v === null || v === undefined || v === "") return "—";
-  if (Array.isArray(v)) return v.length ? `${v.length} item(s)` : "—";
+function show(t: T, p: P, v: unknown): string {
+  if (v === null || v === undefined || v === "") return t("state.none");
+  if (Array.isArray(v)) return v.length ? p("ops.items", v.length) : t("state.none");
   if (typeof v === "object") return JSON.stringify(v).slice(0, 120);
   return String(v).slice(0, 160);
 }
@@ -26,6 +39,7 @@ export default async function HistoryPage({
   params: Promise<{ type: string; id: string }>;
   searchParams: Promise<{ v?: string; compare?: string }>;
 }) {
+  const { t, p, d } = await getI18n();
   const { type, id: rawId } = await params;
   const sp = await searchParams;
   const id = Number(rawId);
@@ -47,14 +61,14 @@ export default async function HistoryPage({
         title={name}
         subtitle={
           <span className="flex flex-wrap items-center gap-2">
-            <span>{TYPE_LABEL[type] ?? type} · history</span>
-            {isGone ? <Badge tone="bad">Deleted</Badge> : null}
+            <span>{t("ops.history.subtitle", { type: typeLabel(t, type) })}</span>
+            {isGone ? <Badge tone="bad">{t("ops.action.delete")}</Badge> : null}
           </span>
         }
         actions={
           <>
-            <ButtonLink href="/activity">All activity</ButtonLink>
-            {href && !isGone ? <ButtonLink href={href}>Open it</ButtonLink> : null}
+            <ButtonLink href="/activity">{t("ops.history.allActivity")}</ButtonLink>
+            {href && !isGone ? <ButtonLink href={href}>{t("ops.history.openIt")}</ButtonLink> : null}
           </>
         }
       />
@@ -62,14 +76,14 @@ export default async function HistoryPage({
 
       {forbidden ? (
         <Card className="border-warn/40">
-          <p className="text-sm text-warn">Your account may not read the history.</p>
+          <p className="text-sm text-warn">{t("ops.history.forbidden")}</p>
         </Card>
       ) : revisions.length ? (
         <div className="grid gap-6 lg:grid-cols-[22rem_1fr]">
-          <Card title={`${revisions.length} version(s)`}>
+          <Card title={p("ops.versions", revisions.length)}>
             <ol className="divide-y divide-line">
               {revisions.map((r) => {
-                const action = ACTION_LABEL[r.action] ?? { label: r.action, tone: "muted" as const };
+                const action = actionBadge(t, r.action);
                 const active = r.version === chosen;
                 return (
                   <li key={r.version} className={`py-2 ${active ? "-mx-4 border-l-2 border-amber bg-raised/40 px-4" : ""}`}>
@@ -78,10 +92,10 @@ export default async function HistoryPage({
                         <span className="font-mono text-xs text-dim">v{r.version}</span>
                         <Badge tone={action.tone}>{action.label}</Badge>
                       </div>
-                      <div className="mt-1 text-sm">{r.actorName ?? "—"}</div>
+                      <div className="mt-1 text-sm">{r.actorName ?? t("state.none")}</div>
                       <div className="text-xs text-faint">
-                        {formatDateTime(r.createdAt)}
-                        {r.actorKind !== "user" ? ` · ${r.actorKind}` : ""}
+                        {d.dateTime(r.createdAt)}
+                        {r.actorKind !== "user" ? ` · ${actorKindLabel(t, r.actorKind)}` : ""}
                       </div>
                     </Link>
                   </li>
@@ -91,15 +105,15 @@ export default async function HistoryPage({
           </Card>
 
           <Card
-            title={detail ? `Version ${detail.version}` : "Pick a version"}
+            title={detail ? t("ops.version.title", { version: detail.version }) : t("ops.version.pick")}
             actions={
               detail ? (
                 <span className="flex gap-2 text-xs">
                   <Link href={link(detail.version, "previous")} className={compare === "previous" ? "text-amber" : "text-dim hover:text-ink"}>
-                    vs previous
+                    {t("ops.compare.previous")}
                   </Link>
                   <Link href={link(detail.version, "current")} className={compare === "current" ? "text-amber" : "text-dim hover:text-ink"}>
-                    vs now
+                    {t("ops.compare.now")}
                   </Link>
                 </span>
               ) : null
@@ -111,25 +125,25 @@ export default async function HistoryPage({
                   <table className="data">
                     <thead>
                       <tr>
-                        <th>Field</th>
-                        <th>{compare === "current" ? "Now" : "Before"}</th>
-                        <th>{compare === "current" ? "This version" : "After"}</th>
+                        <th>{t("ops.col.field")}</th>
+                        <th>{compare === "current" ? t("ops.col.now") : t("ops.col.before")}</th>
+                        <th>{compare === "current" ? t("ops.col.thisVersion") : t("ops.col.after")}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {detail.changes.map((c) => (
                         <tr key={c.field}>
                           <td className="font-medium">{c.field.replace(/_/g, " ")}</td>
-                          <td className="text-dim">{show(compare === "current" ? c.after : c.before)}</td>
-                          <td className={c.change === "removed" ? "text-bad" : "text-ok"}>{show(compare === "current" ? c.before : c.after)}</td>
+                          <td className="text-dim">{show(t, p, compare === "current" ? c.after : c.before)}</td>
+                          <td className={c.change === "removed" ? "text-bad" : "text-ok"}>
+                            {show(t, p, compare === "current" ? c.before : c.after)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 ) : (
-                  <p className="text-sm text-dim">
-                    {compare === "current" ? "This version matches the content as it stands." : "Nothing changed in this version's fields."}
-                  </p>
+                  <p className="text-sm text-dim">{compare === "current" ? t("ops.diff.sameAsNow") : t("ops.diff.noChange")}</p>
                 )}
                 <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-line pt-4">
                   <RestoreButton
@@ -137,25 +151,23 @@ export default async function HistoryPage({
                     entry={id}
                     version={detail.version}
                     primary
-                    label={isGone ? "Bring it back" : `Restore version ${detail.version}`}
+                    label={isGone ? t("ops.restore.bringBack") : t("ops.restore.version", { version: detail.version })}
                     confirm={
                       isGone
-                        ? `Bring ${name} back as it was at version ${detail.version}?`
-                        : `Make version ${detail.version} the current content of ${name}?`
+                        ? t("ops.restore.confirmUndelete", { name, version: detail.version })
+                        : t("ops.restore.confirmApply", { name, version: detail.version })
                     }
                   />
-                  <span className="text-xs text-faint">
-                    A restore is itself recorded, so it can be undone. Fields the content model no longer has are left out.
-                  </span>
+                  <span className="text-xs text-faint">{t("ops.restore.note")}</span>
                 </div>
               </>
             ) : (
-              <Empty>Pick a version on the left.</Empty>
+              <Empty>{t("ops.version.pickLeft")}</Empty>
             )}
           </Card>
         </div>
       ) : (
-        <Empty>No history for this entry.</Empty>
+        <Empty>{t("ops.history.empty")}</Empty>
       )}
     </>
   );

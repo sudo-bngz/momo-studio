@@ -3,13 +3,18 @@ import type { Metadata } from "next";
 import { CableForm, nextCableCode } from "@/components/cable-form";
 import { Help } from "@/components/help";
 import { PageHeader } from "@/components/ui";
+import { getI18n } from "@/lib/i18n";
 import { getCables, getDevices } from "@/lib/data";
 import { cablesByPort } from "@/lib/patch";
 import { toPlanCable } from "@/lib/plan-data";
 
-export const metadata: Metadata = { title: "Add cable" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("cables.add") };
+}
 
 export default async function NewCablePage({ searchParams }: { searchParams: Promise<{ from?: string; to?: string }> }) {
+  const { t } = await getI18n();
   const { from, to } = await searchParams;
   const [devices, cables] = await Promise.all([getDevices(), getCables()]);
   // Back to where the patching started: the patchbay, or the device.
@@ -18,7 +23,7 @@ export default async function NewCablePage({ searchParams }: { searchParams: Pro
   const returnTo = startDevice ? (startDevice.category === "patchbay" ? `/patchbays/${startDevice.id}` : `/assets/${startDevice.id}`) : undefined;
   return (
     <>
-      <PageHeader title="Add cable" subtitle="Give it a code, write it on both ends, and say which two ports it joins." />
+      <PageHeader title={t("cables.add")} subtitle={t("cables.new.subtitle")} />
       <Help topic="cable-form" />
       <CableForm
         devices={devices}

@@ -6,18 +6,24 @@ import { Help } from "@/components/help";
 import { LoopWarnings } from "@/components/patchbay-bits";
 import { ButtonLink, Empty, PageHeader } from "@/components/ui";
 import { getConsoles } from "@/lib/console-data";
+import { getI18n } from "@/lib/i18n";
+import { categoryLabel } from "@/lib/vocab";
 
-export const metadata: Metadata = { title: "Consoles" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("console.meta.list") };
+}
 
 export default async function ConsolesPage() {
+  const { t, p } = await getI18n();
   const { views, issues } = await getConsoles();
   const loops = [...new Set([...issues.values()].flat().filter((i) => i.kind === "loop"))];
   return (
     <>
       <PageHeader
-        title="Consoles"
-        subtitle="Every channel of the desk: what's plugged in, what it's called, where it goes."
-        actions={<ButtonLink href="/assets/new?category=mixer">Add a console</ButtonLink>}
+        title={t("console.list.title")}
+        subtitle={t("console.list.subtitle")}
+        actions={<ButtonLink href="/assets/new?category=mixer">{t("console.list.add")}</ButtonLink>}
       />
       <Help topic="consoles" />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
@@ -34,10 +40,12 @@ export default async function ConsolesPage() {
                 </h2>
                 <span className="flex gap-3 text-sm">
                   <span className="text-dim">
-                    {v.channels} channels · {v.groups} groups · {v.auxes} auxes · {v.strips.filter((s) => s.sockets.some((k) => k.ends.length)).length} in use
+                    {p("console.shape.channels", v.channels)} · {p("console.shape.groups", v.groups)} ·{" "}
+                    {p("console.shape.auxes", v.auxes)} ·{" "}
+                    {p("console.shape.inUse", v.strips.filter((s) => s.sockets.some((k) => k.ends.length)).length)}
                   </span>
                   <Link href={`/consoles/${v.id}`} className="text-amber hover:underline">
-                    Edit →
+                    {t("console.list.edit")}
                   </Link>
                 </span>
               </div>
@@ -46,9 +54,7 @@ export default async function ConsolesPage() {
           ))}
         </div>
       ) : (
-        <Empty>
-          No console yet. Add one as an asset with the category “Mixer” and fill its ports from a template (the Allen &amp; Heath GS3 is there), or name its ports “Ch 1 Line”, “Ch 1 Insert”…
-        </Empty>
+        <Empty>{t("console.list.empty", { category: categoryLabel(t, "mixer") })}</Empty>
       )}
     </>
   );

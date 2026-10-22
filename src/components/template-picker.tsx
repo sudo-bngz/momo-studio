@@ -9,13 +9,32 @@ import { useState } from "react";
 
 import type { Port } from "@/gohead";
 import { PortsEditor } from "@/components/ports-editor";
+import { useI18n } from "@/lib/i18n/client";
+import type { MessageKey } from "@/lib/i18n/messages";
 import { expandTemplate, TEMPLATES } from "@/lib/templates";
 
+/**
+ * The numbers a generic template is sized by. They are keys of
+ * templates/devices.json, so one the file adds later falls back to its own
+ * name rather than to a missing message.
+ */
+const PARAMS: Record<string, MessageKey> = {
+  channels: "assets.template.param.channels",
+  groups: "assets.template.param.groups",
+  auxes: "assets.template.param.auxes",
+  fx_returns: "assets.template.param.fx_returns",
+  mic_ins: "assets.template.param.mic_ins",
+  line_ins: "assets.template.param.line_ins",
+  line_outs: "assets.template.param.line_outs",
+  adat: "assets.template.param.adat",
+};
+
 export function PortsWithTemplate({ initial, isNew }: { initial: Port[]; isNew: boolean }) {
+  const { t, p } = useI18n();
   const [templateId, setTemplateId] = useState("");
   const [params, setParams] = useState<Record<string, number>>({});
   const [applied, setApplied] = useState<{ key: number; ports: Port[]; consoleChannels?: number; patchColumns?: number } | null>(null);
-  const template = TEMPLATES.find((t) => t.id === templateId);
+  const template = TEMPLATES.find((tpl) => tpl.id === templateId);
   const values = { ...(template?.params ?? {}), ...params };
 
   const apply = (form: HTMLFormElement | null) => {
@@ -38,12 +57,12 @@ export function PortsWithTemplate({ initial, isNew }: { initial: Port[]; isNew: 
     <div>
       <div className="mb-4 flex flex-wrap items-end gap-2 rounded-md border border-line bg-raised/50 p-3">
         <label className="block min-w-64 flex-1">
-          <span className="mb-1 block text-xs font-medium text-dim">{isNew ? "Start from a template" : "Replace the ports with a template"}</span>
+          <span className="mb-1 block text-xs font-medium text-dim">{isNew ? t("assets.template.start") : t("assets.template.replace")}</span>
           <select className="control" value={templateId} onChange={(e) => { setTemplateId(e.target.value); setParams({}); }}>
-            <option value="">— type the ports by hand —</option>
-            {TEMPLATES.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
+            <option value="">{t("assets.template.byHand")}</option>
+            {TEMPLATES.map((tpl) => (
+              <option key={tpl.id} value={tpl.id}>
+                {tpl.name}
               </option>
             ))}
           </select>
@@ -51,7 +70,7 @@ export function PortsWithTemplate({ initial, isNew }: { initial: Port[]; isNew: 
         {template
           ? Object.entries(template.params).map(([k, v]) => (
               <label key={k} className="block">
-                <span className="mb-1 block text-xs text-dim">{k.replace(/_/g, " ")}</span>
+                <span className="mb-1 block text-xs text-dim">{PARAMS[k] ? t(PARAMS[k]) : k.replace(/_/g, " ")}</span>
                 <input
                   className="control w-24"
                   type="number"
@@ -64,18 +83,14 @@ export function PortsWithTemplate({ initial, isNew }: { initial: Port[]; isNew: 
             ))
           : null}
         <button type="button" disabled={!template} onClick={(e) => apply(e.currentTarget.form)} className="rounded-md border border-line-strong px-3 py-1.5 text-sm hover:bg-raised disabled:opacity-40">
-          Fill the ports
+          {t("assets.template.fill")}
         </button>
         {template?.notes ? <p className="basis-full text-[11px] text-faint">{template.notes}</p> : null}
       </div>
       {applied?.consoleChannels ? <input type="hidden" name="console_channels" value={applied.consoleChannels} /> : null}
       {applied?.patchColumns ? <input type="hidden" name="patch_columns" value={applied.patchColumns} /> : null}
       <PortsEditor key={applied?.key ?? "initial"} initial={applied?.ports ?? initial} />
-      {applied ? (
-        <p className="mt-2 text-xs text-ok">
-          {applied.ports.length} ports filled in. Check them, then save: the device will have every socket of the template.
-        </p>
-      ) : null}
+      {applied ? <p className="mt-2 text-xs text-ok">{p("assets.template.filled", applied.ports.length)}</p> : null}
     </div>
   );
 }

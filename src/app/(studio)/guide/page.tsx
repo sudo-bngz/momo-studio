@@ -5,63 +5,68 @@ import type { ReactNode } from "react";
 import { RichText } from "@/components/rich-text";
 import { ChannelStripFlow, InlineGroups, Normalling } from "@/components/signal-flow";
 import { PageHeader } from "@/components/ui";
-import { GLOSSARY, GUIDE_PARTS, TOPICS, type TopicId } from "@/lib/help";
+import { getHelp, PART_TOPICS, type HelpContent, type TopicId } from "@/lib/help";
+import { getI18n } from "@/lib/i18n";
+import type { T } from "@/lib/i18n/translate";
 
-export const metadata: Metadata = { title: "Guide" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("guide.title") };
+}
 
-/** The drawing that belongs to a chapter, and a caption for it. */
-const FIGURES: Partial<Record<TopicId, ReactNode>> = {
-  patchbays: (
-    <Figure
-      bare
-      caption="The three modes of a column. The app follows a signal through the first two as if the points were one wire, and stops at the third — because that is what the hardware does."
-    >
-      <Normalling />
-    </Figure>
-  ),
-  console: (
-    <>
-      <Figure caption="One channel of the GS3. The channel path carries mic or line through the insert, the EQ and the fader, and leaves by one of four routes. The monitor path carries the tape return on its own level — which is why every channel has a Tape In.">
-        <ChannelStripFlow />
+export default async function GuidePage() {
+  const { t, locale } = await getI18n();
+  const help = getHelp(locale);
+
+  /** The drawing that belongs to a chapter, and the caption under it. */
+  const figures: Partial<Record<TopicId, ReactNode>> = {
+    patchbays: (
+      <Figure bare caption={t("guide.fig.normalling")}>
+        <Normalling t={t} />
       </Figure>
-      <Figure caption="Why the desk has eight groups and no group output sockets: the group buses are paralleled onto the channels' track outs. Group 1 comes out of channel 1, 9 or 17; group 2 out of 2, 10 or 18.">
-        <InlineGroups />
-      </Figure>
-    </>
-  ),
-};
+    ),
+    console: (
+      <>
+        <Figure caption={t("guide.fig.channelFlow")}>
+          <ChannelStripFlow t={t} />
+        </Figure>
+        <Figure caption={t("guide.fig.inlineGroups")}>
+          <InlineGroups t={t} />
+        </Figure>
+      </>
+    ),
+  };
 
-export default function GuidePage() {
+  const intro = t("guide.intro", { link: "\u0000" }).split("\u0000");
+
   return (
     <>
-      <PageHeader title="Guide" subtitle="How the app is put together, and how the studio it describes is put together." />
+      <PageHeader title={t("guide.title")} subtitle={t("guide.subtitle")} />
 
       <div className="max-w-3xl">
         <p className="text-[15px] leading-relaxed text-dim">
-          Every page carries its own short help at the top — the sentence is always on screen, and opening it explains what the
-          things on that page mean. This is the same text at length, in one place, plus the parts that need a drawing. The{" "}
+          {intro[0]}
           <Link href="#console" className="text-amber hover:underline">
-            console chapter
-          </Link>{" "}
-          is the one worth reading properly: an in-line desk like the Allen &amp; Heath GS3 behaves in a way that looks like a bug
-          until you know it isn&apos;t.
+            {t("guide.intro.link")}
+          </Link>
+          {intro[1]}
         </p>
 
         {/* Contents */}
         <nav className="mt-8 rounded-lg border border-line bg-panel p-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-faint">Contents</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-faint">{t("guide.contents")}</h2>
           <ol className="mt-3 space-y-3">
-            {GUIDE_PARTS.map((part, i) => (
-              <li key={part.title}>
+            {PART_TOPICS.map((part, i) => (
+              <li key={part.id}>
                 <span className="text-sm font-medium">
                   <span className="mr-2 font-mono text-xs text-faint">{i + 1}</span>
-                  {part.title}
+                  {help.parts[part.id].title}
                 </span>
-                <span className="ml-6 block text-xs text-faint">{part.blurb}</span>
+                <span className="ml-6 block text-xs text-faint">{help.parts[part.id].blurb}</span>
                 <span className="ml-6 mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs">
-                  {part.topics.map((t) => (
-                    <Link key={t} href={`#${t}`} className="text-dim hover:text-amber">
-                      {TOPICS[t].title}
+                  {part.topics.map((id) => (
+                    <Link key={id} href={`#${id}`} className="text-dim hover:text-amber">
+                      {help.topics[id].title}
                     </Link>
                   ))}
                 </span>
@@ -69,22 +74,22 @@ export default function GuidePage() {
             ))}
             <li>
               <Link href="#glossary" className="text-sm font-medium hover:text-amber">
-                <span className="mr-2 font-mono text-xs text-faint">{GUIDE_PARTS.length + 1}</span>
-                Glossary
+                <span className="mr-2 font-mono text-xs text-faint">{PART_TOPICS.length + 1}</span>
+                {t("guide.glossary")}
               </Link>
             </li>
           </ol>
         </nav>
 
         {/* Chapters */}
-        {GUIDE_PARTS.map((part, i) => (
-          <section key={part.title} className="mt-12">
+        {PART_TOPICS.map((part, i) => (
+          <section key={part.id} className="mt-12">
             <h2 className="flex items-baseline gap-3 border-b border-line pb-2 text-lg font-semibold">
               <span className="font-mono text-sm text-faint">{i + 1}</span>
-              {part.title}
+              {help.parts[part.id].title}
             </h2>
-            {part.topics.map((t) => (
-              <Chapter key={t} id={t} />
+            {part.topics.map((id) => (
+              <Chapter key={id} id={id} help={help} t={t} figure={figures[id]} />
             ))}
           </section>
         ))}
@@ -92,11 +97,11 @@ export default function GuidePage() {
         {/* Glossary */}
         <section id="glossary" className="mt-12 scroll-mt-6">
           <h2 className="flex items-baseline gap-3 border-b border-line pb-2 text-lg font-semibold">
-            <span className="font-mono text-sm text-faint">{GUIDE_PARTS.length + 1}</span>
-            Glossary
+            <span className="font-mono text-sm text-faint">{PART_TOPICS.length + 1}</span>
+            {t("guide.glossary")}
           </h2>
           <dl className="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2">
-            {Object.values(GLOSSARY).map((g) => (
+            {Object.values(help.glossary).map((g) => (
               <div key={g.term} className="text-sm">
                 <dt className="font-medium text-ink">{g.term}</dt>
                 <dd className="mt-0.5 leading-relaxed text-dim">{g.text}</dd>
@@ -106,49 +111,49 @@ export default function GuidePage() {
         </section>
 
         <p className="mt-12 border-t border-line pt-4 text-xs text-faint">
-          Something here wrong or missing? The text lives in one file, <code className="font-mono text-dim">src/lib/help.ts</code>, and
-          feeds both this page and the panels on the pages themselves.
+          {t("guide.source", { file: "" })}
+          <code className="font-mono text-dim">src/lib/help</code>
         </p>
       </div>
     </>
   );
 }
 
-function Chapter({ id }: { id: TopicId }) {
-  const t = TOPICS[id];
+function Chapter({ id, help, t, figure }: { id: TopicId; help: HelpContent; t: T; figure?: ReactNode }) {
+  const topic = help.topics[id];
   return (
     <article id={id} className="mt-8 scroll-mt-6">
-      <h3 className="text-base font-semibold text-ink">{t.title}</h3>
+      <h3 className="text-base font-semibold text-ink">{topic.title}</h3>
       <p className="mt-1.5 text-[15px] leading-relaxed text-dim">
-        <RichText>{t.lede}</RichText>
+        <RichText>{topic.lede}</RichText>
       </p>
 
-      {FIGURES[id] ?? null}
+      {figure ?? null}
 
-      {t.long?.map((p) => (
-        <p key={p.slice(0, 40)} className="mt-3 text-[15px] leading-relaxed text-dim">
-          <RichText>{p}</RichText>
+      {topic.long?.map((para) => (
+        <p key={para.slice(0, 40)} className="mt-3 text-[15px] leading-relaxed text-dim">
+          <RichText>{para}</RichText>
         </p>
       ))}
 
-      {t.points?.length ? (
+      {topic.points?.length ? (
         <dl className="mt-4 space-y-2 border-l border-line pl-4">
-          {t.points.map((p) => (
-            <div key={p.term} className="text-sm">
-              <dt className="font-medium text-ink">{p.term}</dt>
+          {topic.points.map((pt) => (
+            <div key={pt.term} className="text-sm">
+              <dt className="font-medium text-ink">{pt.term}</dt>
               <dd className="mt-0.5 leading-relaxed text-dim">
-                <RichText>{p.text}</RichText>
+                <RichText>{pt.text}</RichText>
               </dd>
             </div>
           ))}
         </dl>
       ) : null}
 
-      {t.steps?.length ? (
+      {topic.steps?.length ? (
         <>
-          <h4 className="mb-1.5 mt-4 text-xs font-semibold uppercase tracking-wider text-faint">Doing it</h4>
+          <h4 className="mb-1.5 mt-4 text-xs font-semibold uppercase tracking-wider text-faint">{t("help.doingIt")}</h4>
           <ol className="list-decimal space-y-1 pl-5 text-sm text-dim">
-            {t.steps.map((s) => (
+            {topic.steps.map((s) => (
               <li key={s} className="leading-relaxed">
                 <RichText>{s}</RichText>
               </li>
@@ -157,12 +162,12 @@ function Chapter({ id }: { id: TopicId }) {
         </>
       ) : null}
 
-      {t.see?.length ? (
+      {topic.see?.length ? (
         <p className="mt-3 flex flex-wrap gap-x-3 text-xs">
-          <span className="text-faint">See also</span>
-          {t.see.map((s) => (
+          <span className="text-faint">{t("help.seeAlso")}</span>
+          {topic.see.map((s) => (
             <Link key={s} href={`#${s}`} className="text-amber hover:underline">
-              {TOPICS[s].title}
+              {help.topics[s].title}
             </Link>
           ))}
         </p>

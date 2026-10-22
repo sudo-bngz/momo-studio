@@ -8,7 +8,8 @@
  * It is a drawing, not a picture of your machine: upload a photo and this
  * steps aside.
  */
-import type { Category } from "@/lib/vocab";
+import { getI18n } from "@/lib/i18n";
+import { categoryLabel, type Category } from "@/lib/vocab";
 
 export interface Figure {
   category: Category;
@@ -48,7 +49,8 @@ const RACK: Category[] = ["expander", "dynamics_eq", "preamp", "audio_interface"
 
 const W = 200;
 
-export function DeviceFigure({ figure, className = "", title }: { figure: Figure; className?: string; title?: string }) {
+export async function DeviceFigure({ figure, className = "", title }: { figure: Figure; className?: string; title?: string }) {
+  const { t } = await getI18n();
   const { category, units, columns, code } = figure;
   const skin = SKIN[category] ?? SKIN.other;
   // Height follows the real thing: a 1U box is a letterbox, a synth is deeper.
@@ -56,7 +58,13 @@ export function DeviceFigure({ figure, className = "", title }: { figure: Figure
   const pad = 8;
 
   return (
-    <svg viewBox={`0 0 ${W} ${h}`} className={className} role="img" aria-label={title ?? `Drawing of a ${category.replace(/_/g, " ")}`} preserveAspectRatio="xMidYMid meet">
+    <svg
+      viewBox={`0 0 ${W} ${h}`}
+      className={className}
+      role="img"
+      aria-label={title ?? t("assets.figure.alt", { category: categoryLabel(t, category) })}
+      preserveAspectRatio="xMidYMid meet"
+    >
       {title ? <title>{title}</title> : null}
       <rect x={2} y={2} width={W - 4} height={h - 4} rx={6} fill={skin.face} stroke={skin.trim} strokeWidth={2} />
       <Motif category={category} w={W} h={h} pad={pad} color={skin.motif} trim={skin.trim} columns={columns} />

@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { saveMapLayout } from "@/app/actions";
+import { useI18n } from "@/lib/i18n/client";
 import {
   bundles as bundlesOf,
   detailCard,
@@ -28,7 +29,17 @@ import {
   type MapPlace,
   type MapRoom,
 } from "@/lib/studio-map";
-import { CATEGORIES, LOCATION_KINDS, SIGNALS, type Category, type Signal } from "@/lib/vocab";
+import {
+  CATEGORIES,
+  DEVICE_STATES,
+  SIGNALS,
+  categoryLabel,
+  deviceStateLabel,
+  isKey,
+  locationKindLabel,
+  signalLabel,
+  type Signal,
+} from "@/lib/vocab";
 
 interface Props {
   rooms: MapRoom[];
@@ -63,6 +74,7 @@ const PLACE_STYLE: Record<MapPlace["kind"], { fill: string; stroke: string; dash
 };
 
 export function StudioMap(props: Props) {
+  const { t, p: plural, d: fmt } = useI18n();
   const router = useRouter();
   const svgRef = useRef<SVGSVGElement>(null);
   const [rooms, setRooms] = useState(props.rooms);
@@ -341,9 +353,9 @@ export function StudioMap(props: Props) {
     <div>
       {/* Toolbar */}
       <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
-        <nav className="mr-auto flex items-center gap-1 text-dim" aria-label="Breadcrumb">
+        <nav className="mr-auto flex items-center gap-1 text-dim" aria-label={t("places.map.breadcrumb")}>
           <button type="button" onClick={() => zoomTo(null)} className={focusPlace ? "hover:text-ink" : "font-medium text-ink"}>
-            Studio
+            {t("places.map.studio")}
           </button>
           {focusPlace ? (
             <>
@@ -356,11 +368,11 @@ export function StudioMap(props: Props) {
         </nav>
         {focusPlace ? (
           <button type="button" onClick={() => zoomTo(null)} className="rounded-md border border-line-strong px-3 py-1.5 hover:bg-raised">
-            ← Whole studio
+            {t("places.map.wholeStudio")}
           </button>
         ) : (
           <button type="button" onClick={() => animateTo(fit())} className="rounded-md border border-line-strong px-3 py-1.5 hover:bg-raised">
-            Fit
+            {t("places.map.fit")}
           </button>
         )}
         <button
@@ -372,7 +384,7 @@ export function StudioMap(props: Props) {
           className={`rounded-md border px-3 py-1.5 ${edit ? "border-amber bg-amber/10 text-amber" : "border-line-strong hover:bg-raised"}`}
           aria-pressed={edit}
         >
-          {edit ? "Editing layout" : "Edit layout"}
+          {edit ? t("places.map.editing") : t("places.map.edit")}
         </button>
       </div>
       <div className="mb-3 flex flex-wrap gap-1.5">
@@ -392,7 +404,7 @@ export function StudioMap(props: Props) {
             aria-pressed={signals.has(s)}
           >
             <span className="size-2 rounded-full" style={{ background: signals.has(s) ? SIGNALS[s].color : "transparent", outline: `1px solid ${SIGNALS[s].color}` }} />
-            {SIGNALS[s].label}
+            {signalLabel(t, s)}
           </button>
         ))}
       </div>
@@ -408,7 +420,7 @@ export function StudioMap(props: Props) {
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
           role="img"
-          aria-label="Floor plan of the studio"
+          aria-label={t("places.map.aria")}
         >
           <defs>
             <pattern id="grid50" width="50" height="50" patternUnits="userSpaceOnUse">
@@ -449,7 +461,7 @@ export function StudioMap(props: Props) {
                     {r.name}
                   </text>
                   <text x={r.x + r.w} y={r.y - fsBase * 0.45} fontSize={fsBase * 0.7} fill="#6b6e76" textAnchor="end">
-                    {(r.w / 100).toFixed(1)} × {(r.d / 100).toFixed(1)} m
+                    {t("places.map.roomSize", { w: fmt.number(r.w / 100, 1), d: fmt.number(r.d / 100, 1) })}
                   </text>
                 </g>
                 {edit ? (
@@ -538,7 +550,7 @@ export function StudioMap(props: Props) {
                       {p.name}
                     </text>
                     <text x={cx} y={cy + nameSize * 1.2} fontSize={nameSize * 0.7} fill="#9a9ca3" textAnchor="middle" stroke="#0f1012" strokeWidth={nameSize * 0.2} paintOrder="stroke">
-                      {LOCATION_KINDS[p.kind]} · {count} {count === 1 ? "machine" : "machines"}
+                      {locationKindLabel(t, p.kind)} · {plural("places.machineCount", count)}
                     </text>
                   </g>
                 ) : null}
@@ -606,12 +618,12 @@ export function StudioMap(props: Props) {
 
         {edit ? (
           <p className="pointer-events-none absolute bottom-3 left-3 rounded bg-bg/80 px-2 py-1 text-xs text-dim">
-            Drag places and room names to move them · orange corner to resize · drop a place in another room to move it there
-            {focusPlace && focusPlace.kind !== "rack" ? " · drag machines on this surface" : ""}
+            {t("places.map.hintEdit")}
+            {focusPlace && focusPlace.kind !== "rack" ? t("places.map.hintEditDevices") : ""}
           </p>
         ) : (
           <p className="pointer-events-none absolute bottom-3 left-3 rounded bg-bg/80 px-2 py-1 text-xs text-dim">
-            Click a place to zoom in · scroll to zoom · drag to move around · Esc to go back
+            {t("places.map.hintView")}
           </p>
         )}
       </div>
@@ -619,22 +631,22 @@ export function StudioMap(props: Props) {
       {changed || (edit && unplaced) || state.error ? (
         <div className="sticky bottom-0 z-10 mt-3 flex flex-wrap items-center gap-3 border-t border-line bg-bg/95 py-3 backdrop-blur">
           <button type="button" onClick={save} disabled={pending} className="rounded-md bg-amber px-4 py-2 text-sm font-medium text-amber-ink hover:brightness-110 disabled:opacity-60">
-            {pending ? "Saving…" : "Save layout"}
+            {pending ? t("action.saving") : t("places.map.saveLayout")}
           </button>
           {changed ? (
             <button type="button" onClick={discard} className="rounded-md border border-line-strong px-3 py-2 text-sm hover:bg-raised">
-              Discard changes
+              {t("action.discard")}
             </button>
           ) : null}
           <span className={`text-sm ${state.error ? "text-bad" : "text-dim"}`}>
-            {state.error ?? (changed ? `${changed} change(s)` : "Dashed outlines are placed automatically: save to keep them where they are.")}
+            {state.error ?? (changed ? plural("places.map.changes", changed) : t("places.map.autoPlaced"))}
           </span>
         </div>
       ) : null}
 
       {homeless.length ? (
         <p className="mt-4 text-sm text-dim">
-          Not on the map (no place):{" "}
+          {t("places.map.notOnMap")}{" "}
           {homeless.map((d, i) => (
             <span key={d.id}>
               {i ? ", " : ""}
@@ -643,7 +655,7 @@ export function StudioMap(props: Props) {
               </Link>
             </span>
           ))}
-          . Give them a location to see them here.
+          . {t("places.map.notOnMap.hint")}
         </p>
       ) : null}
     </div>
@@ -713,6 +725,7 @@ function BundleLines({
 }
 
 function BundleTip({ bundle, placeById, deviceById }: { bundle: Bundle; placeById: Map<number, MapPlace>; deviceById: Map<number, MapDevice> }) {
+  const { t, p: plural } = useI18n();
   const a = placeById.get(bundle.a);
   const b = placeById.get(bundle.b);
   return (
@@ -723,7 +736,7 @@ function BundleTip({ bundle, placeById, deviceById }: { bundle: Bundle; placeByI
       <div className="mt-1 flex flex-wrap gap-x-3 text-xs">
         {(Object.entries(bundle.bySignal) as Array<[Signal, number]>).map(([s, n]) => (
           <span key={s} style={{ color: SIGNALS[s].color }}>
-            {n} {SIGNALS[s].label}
+            {n} {signalLabel(t, s)}
           </span>
         ))}
       </div>
@@ -733,7 +746,7 @@ function BundleTip({ bundle, placeById, deviceById }: { bundle: Bundle; placeByI
             <span className="font-mono text-amber">{c.code}</span> {deviceById.get(c.a.device)?.name} · {c.a.port} → {deviceById.get(c.b.device)?.name} · {c.b.port}
           </li>
         ))}
-        {bundle.cables.length > 8 ? <li>and {bundle.cables.length - 8} more</li> : null}
+        {bundle.cables.length > 8 ? <li>{plural("places.map.andMore", bundle.cables.length - 8)}</li> : null}
       </ul>
     </div>
   );
@@ -762,38 +775,49 @@ function PlaceInspector({
   onChange: (patch: Partial<MapPlace>) => void;
   onRoom: (room: number | undefined) => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="space-y-3">
       <div className="flex items-baseline justify-between gap-2">
         <span className="font-semibold">{place.name}</span>
         <Link href={`/places?location=${place.id}`} className="text-xs text-dim hover:text-ink">
-          Details
+          {t("places.map.details")}
         </Link>
       </div>
       <div className="grid grid-cols-2 gap-2">
         <label>
-          <span className="block text-[11px] text-faint">Width (cm)</span>
+          <span className="block text-[11px] text-faint">{t("places.map.width")}</span>
           <input className="control" type="number" min={10} value={place.w} onChange={(e) => onChange({ w: Math.max(10, Number(e.target.value) || 10) })} />
         </label>
         <label>
-          <span className="block text-[11px] text-faint">Depth (cm)</span>
+          <span className="block text-[11px] text-faint">{t("places.map.depth")}</span>
           <input className="control" type="number" min={10} value={place.d} onChange={(e) => onChange({ d: Math.max(10, Number(e.target.value) || 10) })} />
         </label>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-[11px] text-faint">Turn</span>
-        <button type="button" onClick={() => onChange({ rot: (place.rot + 270) % 360 })} className="rounded border border-line-strong px-2 py-0.5 hover:bg-raised" aria-label="Turn left">
+        <span className="text-[11px] text-faint">{t("places.map.turn")}</span>
+        <button
+          type="button"
+          onClick={() => onChange({ rot: (place.rot + 270) % 360 })}
+          className="rounded border border-line-strong px-2 py-0.5 hover:bg-raised"
+          aria-label={t("places.map.turnLeft")}
+        >
           ⟲
         </button>
-        <button type="button" onClick={() => onChange({ rot: (place.rot + 90) % 360 })} className="rounded border border-line-strong px-2 py-0.5 hover:bg-raised" aria-label="Turn right">
+        <button
+          type="button"
+          onClick={() => onChange({ rot: (place.rot + 90) % 360 })}
+          className="rounded border border-line-strong px-2 py-0.5 hover:bg-raised"
+          aria-label={t("places.map.turnRight")}
+        >
           ⟳
         </button>
         <span className="text-xs text-dim">{place.rot}°</span>
       </div>
       <label className="block">
-        <span className="block text-[11px] text-faint">Room</span>
+        <span className="block text-[11px] text-faint">{t("places.map.room")}</span>
         <select className="control" value={place.room ?? ""} onChange={(e) => onRoom(e.target.value ? Number(e.target.value) : undefined)}>
-          <option value="">— none —</option>
+          <option value="">{t("places.map.noRoom")}</option>
           {rooms.map((r) => (
             <option key={r.id} value={r.id}>
               {r.name}
@@ -806,6 +830,7 @@ function PlaceInspector({
 }
 
 function RoomInspector({ room, onChange }: { room: MapRoom; onChange: (patch: Partial<MapRoom>) => void }) {
+  const { t } = useI18n();
   return (
     <div className="space-y-3">
       <div className="flex items-baseline justify-between gap-2">
@@ -813,16 +838,16 @@ function RoomInspector({ room, onChange }: { room: MapRoom; onChange: (patch: Pa
           {room.name}
         </span>
         <Link href={`/places?room=${room.id}`} className="text-xs text-dim hover:text-ink">
-          Details
+          {t("places.map.details")}
         </Link>
       </div>
       <div className="grid grid-cols-2 gap-2">
         <label>
-          <span className="block text-[11px] text-faint">Width (cm)</span>
+          <span className="block text-[11px] text-faint">{t("places.map.width")}</span>
           <input className="control" type="number" min={100} value={room.w} onChange={(e) => onChange({ w: Math.max(100, Number(e.target.value) || 100) })} />
         </label>
         <label>
-          <span className="block text-[11px] text-faint">Depth (cm)</span>
+          <span className="block text-[11px] text-faint">{t("places.map.depth")}</span>
           <input className="control" type="number" min={100} value={room.d} onChange={(e) => onChange({ d: Math.max(100, Number(e.target.value) || 100) })} />
         </label>
       </div>
@@ -868,6 +893,7 @@ function PlaceDetail({
   onDragDevice: (e: React.PointerEvent, id: number, box: { x: number; y: number; w: number; d: number }) => void;
   onOpenPlace: (id: number) => void;
 }) {
+  const { t } = useI18n();
   const fs = place.kind === "rack" ? 6 : Math.max(4, Math.min(box.w, box.d) / 11);
   const center = { cx: box.x + box.w / 2, cy: box.y + box.d / 2 };
   const anchors = new Map<number, Anchor>();
@@ -911,7 +937,7 @@ function PlaceDetail({
     if (loose.length) {
       tiles.push(
         <text key="loose" x={box.x + box.w / 2} y={box.y + box.d + fs * 1.2} fontSize={fs * 0.7} fill="#9a9ca3" textAnchor="middle">
-          No rack position: {loose.map((d) => d.name).join(", ")}
+          {t("places.map.noRackPosition", { names: loose.map((d) => d.name).join(", ") })}
         </text>,
       );
     }
@@ -1062,6 +1088,7 @@ function DeviceTile({
   onHover: (id: number | null) => void;
   onDown?: (e: React.PointerEvent) => void;
 }) {
+  const { t } = useI18n();
   const dim = d.state === "in_repair" || d.state === "loaned";
   const body = (
     <g
@@ -1097,8 +1124,8 @@ function DeviceTile({
       )}
       {h > fs * 3.2 ? (
         <text x={x + fs * 0.5} y={y + fs * 3.3} fontSize={fs * 0.62} fill="#9a9ca3">
-          {CATEGORIES[d.category as Category] ?? d.category}
-          {dim ? ` · ${d.state.replace("_", " ")}` : ""}
+          {isKey(CATEGORIES, d.category) ? categoryLabel(t, d.category) : d.category}
+          {dim && isKey(DEVICE_STATES, d.state) ? ` · ${deviceStateLabel(t, d.state)}` : ""}
         </text>
       ) : null}
     </g>

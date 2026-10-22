@@ -2,15 +2,21 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { Help } from "@/components/help";
+import { getI18n } from "@/lib/i18n";
+import { issueMessage } from "@/lib/issues";
 import { LoopWarnings, ModeLegend } from "@/components/patchbay-bits";
 import { PatchbayBoard } from "@/components/patchbay-board";
 import { Badge, ButtonLink, PageHeader } from "@/components/ui";
 import { getDevice } from "@/lib/data";
 import { getPatchbays } from "@/lib/patchbay-data";
 
-export const metadata: Metadata = { title: "Patchbay" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("patchbay.meta.titleOne") };
+}
 
 export default async function PatchbayPage({ params }: { params: Promise<{ id: string }> }) {
+  const { t, p } = await getI18n();
   const id = Number((await params).id);
   if (!Number.isInteger(id)) notFound();
   const [{ views, issues }, device] = await Promise.all([getPatchbays(), getDevice(id)]);
@@ -34,15 +40,15 @@ export default async function PatchbayPage({ params }: { params: Promise<{ id: s
                 {device.rack_position ? ` · U${device.rack_position}` : ""}
               </span>
             ) : null}
-            <Badge>{view.columns * 2} points</Badge>
+            <Badge>{p("patchbay.points", view.columns * 2)}</Badge>
           </span>
         }
         actions={
           <>
-            <ButtonLink href={`/plan?focus=${id}`}>Show in plan</ButtonLink>
-            <ButtonLink href={`/cables/labels?device=${id}`}>Cable labels</ButtonLink>
-            <ButtonLink href={`/patchbays/${id}/strip`}>Print strips</ButtonLink>
-            <ButtonLink href={`/assets/${id}/edit`}>Edit device</ButtonLink>
+            <ButtonLink href={`/plan?focus=${id}`}>{t("action.showInPlan")}</ButtonLink>
+            <ButtonLink href={`/cables/labels?device=${id}`}>{t("action.cableLabels")}</ButtonLink>
+            <ButtonLink href={`/patchbays/${id}/strip`}>{t("patchbay.printStrips")}</ButtonLink>
+            <ButtonLink href={`/assets/${id}/edit`}>{t("patchbay.editDevice")}</ButtonLink>
           </>
         }
       />
@@ -52,7 +58,7 @@ export default async function PatchbayPage({ params }: { params: Promise<{ id: s
       {others.length ? (
         <ul className="mb-6 space-y-1 rounded-md border border-warn/40 bg-warn/10 px-4 py-3 text-sm text-warn">
           {others.map((i, k) => (
-            <li key={k}>{i.message}</li>
+            <li key={k}>{issueMessage(t, i)}</li>
           ))}
         </ul>
       ) : null}

@@ -4,9 +4,13 @@ import { Help } from "@/components/help";
 import { PrintButton } from "@/components/print-button";
 import { ButtonLink, PageHeader } from "@/components/ui";
 import { getCables, getDevices, refId } from "@/lib/data";
-import { SIGNALS, isKey } from "@/lib/vocab";
+import { getI18n } from "@/lib/i18n";
+import { SIGNALS, isKey, signalColor } from "@/lib/vocab";
 
-export const metadata: Metadata = { title: "Cable labels" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("action.cableLabels") };
+}
 
 /**
  * Two wrap-around labels per cable, one for each end. Each says which end it
@@ -14,9 +18,10 @@ export const metadata: Metadata = { title: "Cable labels" };
  * back without the app.
  */
 export default async function LabelsPage({ searchParams }: { searchParams: Promise<{ device?: string; signal?: string; codes?: string }> }) {
+  const { t, p } = await getI18n();
   const sp = await searchParams;
   const [devices, cables] = await Promise.all([getDevices(), getCables()]);
-  const byId = new Map(devices.map((d) => [d.id, d]));
+  const byId = new Map(devices.map((x) => [x.id, x]));
   const device = Number(sp.device) || undefined;
   const codes = sp.codes ? new Set(sp.codes.split(",").map((c) => c.trim().toUpperCase())) : undefined;
   const list = cables.filter(
@@ -27,19 +32,19 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
       (!codes || codes.has(c.code.toUpperCase())),
   );
   const where = (id: number | undefined, port: string | null | undefined) => {
-    const d = id ? byId.get(id) : undefined;
-    return d ? `${d.code} ${port ?? ""}`.trim() : "—";
+    const dev = id ? byId.get(id) : undefined;
+    return dev ? `${dev.code} ${port ?? ""}`.trim() : t("state.none");
   };
 
   return (
     <>
       <div className="no-print">
         <PageHeader
-          title="Cable labels"
-          subtitle={`${list.length} cables · ${list.length * 2} labels. Filter with ?device=, ?signal= or ?codes=C-001,C-002.`}
+          title={t("action.cableLabels")}
+          subtitle={`${p("cables.labels.count", list.length)} · ${p("cables.labels.sheets", list.length * 2)}. ${t("cables.labels.filterHint")}`}
           actions={
             <>
-              <ButtonLink href="/cables">Back</ButtonLink>
+              <ButtonLink href="/cables">{t("action.back")}</ButtonLink>
               <PrintButton />
             </>
           }
@@ -55,16 +60,16 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
               key={`${c.id}${side}`}
               className="flex h-[22mm] break-inside-avoid items-stretch overflow-hidden rounded border border-line-strong bg-white text-black print:border-black"
             >
-              <div className="flex w-[7mm] items-center justify-center text-[10px] font-bold text-white" style={{ background: SIGNALS[c.signal].color }}>
+              <div className="flex w-[7mm] items-center justify-center text-[10px] font-bold text-white" style={{ background: signalColor(c.signal) }}>
                 {side}
               </div>
               <div className="flex min-w-0 flex-1 flex-col justify-center px-2 font-mono leading-tight">
                 <div className="text-[15px] font-bold tracking-wide">{c.code}</div>
                 <div className="truncate text-[10px]">
-                  <b>{side === "A" ? "HERE" : "FROM"}</b> {a}
+                  <b>{side === "A" ? t("cables.labels.here") : t("cables.labels.from")}</b> {a}
                 </div>
                 <div className="truncate text-[10px]">
-                  <b>{side === "B" ? "HERE" : "TO"}</b> {b}
+                  <b>{side === "B" ? t("cables.labels.here") : t("cables.labels.to")}</b> {b}
                 </div>
               </div>
             </div>

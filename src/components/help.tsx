@@ -8,15 +8,22 @@
  * storage can be blocked or empty.
  *
  * `Tip` is an inline term with its explanation from the glossary.
+ *
+ * Both read the manual in the reader's language.
  */
 import Link from "next/link";
 import { useEffect, useRef, type ReactNode } from "react";
 
 import { RichText } from "@/components/rich-text";
-import { GLOSSARY, TOPICS, type GlossaryId, type TopicId } from "@/lib/help";
+import { getHelp, type GlossaryId, type TopicId } from "@/lib/help";
+import { useI18n, useLocale } from "@/lib/i18n/client";
 
 export function Help({ topic, children }: { topic: TopicId; children?: ReactNode }) {
-  const t = TOPICS[topic];
+  const { t } = useI18n();
+  const locale = useLocale();
+  const help = getHelp(locale);
+  const topics = help.topics;
+  const current = topics[topic];
   const ref = useRef<HTMLDetailsElement>(null);
   const key = `help:${topic}`;
 
@@ -36,7 +43,7 @@ export function Help({ topic, children }: { topic: TopicId; children?: ReactNode
     }
   };
 
-  const hasMore = !!(t.points?.length || t.steps?.length || children);
+  const hasMore = !!(current.points?.length || current.steps?.length || children);
 
   return (
     <details
@@ -52,11 +59,11 @@ export function Help({ topic, children }: { topic: TopicId; children?: ReactNode
           ?
         </span>
         <span className="text-sm leading-relaxed text-dim">
-          <RichText>{t.lede}</RichText>
+          <RichText>{current.lede}</RichText>
         </span>
         {hasMore ? (
           <span className="ml-auto flex shrink-0 items-center gap-1.5 whitespace-nowrap pt-0.5 text-xs text-faint group-hover:text-dim">
-            <span className="hidden sm:inline">Details</span>
+            <span className="hidden sm:inline">{t("help.details")}</span>
             <svg viewBox="0 0 10 10" className="size-2.5 transition-transform group-open:rotate-90" aria-hidden>
               <path d="M2 1l5 4-5 4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -66,24 +73,24 @@ export function Help({ topic, children }: { topic: TopicId; children?: ReactNode
 
       {hasMore ? (
         <div className="border-t border-line px-4 pb-4 pt-3.5">
-          {t.points?.length ? (
+          {current.points?.length ? (
             <dl className="grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
-              {t.points.map((p) => (
-                <div key={p.term} className="text-sm">
-                  <dt className="font-medium text-ink">{p.term}</dt>
+              {current.points.map((pt) => (
+                <div key={pt.term} className="text-sm">
+                  <dt className="font-medium text-ink">{pt.term}</dt>
                   <dd className="mt-0.5 leading-relaxed text-dim">
-                    <RichText>{p.text}</RichText>
+                    <RichText>{pt.text}</RichText>
                   </dd>
                 </div>
               ))}
             </dl>
           ) : null}
 
-          {t.steps?.length ? (
+          {current.steps?.length ? (
             <>
-              <h3 className="mb-1.5 mt-4 text-xs font-semibold uppercase tracking-wider text-faint">Doing it</h3>
+              <h3 className="mb-1.5 mt-4 text-xs font-semibold uppercase tracking-wider text-faint">{t("help.doingIt")}</h3>
               <ol className="list-decimal space-y-1 pl-5 text-sm text-dim">
-                {t.steps.map((s) => (
+                {current.steps.map((s) => (
                   <li key={s} className="leading-relaxed">
                     <RichText>{s}</RichText>
                   </li>
@@ -96,11 +103,11 @@ export function Help({ topic, children }: { topic: TopicId; children?: ReactNode
 
           <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line pt-3 text-xs">
             <Link href={`/guide#${topic}`} className="text-amber hover:underline">
-              {t.title} in the guide →
+              {t("help.inTheGuide", { title: current.title })}
             </Link>
-            {t.see?.map((s) => (
+            {current.see?.map((s) => (
               <Link key={s} href={`/guide#${s}`} className="text-faint hover:text-dim">
-                {TOPICS[s].title}
+                {topics[s].title}
               </Link>
             ))}
           </p>
@@ -116,7 +123,7 @@ export function Help({ topic, children }: { topic: TopicId; children?: ReactNode
  * everywhere the term appears.
  */
 export function Tip({ term, label }: { term: GlossaryId; label?: string }) {
-  const g = GLOSSARY[term];
+  const g = getHelp(useLocale()).glossary[term];
   return (
     <span className="group/tip relative inline-block">
       <button

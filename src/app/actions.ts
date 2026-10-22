@@ -7,6 +7,7 @@
  */
 import { isGoHeadError } from "@gohead-cms/client";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import type { BookingInput, CableInput, ChannelStripInput, ClientInput, DeviceInput, LocationInput, MaintenanceInput, PatchPointInput, PortInput, RoomInput } from "@/gohead";
@@ -15,6 +16,9 @@ import { restoreRevision } from "@/lib/audit";
 import { toDeviceInput, toLocationInput, toRoomInput } from "@/lib/device-input";
 import { createPerson, deletePerson, updatePerson } from "@/lib/people";
 import { compact, failure, FieldError, Fields, type FormState } from "@/lib/form";
+import { getI18n } from "@/lib/i18n";
+import { isLocale, LOCALE_COOKIE } from "@/lib/i18n/locales";
+import type { T } from "@/lib/i18n/translate";
 import { cablesByPort, portKey } from "@/lib/patch";
 import { toPlanCable } from "@/lib/plan-data";
 import { signIn, signOut, withSession } from "@/lib/session";
@@ -34,16 +38,17 @@ import {
 // ---- Session ----
 
 export async function login(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const username = f.str("username");
   const password = typeof form.get("password") === "string" ? (form.get("password") as string) : "";
-  if (!username || !password) return { error: "Enter your GoHead username and password." };
+  if (!username || !password) return { error: t("error.signIn.missing") };
   try {
     await signIn(username, password);
   } catch (err) {
-    if (isGoHeadError(err) && (err.status === 401 || err.status === 400)) return { error: "Wrong username or password." };
-    if (isGoHeadError(err) && err.status === 429) return { error: "Too many attempts: wait a minute and try again." };
-    return failure(err);
+    if (isGoHeadError(err) && (err.status === 401 || err.status === 400)) return { error: t("error.signIn.wrong") };
+    if (isGoHeadError(err) && err.status === 429) return { error: t("error.signIn.tooMany") };
+    return failure(t, err);
   }
   const next = f.str("next");
   redirect(next && next.startsWith("/") && !next.startsWith("//") ? next : "/");
@@ -54,15 +59,30 @@ export async function logout(): Promise<void> {
   redirect("/login");
 }
 
+/**
+ * Switches the language. The cookie outlives the session on purpose: someone
+ * who chose French should get French at the next sign-in too.
+ */
+export async function setLocale(formData: FormData): Promise<void> {
+  const wanted = formData.get("locale");
+  if (!isLocale(wanted)) return;
+  (await cookies()).set(LOCALE_COOKIE, wanted, {
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+  });
+  revalidatePath("/", "layout");
+}
+
 // ---- Gear ----
 
-function parsePorts(raw: string | undefined): PortInput[] {
+function parsePorts(t: T, raw: string | undefined): PortInput[] {
   if (!raw) return [];
   let list: unknown;
   try {
     list = JSON.parse(raw);
   } catch {
-    throw new FieldError("The port list could not be read.");
+    throw new FieldError(t("error.ports.unreadable"));
   }
   if (!Array.isArray(list)) return [];
   const seen = new Set<string>();
@@ -84,17 +104,18 @@ function parsePorts(raw: string | undefined): PortInput[] {
 }
 
 export async function saveDevice(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
   let savedId: number;
   try {
-    const ports = parsePorts(f.str("ports"));
+    const ports = parsePorts(t, f.str("ports"));
     savedId = await withSession(async (g) => {
       // Photos kept (in the order shown, the first being the cover) plus the
       // new ones, which the browser has already scaled down.
       const kept = f.idList("photo_ids");
       const uploads = f.files("photos");
-      if (uploads.some((u) => !u.type.startsWith("image/"))) throw new FieldError("Photos have to be images.");
+      if (uploads.some((u) => !u.type.startsWith("image/"))) throw new FieldError(t("error.photos.images"));
       if (kept.length + uploads.length > MAX_PHOTOS) throw new FieldError(`A machine takes at most ${MAX_PHOTOS} photos.`);
       const added = uploads.length ? await g.media.upload(uploads, { alt: f.str("name") }) : [];
       const photos = [...kept, ...added.map((m) => m.id)];
@@ -150,7 +171,7 @@ export async function saveDevice(_prev: FormState, form: FormData): Promise<Form
       return saved.id;
     });
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   redirect(`/assets/${savedId}`);
@@ -170,8 +191,9 @@ async function orphanedPorts(deviceId: number, ports: PortInput[]) {
 }
 
 export async function deleteDevice(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const id = new Fields(form).id("id");
-  if (!id) return { error: "Missing device." };
+  if (!id) return { error: t("error.missing.device") };
   try {
     const cables = (await getCables()).filter((c) => refId(c.from_device) === id || refId(c.to_device) === id);
     if (cables.length) {
@@ -179,16 +201,17 @@ export async function deleteDevice(_prev: FormState, form: FormData): Promise<Fo
     }
     await withSession((g) => g.collection("devices").delete(id));
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   redirect("/assets");
 }
 
 export async function saveMaintenance(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const device = f.id("device");
-  if (!device) return { error: "Missing device." };
+  if (!device) return { error: t("error.missing.device") };
   try {
     const data: MaintenanceInput = compact({
       device,
@@ -200,7 +223,7 @@ export async function saveMaintenance(_prev: FormState, form: FormData): Promise
     });
     await withSession((g) => g.collection("maintenance").create(data, { level: 0 }));
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath(`/assets/${device}`);
   return { ok: true };
@@ -225,6 +248,7 @@ function splitEnd(value: string | undefined): { device?: number; port?: string }
 }
 
 export async function saveCable(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
   try {
@@ -232,10 +256,10 @@ export async function saveCable(_prev: FormState, form: FormData): Promise<FormS
     const to = splitEnd(f.str("to"));
     const state = f.oneOf("state", CABLE_STATES) ?? "connected";
     if (state === "connected" && (!from.device || !to.device)) {
-      throw new FieldError("A connected cable needs both ends: pick a port on each side, or mark it spare.");
+      throw new FieldError(t("error.cable.bothEnds"));
     }
     if (from.device && to.device && from.device === to.device && from.port === to.port) {
-      throw new FieldError("Both ends are the same port.");
+      throw new FieldError(t("error.cable.samePort"));
     }
 
     // A port takes one cable, unless the user says otherwise (a Y-cable, a MIDI thru box).
@@ -246,8 +270,11 @@ export async function saveCable(_prev: FormState, form: FormData): Promise<FormS
         const busy = usage.get(portKey(end.device!, end.port!));
         if (busy?.length) {
           throw new FieldError(
-            `${devices.get(end.device!) ?? "That device"} · ${end.port} already has ${busy.map((c) => c.code).join(", ")}. ` +
-              'Unplug it first, or tick "Allow a shared port".',
+            t("error.cable.busy", {
+              device: devices.get(end.device!) ?? "",
+              port: end.port ?? "",
+              codes: busy.map((c) => c.code).join(", "),
+            }),
           );
         }
       }
@@ -269,7 +296,7 @@ export async function saveCable(_prev: FormState, form: FormData): Promise<FormS
     });
     await withSession((g) => (id ? g.collection("cables").update(id, data, { level: 0 }) : g.collection("cables").create(data, { level: 0 })));
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   const back = f.str("return_to");
@@ -277,12 +304,13 @@ export async function saveCable(_prev: FormState, form: FormData): Promise<FormS
 }
 
 export async function deleteCable(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const id = new Fields(form).id("id");
-  if (!id) return { error: "Missing cable." };
+  if (!id) return { error: t("error.missing.cable") };
   try {
     await withSession((g) => g.collection("cables").delete(id));
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   redirect("/cables");
@@ -291,13 +319,14 @@ export async function deleteCable(_prev: FormState, form: FormData): Promise<For
 // ---- Bookings ----
 
 export async function saveBooking(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
   try {
     const starts_at = f.datetime("starts_at");
     const ends_at = f.datetime("ends_at");
-    if (!starts_at || !ends_at) throw new FieldError("Set when the session starts and ends.");
-    if (ends_at <= starts_at) throw new FieldError("The session must end after it starts.");
+    if (!starts_at || !ends_at) throw new FieldError(t("error.booking.times"));
+    if (ends_at <= starts_at) throw new FieldError(t("error.booking.order"));
     const room = f.id("room");
     const devices = f.ids("devices");
     const state = f.oneOf("state", BOOKING_STATES) ?? "tentative";
@@ -306,7 +335,7 @@ export async function saveBooking(_prev: FormState, form: FormData): Promise<For
       const overlapping = (await getBookings(starts_at, ends_at)).filter((b) => b.id !== id && b.state !== "cancelled");
       const roomClash = room ? overlapping.find((b) => refId(b.room) === room) : undefined;
       if (roomClash) {
-        throw new FieldError(`The room is already booked for "${roomClash.title}". Tick "Book anyway" to keep both.`);
+        throw new FieldError(t("error.booking.clash", { title: roomClash.title }));
       }
       const wanted = new Set(devices);
       for (const b of overlapping) {
@@ -333,7 +362,7 @@ export async function saveBooking(_prev: FormState, form: FormData): Promise<For
     });
     await withSession((g) => (id ? g.collection("bookings").update(id, data, { level: 0 }) : g.collection("bookings").create(data, { level: 0 })));
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   const week = f.str("week");
@@ -341,12 +370,13 @@ export async function saveBooking(_prev: FormState, form: FormData): Promise<For
 }
 
 export async function deleteBooking(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const id = new Fields(form).id("id");
-  if (!id) return { error: "Missing booking." };
+  if (!id) return { error: t("error.missing.booking") };
   try {
     await withSession((g) => g.collection("bookings").delete(id));
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   redirect("/bookings");
@@ -355,6 +385,7 @@ export async function deleteBooking(_prev: FormState, form: FormData): Promise<F
 // ---- Clients, rooms, locations ----
 
 export async function saveClient(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
   try {
@@ -367,13 +398,14 @@ export async function saveClient(_prev: FormState, form: FormData): Promise<Form
     });
     await withSession((g) => (id ? g.collection("clients").update(id, data, { level: 0 }) : g.collection("clients").create(data, { level: 0 })));
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/clients");
   redirect("/clients");
 }
 
 export async function saveRoom(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
   try {
@@ -395,13 +427,14 @@ export async function saveRoom(_prev: FormState, form: FormData): Promise<FormSt
       return g.collection("rooms").update(id, compact({ ...data, map_x, map_y, width_cm, depth_cm }), { level: 0 });
     });
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   redirect("/places");
 }
 
 export async function saveLocation(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
   try {
@@ -418,7 +451,7 @@ export async function saveLocation(_prev: FormState, form: FormData): Promise<Fo
       return g.collection("locations").update(id, compact({ ...data, map_x, map_y, width_cm, depth_cm, rotation }), { level: 0 });
     });
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   redirect("/places");
@@ -426,10 +459,11 @@ export async function saveLocation(_prev: FormState, form: FormData): Promise<Fo
 
 /** Deletes a client, room or location that nothing points to any more. */
 export async function deletePlaceOrClient(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
   const type = f.str("type");
-  if (!id || (type !== "clients" && type !== "rooms" && type !== "locations")) return { error: "Nothing to delete." };
+  if (!id || (type !== "clients" && type !== "rooms" && type !== "locations")) return { error: t("error.delete.nothing") };
   try {
     if (type === "locations") {
       const used = (await getDevices()).filter((d) => refId(d.location) === id);
@@ -437,7 +471,7 @@ export async function deletePlaceOrClient(_prev: FormState, form: FormData): Pro
     }
     await withSession((g) => g.collection(type).delete(id));
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   redirect(type === "clients" ? "/clients" : "/places");
@@ -459,17 +493,18 @@ const MAX_PHOTOS = 8;
 
 /** Saves a patchbay's column count and every column's labels, mode, DAW track, color and note. */
 export async function savePatchPoints(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
-  if (!id) return { error: "Missing patchbay." };
+  if (!id) return { error: t("error.missing.patchbay") };
   try {
     const columns = f.int("columns");
-    if (!columns || columns < 1 || columns > 96) throw new FieldError("A patchbay has between 1 and 96 columns.");
+    if (!columns || columns < 1 || columns > 96) throw new FieldError(t("error.patchbay.columns"));
     let raw: unknown;
     try {
       raw = JSON.parse(f.str("points") ?? "[]");
     } catch {
-      throw new FieldError("The columns could not be read.");
+      throw new FieldError(t("error.patchbay.unreadable"));
     }
     const points: PatchPointInput[] = [];
     for (const item of Array.isArray(raw) ? (raw as Array<Record<string, unknown>>) : []) {
@@ -484,14 +519,14 @@ export async function savePatchPoints(_prev: FormState, form: FormData): Promise
     await withSession(async (g) => {
       const devices = g.collection("devices");
       const current = await devices.findOne(id, { level: 0 });
-      if (current.category !== "patchbay") throw new FieldError("This device isn't a patchbay.");
+      if (current.category !== "patchbay") throw new FieldError(t("error.patchbay.notPatchbay"));
       const data = toDeviceInput(current);
       data.patch_columns = columns;
       data.patch_points = points.sort((a, b) => a.column - b.column);
       await devices.update(id, data, { level: 0 });
     });
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   return { ok: true };
@@ -499,9 +534,10 @@ export async function savePatchPoints(_prev: FormState, form: FormData): Promise
 
 /** Adds the rear ports "Top N" / "Bottom N" a patchbay is missing, so cables can plug into them. */
 export async function createRearPorts(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
-  if (!id) return { error: "Missing patchbay." };
+  if (!id) return { error: t("error.missing.patchbay") };
   try {
     await withSession(async (g) => {
       const devices = g.collection("devices");
@@ -529,7 +565,7 @@ export async function createRearPorts(_prev: FormState, form: FormData): Promise
       await devices.update(id, data, { level: 0 });
     });
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   return { ok: true };
@@ -543,19 +579,20 @@ interface LayoutChange {
   devices?: Array<{ id: number; x: number; y: number }>;
 }
 
-const clampInt = (v: unknown, min: number, max: number) => {
+const clampInt = (t: T, v: unknown, min: number, max: number) => {
   const n = Math.round(Number(v));
-  if (!Number.isFinite(n)) throw new FieldError("A position could not be read.");
+  if (!Number.isFinite(n)) throw new FieldError(t("error.layout.position"));
   return Math.min(max, Math.max(min, n));
 };
 
 /** Saves what was moved on the studio map: rooms, places, and devices on their place. */
 export async function saveMapLayout(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   let change: LayoutChange;
   try {
     change = JSON.parse(new Fields(form).str("layout") ?? "{}") as LayoutChange;
   } catch {
-    return { error: "The layout could not be read." };
+    return { error: t("error.layout.unreadable") };
   }
   try {
     await withSession(async (g) => {
@@ -563,7 +600,7 @@ export async function saveMapLayout(_prev: FormState, form: FormData): Promise<F
         const current = await g.collection("rooms").findOne(r.id, { level: 0 });
         await g.collection("rooms").update(
           r.id,
-          { ...toRoomInput(current), map_x: clampInt(r.x, -5000, 5000), map_y: clampInt(r.y, -5000, 5000), width_cm: clampInt(r.w, 50, 5000), depth_cm: clampInt(r.d, 50, 5000) },
+          { ...toRoomInput(current), map_x: clampInt(t, r.x, -5000, 5000), map_y: clampInt(t, r.y, -5000, 5000), width_cm: clampInt(t, r.w, 50, 5000), depth_cm: clampInt(t, r.d, 50, 5000) },
           { level: 0 },
         );
       }
@@ -575,22 +612,22 @@ export async function saveMapLayout(_prev: FormState, form: FormData): Promise<F
           compact({
             ...input,
             room: l.room === undefined ? input.room : l.room > 0 ? l.room : undefined,
-            map_x: clampInt(l.x, -5000, 5000),
-            map_y: clampInt(l.y, -5000, 5000),
-            width_cm: clampInt(l.w, 5, 2000),
-            depth_cm: clampInt(l.d, 5, 2000),
-            rotation: ((clampInt(l.rot, -720, 720) % 360) + 360) % 360,
+            map_x: clampInt(t, l.x, -5000, 5000),
+            map_y: clampInt(t, l.y, -5000, 5000),
+            width_cm: clampInt(t, l.w, 5, 2000),
+            depth_cm: clampInt(t, l.d, 5, 2000),
+            rotation: ((clampInt(t, l.rot, -720, 720) % 360) + 360) % 360,
           }),
           { level: 0 },
         );
       }
       for (const d of change.devices ?? []) {
         const current = await g.collection("devices").findOne(d.id, { level: 0 });
-        await g.collection("devices").update(d.id, { ...toDeviceInput(current), map_x: clampInt(d.x, 0, 100), map_y: clampInt(d.y, 0, 100) }, { level: 0 });
+        await g.collection("devices").update(d.id, { ...toDeviceInput(current), map_x: clampInt(t, d.x, 0, 100), map_y: clampInt(t, d.y, 0, 100) }, { level: 0 });
       }
     });
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   return { ok: true };
@@ -600,17 +637,18 @@ export async function saveMapLayout(_prev: FormState, form: FormData): Promise<F
 
 /** Saves a console's channel count and every strip's label, source, routing, auxes, color and note. */
 export async function saveChannelStrips(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
-  if (!id) return { error: "Missing console." };
+  if (!id) return { error: t("error.missing.console") };
   try {
     const channels = f.int("channels");
-    if (!channels || channels < 1 || channels > 128) throw new FieldError("A console has between 1 and 128 channels.");
+    if (!channels || channels < 1 || channels > 128) throw new FieldError(t("error.console.channels"));
     let raw: unknown;
     try {
       raw = JSON.parse(f.str("strips") ?? "[]");
     } catch {
-      throw new FieldError("The strips could not be read.");
+      throw new FieldError(t("error.console.strips"));
     }
     const strips: ChannelStripInput[] = [];
     for (const item of Array.isArray(raw) ? (raw as Array<Record<string, unknown>>) : []) {
@@ -625,14 +663,14 @@ export async function saveChannelStrips(_prev: FormState, form: FormData): Promi
     await withSession(async (g) => {
       const devices = g.collection("devices");
       const current = await devices.findOne(id, { level: 0 });
-      if (current.category !== "mixer") throw new FieldError("This device isn't a console.");
+      if (current.category !== "mixer") throw new FieldError(t("error.console.notConsole"));
       const data = toDeviceInput(current);
       data.console_channels = channels;
       data.channel_strips = strips.sort((a, b) => a.number - b.number);
       await devices.update(id, data, { level: 0 });
     });
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/", "layout");
   return { ok: true };
@@ -642,35 +680,37 @@ export async function saveChannelStrips(_prev: FormState, form: FormData): Promi
 
 /** Creates a GoHead account. Admins only; GoHead enforces that too. */
 export async function savePerson(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const id = f.id("id");
   try {
     const username = f.required("username", "Username").toLowerCase();
-    if (!/^[a-z0-9._-]{2,40}$/.test(username)) throw new FieldError("A username is 2–40 letters, digits, dot, dash or underscore.");
+    if (!/^[a-z0-9._-]{2,40}$/.test(username)) throw new FieldError(t("error.account.username"));
     const role_name = f.required("role_name", "Role");
     const password = f.str("password");
-    if (password && password.length < 12) throw new FieldError("A password needs 12 characters or more.");
+    if (password && password.length < 12) throw new FieldError(t("error.account.password"));
     if (id) {
       await updatePerson(id, compact({ email: f.str("email"), role_name, password }));
     } else {
-      if (!password) throw new FieldError("Set a password for the new account.");
+      if (!password) throw new FieldError(t("error.account.needPassword"));
       await createPerson({ username, email: f.required("email", "Email"), password, role_name });
     }
   } catch (err) {
-    if (isGoHeadError(err) && err.status === 409) return { error: "That username or email is already taken." };
-    return failure(err);
+    if (isGoHeadError(err) && err.status === 409) return { error: t("error.account.taken") };
+    return failure(t, err);
   }
   revalidatePath("/people");
   redirect("/people");
 }
 
 export async function removePerson(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const id = new Fields(form).id("id");
-  if (!id) return { error: "Missing account." };
+  if (!id) return { error: t("error.missing.account") };
   try {
     await deletePerson(id);
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
   revalidatePath("/people");
   redirect("/people");
@@ -680,17 +720,18 @@ export async function removePerson(_prev: FormState, form: FormData): Promise<Fo
 
 /** Restores a version of an entry; a deleted entry comes back under its own id. */
 export async function restoreVersion(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
   const f = new Fields(form);
   const collection = f.str("collection");
   const id = f.id("entry");
   const version = f.int("version");
-  if (!collection || !id || !version) return { error: "Missing what to restore." };
+  if (!collection || !id || !version) return { error: t("error.restore.missing") };
   try {
     const result = await restoreRevision(collection, id, version);
     revalidatePath("/", "layout");
-    if (result.unchanged) return { error: "That version is already the current content." };
+    if (result.unchanged) return { error: t("error.restore.unchanged") };
     return { ok: true };
   } catch (err) {
-    return failure(err);
+    return failure(t, err);
   }
 }

@@ -67,10 +67,17 @@ export type IssueKind = "busy_port" | "unknown_port" | "missing_device" | "signa
 export interface Issue {
   kind: IssueKind;
   cable: PlanCable;
-  message: string;
   /** Other cables involved (busy ports). */
   others?: PlanCable[];
+  /**
+   * What the message needs to say it. The words themselves live in the
+   * message files, because the reader may be reading in French:
+   * `issueMessage(t, issue)` in src/lib/issues.ts turns this into a sentence.
+   */
+  vars: IssueVars;
 }
+
+export type IssueVars = Record<string, string | number>;
 
 /** What looks wrong in the plan: things worth checking before a session. */
 export function findIssues(devices: PlanDevice[], cables: PlanCable[]): Issue[] {
@@ -82,7 +89,7 @@ export function findIssues(devices: PlanDevice[], cables: PlanCable[]): Issue[] 
   for (const c of cables) {
     if (c.state !== "connected") continue;
     if (!c.from || !c.to) {
-      issues.push({ kind: "loose_end", cable: c, message: `${c.code} is marked connected but one end is not set` });
+      issues.push({ kind: "loose_end", cable: c, vars: { code: c.code } });
       continue;
     }
     const ends: Array<["from" | "to", { device: number; port: string }]> = [["from", c.from], ["to", c.to]];
@@ -90,21 +97,21 @@ export function findIssues(devices: PlanDevice[], cables: PlanCable[]): Issue[] 
     for (const [side, end] of ends) {
       const device = byId.get(end.device);
       if (!device) {
-        issues.push({ kind: "missing_device", cable: c, message: `${c.code}: the ${side === "from" ? "source" : "destination"} device no longer exists` });
+        issues.push({ kind: "missing_device", cable: c, vars: { code: c.code, side } });
         resolved.push(undefined);
         continue;
       }
       const port = device.ports.find((p) => p.name === end.port);
       resolved.push(port);
       if (!port) {
-        issues.push({ kind: "unknown_port", cable: c, message: `${c.code}: ${device.name} has no port "${end.port}"` });
+        issues.push({ kind: "unknown_port", cable: c, vars: { code: c.code, device: device.name, port: end.port } });
         continue;
       }
       if (port.signal !== c.signal) {
         issues.push({
           kind: "signal_mismatch",
           cable: c,
-          message: `${c.code} carries ${c.signal} but ${device.name} · ${port.name} is ${port.signal}`,
+          vars: { code: c.code, cableSignal: c.signal, device: device.name, port: port.name, portSignal: port.signal },
         });
       }
       const key = portKey(end.device, end.port);
@@ -115,13 +122,13 @@ export function findIssues(devices: PlanDevice[], cables: PlanCable[]): Issue[] 
           kind: "busy_port",
           cable: c,
           others: others.filter((o) => o.id !== c.id),
-          message: `${device.name} · ${port.name} has ${others.length} cables: ${others.map((o) => o.code).join(", ")}`,
+          vars: { device: device.name, port: port.name, count: others.length, codes: others.map((o) => o.code).join(", ") },
         });
       }
     }
     const [a, b] = resolved;
     if (a && b && ((a.direction === "in" && b.direction === "in") || (a.direction === "out" && b.direction === "out"))) {
-      issues.push({ kind: "direction", cable: c, message: `${c.code} joins two ${a.direction === "in" ? "inputs" : "outputs"}` });
+      issues.push({ kind: "direction", cable: c, vars: { code: c.code, direction: a.direction } });
     }
   }
   return [...findLoops(devices, cables), ...findConsoleLoops(devices, cables, stripsOf(devices)), ...issues];
@@ -246,14 +253,18 @@ export function findLoops(devices: PlanDevice[], cables: PlanCable[]): Issue[] {
     const names = g.map((id) => byId.get(id)?.name ?? `#${id}`);
     const where = inside
       .filter((h) => h.via)
-      .map((h) => `${byId.get(h.via!.patchbay)?.name ?? "patchbay"} column ${h.via!.column}`);
+      // The bay and the column, kept apart: "column" is a word, and the word
+      // differs by language. issueMessage() puts them together.
+      .map((h) => `${byId.get(h.via!.patchbay)?.name ?? "?"}\u0001${h.via!.column}`);
     issues.push({
       kind: "loop",
       cable: inside[0]!.cables[0]!,
       others: inside.flatMap((h) => h.cables),
-      message:
-        `Feedback loop: ${names.length === 1 ? `${names[0]} feeds itself` : [...names, names[0]].join(" → ")}` +
-        (where.length ? ` (normalled through ${[...new Set(where)].join(", ")}: switch to Thru)` : ""),
+      vars: {
+        chain: names.length === 1 ? names[0]! : [...names, names[0]].join(" → "),
+        alone: names.length === 1 ? 1 : 0,
+        through: [...new Set(where)].join("\u0002"),
+      },
     });
   }
   return issues;

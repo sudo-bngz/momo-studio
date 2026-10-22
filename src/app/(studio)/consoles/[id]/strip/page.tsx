@@ -5,13 +5,21 @@ import { Help } from "@/components/help";
 import { PrintButton } from "@/components/print-button";
 import { ButtonLink, PageHeader } from "@/components/ui";
 import { getConsoles } from "@/lib/console-data";
+import { getI18n } from "@/lib/i18n";
 
-export const metadata: Metadata = { title: "Scribble strip" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("console.meta.strip") };
+}
 
 const PRINTABLE_MM = 277;
 
+/** The source printed on a 30 mm strip: the short words only. */
+const SOURCE_KEY = { mic: "console.role.mic", line: "console.role.line", tape: "console.role.tapeShort" } as const;
+
 /** A scribble strip to tape under the faders: channel number, name, source, routing. */
 export default async function ScribbleStripPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ pitch?: string; height?: string }> }) {
+  const { t, p } = await getI18n();
   const id = Number((await params).id);
   const sp = await searchParams;
   const { views } = await getConsoles();
@@ -27,11 +35,11 @@ export default async function ScribbleStripPage({ params, searchParams }: { para
       <style>{"@page { size: A4 landscape; margin: 10mm; }"}</style>
       <div className="no-print">
         <PageHeader
-          title={`Scribble strip · ${view.name}`}
-          subtitle={`${pieces.length} piece(s). Print at 100 %, cut, tape under the faders. Measure your channel spacing (GS3: about 30 mm).`}
+          title={t("console.strip.title", { name: view.name })}
+          subtitle={p("console.strip.subtitle", pieces.length)}
           actions={
             <>
-              <ButtonLink href={`/consoles/${id}`}>Back</ButtonLink>
+              <ButtonLink href={`/consoles/${id}`}>{t("action.back")}</ButtonLink>
               <PrintButton />
             </>
           }
@@ -39,25 +47,31 @@ export default async function ScribbleStripPage({ params, searchParams }: { para
         <Help topic="console-strip" />
         <form method="get" className="mb-6 flex flex-wrap items-end gap-3 text-sm">
           <label>
-            <span className="mb-1 block text-xs text-dim">Channel spacing (mm)</span>
+            <span className="mb-1 block text-xs text-dim">{t("console.strip.pitch")}</span>
             <input name="pitch" type="number" step="0.5" min={15} max={60} defaultValue={pitch} className="control w-28" />
           </label>
           <label>
-            <span className="mb-1 block text-xs text-dim">Strip height (mm)</span>
+            <span className="mb-1 block text-xs text-dim">{t("console.strip.height")}</span>
             <input name="height" type="number" step="0.5" min={8} max={40} defaultValue={height} className="control w-28" />
           </label>
-          <button className="rounded-md border border-line-strong px-3 py-2 hover:bg-raised">Update</button>
+          <button className="rounded-md border border-line-strong px-3 py-2 hover:bg-raised">{t("console.strip.update")}</button>
         </form>
       </div>
       {pieces.map((piece, k) => (
         <div key={k} className="mb-[4mm] break-inside-avoid">
           <div className="mb-[1mm] font-mono text-[7pt] text-dim print:text-black">
-            {view.code} · channels {piece[0]!.number}–{piece[piece.length - 1]!.number}
+            {t("console.strip.range", { code: view.code, from: piece[0]!.number, to: piece[piece.length - 1]!.number })}
           </div>
           <div className="flex border-l border-black bg-white text-black" style={{ width: `${piece.length * pitch}mm` }}>
             {piece.map((s) => {
-              const src = s.source ? s.source.toUpperCase() : "";
-              const route = [s.direct ? "DIR" : "", s.route.toUpperCase(), s.aux.length ? `AUX ${s.aux.join(",")}` : ""].filter(Boolean).join(" ");
+              const src = s.source ? t(SOURCE_KEY[s.source]).toUpperCase() : "";
+              const route = [
+                s.direct ? t("console.strip.direct") : "",
+                s.route.toUpperCase(),
+                s.aux.length ? t("console.strip.aux", { list: s.aux.join(",") }) : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
               return (
                 <div
                   key={s.number}

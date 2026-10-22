@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect } from "react";
 
 import { restoreVersion } from "@/app/actions";
+import { useI18n } from "@/lib/i18n/client";
 
 export function RestoreButton({
   collection,
   entry,
   version,
-  label = "Restore this version",
+  label,
   confirm,
   primary = false,
 }: {
@@ -21,6 +22,7 @@ export function RestoreButton({
   confirm?: string;
   primary?: boolean;
 }) {
+  const { t } = useI18n();
   const [state, run, pending] = useActionState(restoreVersion, {});
   const router = useRouter();
   // The entry is back (or changed): show the page as it now stands.
@@ -49,7 +51,7 @@ export function RestoreButton({
             : "rounded-md border border-line-strong px-2.5 py-1 text-xs hover:bg-raised disabled:opacity-60"
         }
       >
-        {pending ? "Restoring…" : label}
+        {pending ? t("ops.restore.pending") : (label ?? t("ops.restore.thisVersion"))}
       </button>
       {state.error ? <span className="text-xs text-bad">{state.error}</span> : null}
     </form>

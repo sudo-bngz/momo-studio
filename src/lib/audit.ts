@@ -12,6 +12,7 @@ import "server-only";
 
 import { isGoHeadError } from "@gohead-cms/client";
 
+import type { T } from "@/lib/i18n/translate";
 import { withSession } from "@/lib/session";
 
 export type RevisionAction = "create" | "update" | "publish" | "unpublish" | "delete" | "restore" | "baseline";
@@ -64,25 +65,56 @@ export interface FeedFilter {
 /** The studio's own types, in the order the filter offers them. */
 export const AUDITED = ["devices", "cables", "bookings", "clients", "rooms", "locations", "maintenance"] as const;
 
-export const TYPE_LABEL: Record<string, string> = {
-  devices: "Asset",
-  cables: "Cable",
-  bookings: "Booking",
-  clients: "Client",
-  rooms: "Room",
-  locations: "Location",
-  maintenance: "Maintenance",
+export type AuditedType = (typeof AUDITED)[number];
+
+export const isAuditedType = (v: unknown): v is AuditedType =>
+  typeof v === "string" && (AUDITED as readonly string[]).includes(v);
+
+type Tone = "ok" | "warn" | "bad" | "info" | "muted";
+
+/**
+ * The colour of each kind of change. Only the tones live here: the words are
+ * in the message files, so the trail reads in the reader's language.
+ */
+export const ACTION_TONE: Record<RevisionAction, Tone> = {
+  create: "ok",
+  update: "info",
+  publish: "ok",
+  unpublish: "warn",
+  delete: "bad",
+  restore: "warn",
+  baseline: "muted",
 };
 
-export const ACTION_LABEL: Record<RevisionAction, { label: string; tone: "ok" | "warn" | "bad" | "info" | "muted" }> = {
-  create: { label: "Created", tone: "ok" },
-  update: { label: "Changed", tone: "info" },
-  publish: { label: "Published", tone: "ok" },
-  unpublish: { label: "Unpublished", tone: "warn" },
-  delete: { label: "Deleted", tone: "bad" },
-  restore: { label: "Restored", tone: "warn" },
-  baseline: { label: "Before history", tone: "muted" },
-};
+/** The kinds of change the filter offers, in the order it offers them. */
+export const REVISION_ACTIONS = Object.keys(ACTION_TONE) as RevisionAction[];
+
+export const isRevisionAction = (v: unknown): v is RevisionAction => typeof v === "string" && v in ACTION_TONE;
+
+/** The kinds of actor the filter offers, in the order it offers them. */
+export const ACTOR_KINDS: ActorKind[] = ["user", "token", "agent", "system"];
+
+export const isActorKind = (v: unknown): v is ActorKind => typeof v === "string" && (ACTOR_KINDS as string[]).includes(v);
+
+// ---- The same labels, in the reader's language ----
+//
+// `t` comes from getI18n() on the server. A kind GoHead knows and we don't is
+// shown as GoHead names it rather than as a missing message.
+
+/** How a change is shown on its badge: the word and the colour. */
+export function actionBadge(t: T, action: RevisionAction): { label: string; tone: Tone } {
+  const tone = ACTION_TONE[action];
+  return tone ? { label: t(`ops.action.${action}`), tone } : { label: action, tone: "muted" };
+}
+
+/** The singular name of the kind of thing a revision points at ("Cable"). */
+export const typeLabel = (t: T, typeName: string) => (isAuditedType(typeName) ? t(`ops.type.${typeName}`) : typeName);
+
+/** What made the change, as it reads under the actor's name ("API token"). */
+export const actorKindLabel = (t: T, kind: ActorKind) => (isActorKind(kind) ? t(`ops.actor.${kind}`) : kind);
+
+/** The same, as the filter's group of actors ("API tokens"). */
+export const actorKindFilterLabel = (t: T, kind: ActorKind) => t(`ops.filter.actor.${kind}`);
 
 /** Where an entry of this type is shown in the app. */
 export function entryHref(typeName: string, id: number): string | undefined {

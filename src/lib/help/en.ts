@@ -1,71 +1,14 @@
 /**
- * Every word of help in the app, in one place.
- *
- * A topic is shown twice: as the panel at the top of its page (`<Help topic>`
- * renders `lede`, then `points` and `steps` when opened) and as a chapter of
- * /guide (same text, plus `long` and whatever diagram that chapter carries).
- * Keeping both from one object means the page and the manual can't drift.
+ * The manual, in English. This is the source the French is translated from,
+ * and the fallback for anything French has not reached yet.
  *
  * The text describes what the code actually does — when you change behaviour,
  * change the topic with it.
  */
+import type { HelpContent } from "./types";
 
-/**
- * Every topic there is, in the order they appear in /guide. Declaring them
- * here means `TOPICS` must cover all of them and nothing else, and that a
- * `topic` prop can only be one that exists.
- */
-export const GUIDE_ORDER = [
-  "model",
-  "overview",
-  "assets",
-  "asset",
-  "asset-form",
-  "racks",
-  "places",
-  "map",
-  "cables",
-  "cable-form",
-  "cable-labels",
-  "patchbays",
-  "patchbay",
-  "patchbay-strip",
-  "consoles",
-  "console",
-  "console-strip",
-  "plan",
-  "bookings",
-  "booking-form",
-  "clients",
-  "activity",
-  "history",
-  "people",
-] as const;
-
-export type TopicId = (typeof GUIDE_ORDER)[number];
-
-export interface HelpPoint {
-  /** What's on screen: a column, a badge, a field, a term. */
-  term: string;
-  text: string;
-}
-
-export interface HelpTopic {
-  /** Chapter heading in /guide, and the panel's "more about…" label. */
-  title: string;
-  /** One or two sentences, always visible on the page. */
-  lede: string;
-  /** What the things on screen mean. */
-  points?: HelpPoint[];
-  /** The common task, in order. */
-  steps?: string[];
-  /** Paragraphs shown only in /guide. */
-  long?: string[];
-  /** Other topics worth reading next. */
-  see?: TopicId[];
-}
-
-export const TOPICS: Record<TopicId, HelpTopic> = {
+export const en: HelpContent = {
+  topics: {
   // ---- The idea ----
   model: {
     title: "How the pieces fit",
@@ -77,7 +20,7 @@ export const TOPICS: Record<TopicId, HelpTopic> = {
       { term: "Everything else", text: "Patchbays, consoles, the plan, the map and the labels hold no data of their own. They read the same assets and cables and show them in the shape you think in." },
     ],
     long: [
-      "Because cables point at a port by its name, renaming a port that a cable uses is refused: the cable would be left pointing at nothing. Rename the cable's end first, or delete and re-patch.",
+      "Because cables point at a port by its name, renaming a port that a cable uses is refused: the cable would be left pointing at nothing. Re-point the cable's end first, or delete it and re-patch.",
       "Two kinds of asset carry a little extra. A patchbay has columns, and each column can be normalled, half-normalled or thru. A console has channel strips: the label, source, routing and aux sends of each channel. Both exist so the app can follow a signal through the machine instead of stopping at it.",
     ],
     see: ["assets", "cables", "plan"],
@@ -88,10 +31,10 @@ export const TOPICS: Record<TopicId, HelpTopic> = {
     title: "Overview",
     lede: "The state of the studio in one screen: what's booked, what's patched, what's broken and what needs attention.",
     points: [
-      { term: "Counts", text: "Assets in use, cables connected, sessions this week. Each one links to the page it came from." },
-      { term: "Issues", text: "Anything the patch plan found wrong — a port with two cables on it, a cable to a device that no longer exists, a feedback loop. Zero here means the plan is coherent." },
-      { term: "Maintenance", text: "Jobs logged against an asset: a repair, a service, a recap. Anything overdue shows up here." },
-      { term: "This week", text: "The sessions between today and Sunday, with their room and client." },
+      { term: "Counts", text: "Assets owned, their total value, cables connected, and what the plan found wrong. Each one links to the page it came from." },
+      { term: "Needs attention", text: "Machines away for repair or on loan, warranties about to end, and anything the patch plan found wrong. Empty means every machine is home and the plan is coherent." },
+      { term: "Maintenance", text: "The last jobs logged against a machine — a repair, a service, a calibration, a re-cap — newest first." },
+      { term: "Next 14 days", text: "Every session in the fortnight ahead, with its room, its client and the machines it needs." },
     ],
     see: ["plan", "bookings"],
   },
@@ -292,7 +235,7 @@ export const TOPICS: Record<TopicId, HelpTopic> = {
     ],
     long: [
       "**The GS3 is an in-line desk, and that is the whole reason it needs explaining.** On a split desk, each group has its own output jack: you route a channel to Group 3 and you take Group 3 out of the socket marked Group 3 Out. The GS3 24/8/2 has 24 channels, 8 groups and a 2-track mix, but no group output sockets at all. The eight group buses are paralleled onto the channels' Track Outs: group *g* appears on the Track Out of channels *g*, *g*+8, *g*+16. Group 1 comes out of the Track Out of channel 1, 9 or 17; group 8 out of channel 8, 16 or 24. The same 24 jacks carry either a channel's own direct signal or a group, depending on how the strip is switched.",
-      "So when you tick “Grp 1-2” on channel 17 and the app tells you the signal leaves by “Ch 1 Track Out, Ch 9 Track Out, Ch 17 Track Out”, that is not a bug — those are the three sockets group 1 lands on, and whichever of them you have wired to your interface is where the signal is. The app works this out from the ports: a desk with no “Group n Out” socket but with “Group n Insert” sockets is treated as in-line, and the group is followed onto the track outs.",
+      "So when you tick “Grp 1-2” on channel 17 and the app tells you the signal leaves by “Ch 1 Track Out, Ch 9 Track Out, Ch 17 Track Out”, that is not a bug — those are the three sockets group 1 lands on, and whichever of them you have wired to your interface is where the signal is. The app works this out from the ports: a desk with “Group n” sockets but none of them an out is treated as in-line, and the group is followed onto the track outs.",
       "**Each channel carries two paths.** The channel path takes the Mic or the Line input, through the preamp, the insert, the EQ and the big fader. The monitor path takes Tape In, at its own level. When tracking you record through the channel path and listen on the monitor path, which is why every GS3 channel has a Tape In and why the app asks which source is in use rather than assuming the one that happens to be wired.",
       "**The insert is pre-EQ** and wired tip send, ring return on a single TRS jack. In the app the insert is a port with direction In/Out: a signal that arrives there leaves by whatever the strip's routing says, so the outboard you patch into it becomes part of that channel's chain when you follow the signal rather than a dead end.",
       "**Auxes 1 to 4 are post-fade**, and 3 and 4 can be switched to follow the monitor path. The app doesn't model the switch — it models the consequence. If Aux 2 Out goes to a delay, the delay comes back into channel 7's line input, and channel 7's strip says it sends to Aux 2, you have built an oscillator. That is what the red strips and the loop warning are: the trace follows Aux 2 Out through every pedal and patchbay in the way, and if it arrives back at a channel that feeds Aux 2, it says so, names the channels and tells you which send to pull down.",
@@ -407,28 +350,17 @@ export const TOPICS: Record<TopicId, HelpTopic> = {
     ],
     see: ["activity"],
   },
-};
-
-export const isTopic = (v: string): v is TopicId => Object.prototype.hasOwnProperty.call(TOPICS, v);
-
-/** Chapters grouped under a heading in the guide's table of contents. */
-export const GUIDE_PARTS: Array<{ title: string; blurb: string; topics: TopicId[] }> = [
-  { title: "The idea", blurb: "What the app is made of, and the one screen that summarises it.", topics: ["model", "overview"] },
-  { title: "The gear", blurb: "Assets, their ports, and where they physically are.", topics: ["assets", "asset", "asset-form", "racks", "places", "map"] },
-  {
-    title: "The wiring",
-    blurb: "Cables, the patchbays and the desk — and following a signal through all three.",
-    topics: ["cables", "cable-form", "cable-labels", "patchbays", "patchbay", "patchbay-strip", "consoles", "console", "console-strip", "plan"],
   },
-  { title: "The business", blurb: "Sessions, who they're for, and the calendar feed.", topics: ["bookings", "booking-form", "clients"] },
-  { title: "Running it", blurb: "Who can do what, and what everyone did.", topics: ["activity", "history", "people"] },
-];
 
-/**
- * Terms used across the app. `Tip` looks terms up here by key, so the same
- * explanation appears everywhere the word does.
- */
-export const GLOSSARY = {
+  parts: {
+  idea: { title: "The idea", blurb: "What the app is made of, and the one screen that summarises it." },
+  gear: { title: "The gear", blurb: "Assets, their ports, and where they physically are." },
+  wiring: { title: "The wiring", blurb: "Cables, the patchbays and the desk — and following a signal through all three." },
+  business: { title: "The business", blurb: "Sessions, who they're for, and the calendar feed." },
+  running: { title: "Running it", blurb: "Who can do what, and what everyone did." },
+  },
+
+  glossary: {
   normal: { term: "Normal", text: "A patchbay column whose top and bottom are wired together behind the panel. Plugging into either front jack breaks the link." },
   half_normal: { term: "Half-normal", text: "Wired together as well, but the top front jack takes only a copy and leaves the link alone. Only the bottom jack breaks it." },
   thru: { term: "Thru", text: "A column whose two points aren't joined: each reaches only its own front jack." },
@@ -444,6 +376,5 @@ export const GLOSSARY = {
   strip: { term: "Channel strip", text: "In this app: the label, source, routing, aux sends, colour and note of one channel. The session's state, not the hardware's." },
   port: { term: "Port", text: "One physical socket on a machine, with a name, a direction, a signal and a connector." },
   revision: { term: "Revision", text: "A recorded version of an entry, written by the CMS in the same transaction as the change." },
-} satisfies Record<string, HelpPoint>;
-
-export type GlossaryId = keyof typeof GLOSSARY;
+  },
+};

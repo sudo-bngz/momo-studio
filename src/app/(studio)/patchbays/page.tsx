@@ -5,18 +5,23 @@ import { Help } from "@/components/help";
 import { PatchbayBoard } from "@/components/patchbay-board";
 import { LoopWarnings, ModeLegend } from "@/components/patchbay-bits";
 import { ButtonLink, Empty, PageHeader } from "@/components/ui";
+import { getI18n } from "@/lib/i18n";
 import { getPatchbays } from "@/lib/patchbay-data";
 
-export const metadata: Metadata = { title: "Patchbays" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("patchbay.meta.title") };
+}
 
 export default async function PatchbaysPage() {
+  const { t, p } = await getI18n();
   const { views, loops } = await getPatchbays();
   return (
     <>
       <PageHeader
-        title="Patchbays"
-        subtitle="What's behind every point, how it's normalled, and where it goes in the DAW."
-        actions={<ButtonLink href="/assets/new?category=patchbay">Add a patchbay</ButtonLink>}
+        title={t("patchbay.title")}
+        subtitle={t("patchbay.subtitle")}
+        actions={<ButtonLink href="/assets/new?category=patchbay">{t("patchbay.add")}</ButtonLink>}
       />
       <Help topic="patchbays" />
       <ModeLegend />
@@ -34,19 +39,21 @@ export default async function PatchbaysPage() {
                 </h2>
                 <span className="flex gap-3 text-sm">
                   <span className="text-dim">
-                    {v.rows.filter((r) => r.top.ends.length || r.bottom.ends.length || r.top.text || r.bottom.text).length}/{v.columns} columns used
+                    {p("patchbay.columnsUsed", v.columns, {
+                      used: v.rows.filter((r) => r.top.ends.length || r.bottom.ends.length || r.top.text || r.bottom.text).length,
+                    })}
                   </span>
                   <Link href={`/patchbays/${v.id}`} className="text-amber hover:underline">
-                    Edit →
+                    {t("patchbay.edit")}
                   </Link>
                 </span>
               </div>
-              {v.columns ? <PatchbayBoard view={v} /> : <Empty>No columns yet: open it to set its size.</Empty>}
+              {v.columns ? <PatchbayBoard view={v} /> : <Empty>{t("patchbay.noColumns")}</Empty>}
             </section>
           ))}
         </div>
       ) : (
-        <Empty>No patchbay yet. Add one as an asset with the category “Patchbay”, then lay out its columns here.</Empty>
+        <Empty>{t("patchbay.none")}</Empty>
       )}
     </>
   );

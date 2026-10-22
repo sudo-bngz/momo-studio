@@ -5,44 +5,53 @@ import { AssetImage, coverOf } from "@/components/asset-image";
 import { Help } from "@/components/help";
 import { Badge, ButtonLink, Code, Empty, PageHeader, ViewToggle } from "@/components/ui";
 import { getCables, getDevices, getLocations, refId } from "@/lib/data";
+import { getI18n } from "@/lib/i18n";
 import { cablesByPort, portKey } from "@/lib/patch";
 import { toPlanCable } from "@/lib/plan-data";
-import { formatMoney } from "@/lib/time";
-import { CATEGORIES, DEVICE_STATES, isKey, options } from "@/lib/vocab";
+import { CATEGORIES, DEVICE_STATES, categoryLabel, deviceStateLabel, deviceStateTone, isKey, translatedOptions } from "@/lib/vocab";
 
-export const metadata: Metadata = { title: "Assets" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("assets.meta.title") };
+}
 
 type Search = { q?: string; category?: string; state?: string; location?: string; view?: string };
 
 export default async function GearPage({ searchParams }: { searchParams: Promise<Search> }) {
+  const { t, d } = await getI18n();
   const sp = await searchParams;
   const [devices, cables, locations] = await Promise.all([getDevices(), getCables(), getLocations()]);
   const usage = cablesByPort(cables.map(toPlanCable));
 
   const q = sp.q?.trim().toLowerCase() ?? "";
-  const list = devices.filter((d) => {
-    if (q && ![d.name, d.code, d.brand, d.model, d.serial_number].some((v) => v?.toLowerCase().includes(q))) return false;
-    if (isKey(CATEGORIES, sp.category) && d.category !== sp.category) return false;
-    if (isKey(DEVICE_STATES, sp.state) && d.state !== sp.state) return false;
-    if (!sp.state && d.state === "sold") return false;
-    if (sp.location && String(refId(d.location) ?? "none") !== sp.location) return false;
+  const list = devices.filter((dev) => {
+    if (q && ![dev.name, dev.code, dev.brand, dev.model, dev.serial_number].some((v) => v?.toLowerCase().includes(q))) return false;
+    if (isKey(CATEGORIES, sp.category) && dev.category !== sp.category) return false;
+    if (isKey(DEVICE_STATES, sp.state) && dev.state !== sp.state) return false;
+    if (!sp.state && dev.state === "sold") return false;
+    if (sp.location && String(refId(dev.location) ?? "none") !== sp.location) return false;
     return true;
   });
-  const total = list.reduce((s, d) => s + (d.current_value ?? d.purchase_price ?? 0), 0);
+  const total = list.reduce((s, dev) => s + (dev.current_value ?? dev.purchase_price ?? 0), 0);
   // The gallery is the way in; the table is there for inventory and values.
   const gallery = sp.view !== "table";
-  const withPhoto = list.filter((d) => coverOf(d)).length;
+  const withPhoto = list.filter((dev) => coverOf(dev)).length;
 
   return (
     <>
       <PageHeader
-        title="Assets"
-        subtitle={`${list.length} of ${devices.length} machines · ${formatMoney(total)} · ${withPhoto} photographed`}
+        title={t("assets.title")}
+        subtitle={t("assets.subtitle", {
+          shown: list.length,
+          total: devices.length,
+          value: d.money(total),
+          photographed: withPhoto,
+        })}
         actions={
           <>
             <ViewToggle search={sp} gallery={gallery} />
             <ButtonLink href="/assets/new" primary>
-              Add an asset
+              {t("assets.add")}
             </ButtonLink>
           </>
         }
@@ -51,61 +60,61 @@ export default async function GearPage({ searchParams }: { searchParams: Promise
 
       <form className="mb-4 grid gap-2 sm:grid-cols-[1fr_auto_auto_auto_auto]" method="get">
         {gallery ? <input type="hidden" name="view" value="gallery" /> : null}
-        <input name="q" defaultValue={sp.q} placeholder="Search name, code, brand, serial…" className="control" />
+        <input name="q" defaultValue={sp.q} placeholder={t("assets.filter.q")} className="control" />
         <select name="category" defaultValue={sp.category ?? ""} className="control">
-          <option value="">All categories</option>
-          {options(CATEGORIES).map((o) => (
+          <option value="">{t("assets.filter.allCategories")}</option>
+          {translatedOptions(t, CATEGORIES, categoryLabel).map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
           ))}
         </select>
         <select name="state" defaultValue={sp.state ?? ""} className="control">
-          <option value="">Not sold</option>
-          {options(DEVICE_STATES).map((o) => (
+          <option value="">{t("assets.filter.notSold")}</option>
+          {translatedOptions(t, DEVICE_STATES, deviceStateLabel).map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
           ))}
         </select>
         <select name="location" defaultValue={sp.location ?? ""} className="control">
-          <option value="">Anywhere</option>
+          <option value="">{t("assets.filter.anywhere")}</option>
           {locations.map((l) => (
             <option key={l.id} value={l.id}>
               {l.name}
             </option>
           ))}
-          <option value="none">No location</option>
+          <option value="none">{t("assets.filter.noLocation")}</option>
         </select>
-        <button className="rounded-md border border-line-strong px-3 py-1.5 text-sm hover:bg-raised">Filter</button>
+        <button className="rounded-md border border-line-strong px-3 py-1.5 text-sm hover:bg-raised">{t("action.filter")}</button>
       </form>
 
       {list.length && gallery ? (
         <ul className="grid grid-cols-[repeat(auto-fill,minmax(190px,1fr))] gap-3">
-          {list.map((d) => {
-            const loc = d.location && typeof d.location === "object" ? d.location : undefined;
-            const ports = d.ports ?? [];
-            const patched = ports.filter((p) => usage.has(portKey(d.id, p.name))).length;
+          {list.map((dev) => {
+            const loc = dev.location && typeof dev.location === "object" ? dev.location : undefined;
+            const ports = dev.ports ?? [];
+            const patched = ports.filter((p) => usage.has(portKey(dev.id, p.name))).length;
             return (
-              <li key={d.id}>
+              <li key={dev.id}>
                 <Link
-                  href={`/assets/${d.id}`}
+                  href={`/assets/${dev.id}`}
                   className="group flex h-full flex-col overflow-hidden rounded-lg border border-line bg-panel hover:border-line-strong"
                 >
-                  <AssetImage device={d} className="h-32 w-full" />
+                  <AssetImage device={dev} className="h-32 w-full" />
                   <div className="flex flex-1 flex-col gap-1 p-3">
                     <div className="flex items-baseline justify-between gap-2">
-                      <Code>{d.code}</Code>
-                      <Badge tone={DEVICE_STATES[d.state].tone}>{DEVICE_STATES[d.state].label}</Badge>
+                      <Code>{dev.code}</Code>
+                      <Badge tone={deviceStateTone(dev.state)}>{deviceStateLabel(t, dev.state)}</Badge>
                     </div>
-                    <div className="font-medium leading-tight group-hover:text-amber">{d.name}</div>
-                    <div className="text-xs text-dim">{CATEGORIES[d.category]}</div>
+                    <div className="font-medium leading-tight group-hover:text-amber">{dev.name}</div>
+                    <div className="text-xs text-dim">{categoryLabel(t, dev.category)}</div>
                     <div className="mt-auto flex items-baseline justify-between gap-2 pt-2 text-xs text-faint">
                       <span className="truncate">
-                        {loc ? loc.name : "no location"}
-                        {d.rack_position ? ` · U${d.rack_position}` : ""}
+                        {loc ? loc.name : t("assets.card.noLocation")}
+                        {dev.rack_position ? ` · U${dev.rack_position}` : ""}
                       </span>
-                      <span className="whitespace-nowrap">{ports.length ? `${patched}/${ports.length}` : "—"}</span>
+                      <span className="whitespace-nowrap">{ports.length ? `${patched}/${ports.length}` : t("state.none")}</span>
                     </div>
                   </div>
                 </Link>
@@ -118,43 +127,45 @@ export default async function GearPage({ searchParams }: { searchParams: Promise
           <table className="data">
             <thead>
               <tr>
-                <th>Code</th>
-                <th>Device</th>
-                <th>Category</th>
-                <th>Where</th>
-                <th>Ports</th>
-                <th>State</th>
-                <th className="text-right">Value</th>
+                <th>{t("assets.col.code")}</th>
+                <th>{t("assets.col.device")}</th>
+                <th>{t("assets.col.category")}</th>
+                <th>{t("assets.col.where")}</th>
+                <th>{t("assets.col.ports")}</th>
+                <th>{t("assets.col.state")}</th>
+                <th className="text-right">{t("assets.col.value")}</th>
               </tr>
             </thead>
             <tbody>
-              {list.map((d) => {
-                const loc = d.location && typeof d.location === "object" ? d.location : undefined;
-                const ports = d.ports ?? [];
-                const patched = ports.filter((p) => usage.has(portKey(d.id, p.name))).length;
+              {list.map((dev) => {
+                const loc = dev.location && typeof dev.location === "object" ? dev.location : undefined;
+                const ports = dev.ports ?? [];
+                const patched = ports.filter((p) => usage.has(portKey(dev.id, p.name))).length;
                 return (
-                  <tr key={d.id}>
+                  <tr key={dev.id}>
                     <td>
-                      <Code>{d.code}</Code>
+                      <Code>{dev.code}</Code>
                     </td>
                     <td>
-                      <Link href={`/assets/${d.id}`} className="font-medium hover:text-amber">
-                        {d.name}
+                      <Link href={`/assets/${dev.id}`} className="font-medium hover:text-amber">
+                        {dev.name}
                       </Link>
-                      {d.brand || d.model ? <div className="text-xs text-faint">{[d.brand, d.model].filter(Boolean).join(" ")}</div> : null}
+                      {dev.brand || dev.model ? (
+                        <div className="text-xs text-faint">{[dev.brand, dev.model].filter(Boolean).join(" ")}</div>
+                      ) : null}
                     </td>
-                    <td className="text-dim">{CATEGORIES[d.category]}</td>
+                    <td className="text-dim">{categoryLabel(t, dev.category)}</td>
                     <td className="text-dim">
-                      {loc ? loc.name : "—"}
-                      {d.rack_position ? <span className="text-faint"> · U{d.rack_position}</span> : null}
+                      {loc ? loc.name : t("state.none")}
+                      {dev.rack_position ? <span className="text-faint"> · U{dev.rack_position}</span> : null}
                     </td>
                     <td className="tabular-nums text-dim">
-                      {ports.length ? `${patched}/${ports.length} patched` : "—"}
+                      {ports.length ? t("assets.patchedOf", { patched, total: ports.length }) : t("state.none")}
                     </td>
                     <td>
-                      <Badge tone={DEVICE_STATES[d.state].tone}>{DEVICE_STATES[d.state].label}</Badge>
+                      <Badge tone={deviceStateTone(dev.state)}>{deviceStateLabel(t, dev.state)}</Badge>
                     </td>
-                    <td className="text-right tabular-nums text-dim">{formatMoney(d.current_value ?? d.purchase_price)}</td>
+                    <td className="text-right tabular-nums text-dim">{d.money(dev.current_value ?? dev.purchase_price)}</td>
                   </tr>
                 );
               })}
@@ -162,7 +173,7 @@ export default async function GearPage({ searchParams }: { searchParams: Promise
           </table>
         </div>
       ) : (
-        <Empty>{devices.length ? "Nothing matches these filters." : "Nothing yet: add your first machine."}</Empty>
+        <Empty>{devices.length ? t("assets.empty.filtered") : t("assets.empty.none")}</Empty>
       )}
     </>
   );

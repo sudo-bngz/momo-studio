@@ -5,31 +5,49 @@ import { removePerson, savePerson } from "@/app/actions";
 import { ActionForm, DeleteForm } from "@/components/action-form";
 import { Help } from "@/components/help";
 import { ButtonLink, Card, Empty, Field, Input, PageHeader, Select } from "@/components/ui";
+import { getI18n, type MessageKey } from "@/lib/i18n";
 import { getMe, getPeople, suggestPassword, ROLE_NOTE } from "@/lib/people";
 
-export const metadata: Metadata = { title: "Accounts" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("ops.meta.people") };
+}
+
+/** What GoHead's own roles mean here, in the reader's language. */
+const ROLE_NOTE_KEY = {
+  admin: "ops.roleNote.admin",
+  editor: "ops.roleNote.editor",
+  viewer: "ops.roleNote.viewer",
+  "studio-staff": "ops.roleNote.studioStaff",
+} as const satisfies Record<string, MessageKey>;
 
 export default async function PeoplePage({ searchParams }: { searchParams: Promise<{ edit?: string; new?: string }> }) {
+  const { t } = await getI18n();
   const sp = await searchParams;
   const [me, { people, roles, forbidden }] = await Promise.all([getMe(), getPeople()]);
   const editing = people.find((p) => p.id === Number(sp.edit));
   const showForm = Boolean(editing || sp.new);
+  // A role we don't know keeps the note GoHead gives it, if any.
+  const roleNote = (role: string) =>
+    role in ROLE_NOTE_KEY ? t(ROLE_NOTE_KEY[role as keyof typeof ROLE_NOTE_KEY]) : ROLE_NOTE[role];
   const roleOptions = (roles.length ? roles.map((r) => r.name) : ["admin", "editor", "viewer", "studio-staff"])
     .filter((n) => n !== "public")
-    .map((name) => ({ value: name, label: ROLE_NOTE[name] ? `${name} — ${ROLE_NOTE[name]}` : name }));
+    .map((name) => {
+      const note = roleNote(name);
+      return { value: name, label: note ? `${name} — ${note}` : name };
+    });
 
   if (forbidden || !me.isAdmin) {
     return (
       <>
-        <PageHeader title="Accounts" subtitle="Who can sign in to the studio." />
+        <PageHeader title={t("ops.people.title")} subtitle={t("ops.people.subtitleShort")} />
         <Card className="border-warn/40">
           <p className="text-sm text-warn">
-            Only an administrator manages accounts. You are signed in as <strong>{me.username}</strong> with the role{" "}
-            <strong>{me.role}</strong>.
+            {t("ops.people.onlyAdmin")} <strong>{me.username}</strong> {t("ops.people.withRole")} <strong>{me.role}</strong>.
           </p>
           <p className="mt-2 text-sm text-dim">
-            An admin can add you, or create an account for someone else here, in GoHead&apos;s own admin, or with{" "}
-            <code className="font-mono text-xs text-amber">npm run gohead:access -- --user alex</code>.
+            {t("ops.people.adminCanAdd")}{" "}
+            <code className="font-mono text-xs text-amber">npm run gohead:access -- --user alex</code>
           </p>
         </Card>
       </>
@@ -39,44 +57,60 @@ export default async function PeoplePage({ searchParams }: { searchParams: Promi
   return (
     <>
       <PageHeader
-        title="Accounts"
-        subtitle="Everyone signs in with their own account, so the activity trail says who did what."
-        actions={<ButtonLink href="/people?new=1" primary>Add someone</ButtonLink>}
+        title={t("ops.people.title")}
+        subtitle={t("ops.people.subtitle")}
+        actions={
+          <ButtonLink href="/people?new=1" primary>
+            {t("ops.people.add")}
+          </ButtonLink>
+        }
       />
       <Help topic="people" />
 
       {showForm ? (
-        <Card title={editing ? `Edit ${editing.username}` : "New account"} className="mb-6">
-          <ActionForm action={savePerson} submit={editing ? "Save" : "Create the account"} footer={<ButtonLink href="/people">Cancel</ButtonLink>}>
+        <Card title={editing ? t("ops.people.editOne", { name: editing.username }) : t("ops.people.new")} className="mb-6">
+          <ActionForm
+            action={savePerson}
+            submit={editing ? t("action.save") : t("ops.people.create")}
+            footer={<ButtonLink href="/people">{t("action.cancel")}</ButtonLink>}
+          >
             {editing ? <input type="hidden" name="id" value={editing.id} /> : null}
             {editing ? <input type="hidden" name="username" value={editing.username} /> : null}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {editing ? null : (
-                <Field label="Username" hint="What they type to sign in">
+                <Field label={t("ops.field.username")} hint={t("ops.field.username.hint")}>
                   <Input name="username" required placeholder="alex" autoCapitalize="none" />
                 </Field>
               )}
-              <Field label="Email">
+              <Field label={t("ops.field.email")}>
                 <Input name="email" type="email" required={!editing} defaultValue={editing?.email ?? ""} />
               </Field>
-              <Field label="Role" hint={<Link href="/activity" className="underline hover:text-amber">Their changes are recorded under their name</Link>}>
+              <Field
+                label={t("ops.field.role")}
+                hint={
+                  <Link href="/activity" className="underline hover:text-amber">
+                    {t("ops.field.role.hint")}
+                  </Link>
+                }
+              >
                 <Select name="role_name" options={roleOptions} defaultValue={editing?.role ?? "studio-staff"} />
               </Field>
-              <Field label={editing ? "New password" : "Password"} hint={editing ? "Leave empty to keep it" : "12 characters or more"}>
+              <Field
+                label={editing ? t("ops.field.newPassword") : t("ops.field.password")}
+                hint={editing ? t("ops.field.password.keep") : t("ops.field.password.hint")}
+              >
                 <Input name="password" defaultValue={editing ? "" : suggestPassword()} className="font-mono" />
               </Field>
             </div>
-            <p className="mt-3 text-xs text-faint">
-              The password is shown here once: copy it and give it to them. They can change it in GoHead&apos;s admin.
-            </p>
+            <p className="mt-3 text-xs text-faint">{t("ops.people.passwordOnce")}</p>
           </ActionForm>
           {editing && editing.username !== me.username ? (
             <div className="mt-6 border-t border-line pt-4">
               <DeleteForm
                 action={removePerson}
                 id={editing.id}
-                label={`Delete ${editing.username}`}
-                confirm={`Delete the account ${editing.username}? What they changed stays in the activity trail.`}
+                label={t("ops.people.deleteOne", { name: editing.username })}
+                confirm={t("ops.people.deleteConfirm", { name: editing.username })}
               />
             </div>
           ) : null}
@@ -88,48 +122,51 @@ export default async function PeoplePage({ searchParams }: { searchParams: Promi
           <table className="data">
             <thead>
               <tr>
-                <th>Account</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Changes</th>
+                <th>{t("ops.col.account")}</th>
+                <th>{t("ops.col.email")}</th>
+                <th>{t("ops.col.role")}</th>
+                <th>{t("ops.col.changes")}</th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {people.map((p) => (
-                <tr key={p.id}>
-                  <td>
-                    <span className="font-medium">{p.username}</span>
-                    {p.username === me.username ? <span className="ml-2 text-xs text-amber">you</span> : null}
-                  </td>
-                  <td className="text-dim">{p.email ?? "—"}</td>
-                  <td>
-                    <span className="font-mono text-xs">{p.role}</span>
-                    {ROLE_NOTE[p.role] ? <div className="text-xs text-faint">{ROLE_NOTE[p.role]}</div> : null}
-                  </td>
-                  <td>
-                    <Link href={`/activity?actorKind=user&actor=${encodeURIComponent(p.username)}`} className="text-xs text-dim hover:text-amber">
-                      What they changed →
-                    </Link>
-                  </td>
-                  <td className="text-right">
-                    <Link href={`/people?edit=${p.id}`} className="text-xs text-dim hover:text-ink">
-                      Edit
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+              {people.map((person) => {
+                const note = roleNote(person.role);
+                return (
+                  <tr key={person.id}>
+                    <td>
+                      <span className="font-medium">{person.username}</span>
+                      {person.username === me.username ? <span className="ml-2 text-xs text-amber">{t("ops.people.you")}</span> : null}
+                    </td>
+                    <td className="text-dim">{person.email ?? t("state.none")}</td>
+                    <td>
+                      <span className="font-mono text-xs">{person.role}</span>
+                      {note ? <div className="text-xs text-faint">{note}</div> : null}
+                    </td>
+                    <td>
+                      <Link
+                        href={`/activity?actorKind=user&actor=${encodeURIComponent(person.username)}`}
+                        className="text-xs text-dim hover:text-amber"
+                      >
+                        {t("ops.people.whatTheyChanged")}
+                      </Link>
+                    </td>
+                    <td className="text-right">
+                      <Link href={`/people?edit=${person.id}`} className="text-xs text-dim hover:text-ink">
+                        {t("action.edit")}
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       ) : (
-        <Empty>No account yet.</Empty>
+        <Empty>{t("ops.people.empty")}</Empty>
       )}
 
-      <p className="mt-4 text-xs text-faint">
-        Accounts are GoHead users: the same ones that open GoHead&apos;s admin. Roles decide what each may change, and the app
-        acts as the signed-in person for every read and write — which is what makes the activity trail trustworthy.
-      </p>
+      <p className="mt-4 text-xs text-faint">{t("ops.people.footer")}</p>
     </>
   );
 }

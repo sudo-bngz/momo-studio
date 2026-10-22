@@ -2,6 +2,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { getI18n } from "@/lib/i18n";
 import type { Tone } from "@/lib/vocab";
 
 const TONES: Record<Tone, string> = {
@@ -146,7 +147,8 @@ export function Checkbox({ name, label, defaultChecked }: { name: string; label:
 }
 
 /** Switch the assets page between the gallery and the table, keeping the filters. */
-export function ViewToggle({ search, gallery }: { search: Record<string, string | undefined>; gallery: boolean }) {
+export async function ViewToggle({ search, gallery }: { search: Record<string, string | undefined>; gallery: boolean }) {
+  const { t } = await getI18n();
   const href = (view: "gallery" | "table") => {
     const q = new URLSearchParams();
     for (const [k, v] of Object.entries(search)) if (v && k !== "view") q.set(k, v);
@@ -157,10 +159,10 @@ export function ViewToggle({ search, gallery }: { search: Record<string, string 
   return (
     <span className="inline-flex overflow-hidden rounded-md border border-line-strong">
       <Link href={href("gallery")} className={`px-3 py-1.5 text-sm ${gallery ? "bg-raised text-amber" : "text-dim hover:text-ink"}`}>
-        Gallery
+        {t("view.gallery")}
       </Link>
       <Link href={href("table")} className={`px-3 py-1.5 text-sm ${gallery ? "text-dim hover:text-ink" : "bg-raised text-amber"}`}>
-        Table
+        {t("view.table")}
       </Link>
     </span>
   );

@@ -4,10 +4,14 @@ import { notFound } from "next/navigation";
 import { Help } from "@/components/help";
 import { PrintButton } from "@/components/print-button";
 import { ButtonLink, PageHeader } from "@/components/ui";
+import { getI18n } from "@/lib/i18n";
 import { getPatchbays } from "@/lib/patchbay-data";
 import { rearLabel, type ColumnView } from "@/lib/patchbay";
 
-export const metadata: Metadata = { title: "Patchbay strips" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("patchbay.meta.titleStrip") };
+}
 
 const PRINTABLE_MM = 277; // A4 landscape minus margins
 
@@ -17,6 +21,7 @@ const PRINTABLE_MM = 277; // A4 landscape minus margins
  * as many pieces as an A4 sheet needs.
  */
 export default async function StripPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ pitch?: string; height?: string }> }) {
+  const { t, p } = await getI18n();
   const id = Number((await params).id);
   const sp = await searchParams;
   const { views } = await getPatchbays();
@@ -32,7 +37,8 @@ export default async function StripPage({ params, searchParams }: { params: Prom
     pieces.map((piece, k) => (
       <div key={`${row}${k}`} className="mb-[4mm] break-inside-avoid">
         <div className="mb-[1mm] font-mono text-[7pt] text-dim print:text-black">
-          {view.code} · {row === "top" ? "top row" : "bottom row"} · {piece[0]![row].number}–{piece[piece.length - 1]![row].number}
+          {view.code} · {t(row === "top" ? "patchbay.strip.row.top" : "patchbay.strip.row.bottom")} · {piece[0]![row].number}–
+          {piece[piece.length - 1]![row].number}
         </div>
         <div className="flex border-l border-black bg-white text-black" style={{ width: `${piece.length * pitch}mm` }}>
           {piece.map((c) => {
@@ -58,11 +64,11 @@ export default async function StripPage({ params, searchParams }: { params: Prom
       <style>{"@page { size: A4 landscape; margin: 10mm; }"}</style>
       <div className="no-print">
         <PageHeader
-          title={`Strips · ${view.name}`}
-          subtitle={`${pieces.length} piece(s) per row. Print at 100 % scale, cut, slide above and below the jacks.`}
+          title={t("patchbay.strip.title", { name: view.name })}
+          subtitle={p("patchbay.strip.subtitle", pieces.length)}
           actions={
             <>
-              <ButtonLink href={`/patchbays/${id}`}>Back</ButtonLink>
+              <ButtonLink href={`/patchbays/${id}`}>{t("action.back")}</ButtonLink>
               <PrintButton />
             </>
           }
@@ -70,19 +76,19 @@ export default async function StripPage({ params, searchParams }: { params: Prom
         <Help topic="patchbay-strip" />
         <form method="get" className="mb-6 flex flex-wrap items-end gap-3 text-sm">
           <label>
-            <span className="mb-1 block text-xs text-dim">Jack spacing (mm)</span>
+            <span className="mb-1 block text-xs text-dim">{t("patchbay.strip.pitch")}</span>
             <input name="pitch" type="number" step="0.1" min={8} max={40} defaultValue={pitch} className="control w-28" />
           </label>
           <label>
-            <span className="mb-1 block text-xs text-dim">Strip height (mm)</span>
+            <span className="mb-1 block text-xs text-dim">{t("patchbay.strip.height")}</span>
             <input name="height" type="number" step="0.5" min={5} max={30} defaultValue={height} className="control w-28" />
           </label>
-          <button className="rounded-md border border-line-strong px-3 py-2 hover:bg-raised">Update</button>
+          <button className="rounded-md border border-line-strong px-3 py-2 hover:bg-raised">{t("patchbay.strip.update")}</button>
         </form>
       </div>
-      <h2 className="mb-2 text-sm font-semibold print:hidden">Top row</h2>
+      <h2 className="mb-2 text-sm font-semibold print:hidden">{t("patchbay.row.top")}</h2>
       {strip("top")}
-      <h2 className="mt-6 mb-2 text-sm font-semibold print:hidden">Bottom row</h2>
+      <h2 className="mt-6 mb-2 text-sm font-semibold print:hidden">{t("patchbay.row.bottom")}</h2>
       {strip("bottom")}
     </>
   );

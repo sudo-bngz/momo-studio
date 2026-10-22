@@ -4,14 +4,19 @@ import Link from "next/link";
 import { Help } from "@/components/help";
 import { Badge, ButtonLink, Card, Empty, FileLink, PageHeader } from "@/components/ui";
 import { getBookings, getRooms, refId, type BookingEntry } from "@/lib/data";
-import { addDays, formatDay, formatMoney, formatRange, fromLocal, localDate, localMinutes, mondayOf } from "@/lib/time";
-import { BOOKING_STATES, SESSION_TYPES } from "@/lib/vocab";
+import { getI18n } from "@/lib/i18n";
+import { addDays, fromLocal, localDate, localMinutes, mondayOf } from "@/lib/time";
+import { bookingStateLabel, bookingStateTone, sessionTypeLabel } from "@/lib/vocab";
 
-export const metadata: Metadata = { title: "Bookings" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("bookings.meta.title") };
+}
 
 const HOUR_PX = 36;
 
 export default async function BookingsPage({ searchParams }: { searchParams: Promise<{ week?: string; room?: string }> }) {
+  const { t, p, d } = await getI18n();
   const sp = await searchParams;
   const today = localDate(new Date());
   const week = mondayOf(/^\d{4}-\d{2}-\d{2}$/.test(sp.week ?? "") ? sp.week! : today);
@@ -34,22 +39,23 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
     }
   }
   const hours = Array.from({ length: endHour - startHour }, (_, i) => startHour + i);
-  const income = bookings.filter((b) => b.state !== "cancelled").reduce((s, b) => s + (b.price ?? 0), 0);
+  const held = bookings.filter((b) => b.state !== "cancelled");
+  const income = held.reduce((s, b) => s + (b.price ?? 0), 0);
   const query = (w: string) => `/bookings?week=${w}${roomFilter ? `&room=${roomFilter}` : ""}`;
 
   return (
     <>
       <PageHeader
-        title="Bookings"
-        subtitle={`Week of ${formatDay(fromLocal(week))} · ${bookings.filter((b) => b.state !== "cancelled").length} sessions · ${formatMoney(income)}`}
+        title={t("bookings.title")}
+        subtitle={`${t("bookings.weekOf", { day: d.day(fromLocal(week)) })} · ${p("bookings.sessions", held.length)} · ${d.money(income)}`}
         actions={
           <>
             <ButtonLink href={query(addDays(week, -7))}>←</ButtonLink>
-            <ButtonLink href={query(mondayOf(today))}>This week</ButtonLink>
+            <ButtonLink href={query(mondayOf(today))}>{t("bookings.thisWeek")}</ButtonLink>
             <ButtonLink href={query(addDays(week, 7))}>→</ButtonLink>
-            <FileLink href="/bookings.ics">Calendar feed</FileLink>
+            <FileLink href="/bookings.ics">{t("bookings.calendarFeed")}</FileLink>
             <ButtonLink href={`/bookings/new?week=${week}`} primary>
-              New booking
+              {t("bookings.new")}
             </ButtonLink>
           </>
         }
@@ -59,7 +65,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
       {rooms.length > 1 ? (
         <div className="mb-4 flex flex-wrap gap-2 text-sm">
           <Link href={`/bookings?week=${week}`} className={`rounded-full border px-3 py-1 ${!roomFilter ? "border-amber text-amber" : "border-line text-dim"}`}>
-            All rooms
+            {t("bookings.allRooms")}
           </Link>
           {rooms.map((r) => (
             <Link
@@ -77,10 +83,10 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
       <div className="overflow-x-auto rounded-lg border border-line bg-panel">
         <div className="grid min-w-[760px]" style={{ gridTemplateColumns: `48px repeat(7, 1fr)` }}>
           <div className="border-b border-line" />
-          {days.map((d) => (
-            <div key={d} className={`border-b border-l border-line px-2 py-2 text-xs ${d === today ? "text-amber" : "text-dim"}`}>
-              <Link href={`/bookings/new?date=${d}`} className="hover:text-ink" title="Book this day">
-                {formatDay(fromLocal(d))}
+          {days.map((day) => (
+            <div key={day} className={`border-b border-l border-line px-2 py-2 text-xs ${day === today ? "text-amber" : "text-dim"}`}>
+              <Link href={`/bookings/new?date=${day}`} className="hover:text-ink" title={t("bookings.bookThisDay")}>
+                {d.day(fromLocal(day))}
               </Link>
             </div>
           ))}
@@ -91,13 +97,13 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
               </div>
             ))}
           </div>
-          {days.map((d) => (
-            <div key={d} className={`relative border-l border-line ${d === today ? "bg-amber/[0.03]" : ""}`} style={{ height: hours.length * HOUR_PX }}>
+          {days.map((day) => (
+            <div key={day} className={`relative border-l border-line ${day === today ? "bg-amber/[0.03]" : ""}`} style={{ height: hours.length * HOUR_PX }}>
               {hours.map((h, i) => (
                 <div key={h} className="absolute inset-x-0 border-t border-line/60" style={{ top: i * HOUR_PX }} />
               ))}
               {bookings.map((b) => {
-                const seg = segment(b, d);
+                const seg = segment(b, day);
                 if (!seg) return null;
                 const room = b.room && typeof b.room === "object" ? b.room : undefined;
                 const client = b.client && typeof b.client === "object" ? b.client : undefined;
@@ -129,7 +135,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
         </div>
       </div>
 
-      <Card title="This week" className="mt-6">
+      <Card title={t("bookings.thisWeek")} className="mt-6">
         {bookings.length ? (
           <ul className="divide-y divide-line">
             {bookings.map((b) => {
@@ -142,23 +148,23 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
                       {b.title}
                     </Link>
                     <div className="text-xs text-dim">
-                      {formatRange(b.starts_at, b.ends_at)}
+                      {d.range(b.starts_at, b.ends_at)}
                       {room ? ` · ${room.name}` : ""}
                       {client ? ` · ${client.name}` : ""}
-                      {b.session_type ? ` · ${SESSION_TYPES[b.session_type]}` : ""}
-                      {b.engineer ? ` · with ${b.engineer}` : ""}
+                      {b.session_type ? ` · ${sessionTypeLabel(t, b.session_type)}` : ""}
+                      {b.engineer ? ` · ${t("bookings.withEngineer", { name: b.engineer })}` : ""}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {b.price ? <span className="text-xs tabular-nums text-dim">{formatMoney(b.price)}{b.paid ? " · paid" : ""}</span> : null}
-                    <Badge tone={BOOKING_STATES[b.state].tone}>{BOOKING_STATES[b.state].label}</Badge>
+                    {b.price ? <span className="text-xs tabular-nums text-dim">{d.money(b.price)}{b.paid ? ` · ${t("bookings.paid")}` : ""}</span> : null}
+                    <Badge tone={bookingStateTone(b.state)}>{bookingStateLabel(t, b.state)}</Badge>
                   </div>
                 </li>
               );
             })}
           </ul>
         ) : (
-          <Empty>Nothing booked this week.</Empty>
+          <Empty>{t("bookings.emptyWeek")}</Empty>
         )}
       </Card>
     </>

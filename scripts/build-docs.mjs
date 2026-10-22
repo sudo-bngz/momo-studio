@@ -2,7 +2,7 @@
  * npm run docs
  *
  * Builds the GitHub Pages site in docs/ from the same help text the app uses
- * (src/lib/help.ts), so the manual on the web, the panels on each page and
+ * (src/lib/help/en.ts), so the manual on the web, the panels on each page and
  * /guide inside the app can't drift apart.
  *
  * Owns docs/index.html, docs/guide.html and docs/setup.html. Everything else
@@ -13,7 +13,13 @@ import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { GLOSSARY, GUIDE_PARTS, TOPICS } from "../src/lib/help.ts";
+import { en } from "../src/lib/help/en.ts";
+import { PART_TOPICS } from "../src/lib/help/types.ts";
+
+// The site is in English: it is the source the French is translated from.
+const TOPICS = en.topics;
+const GLOSSARY = en.glossary;
+const GUIDE_PARTS = PART_TOPICS.map((part) => ({ ...en.parts[part.id], topics: part.topics }));
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DOCS = resolve(ROOT, "docs");
@@ -133,7 +139,7 @@ ${body}
 </div>
 <footer>
   <p>A private back-office for an electronic music studio, built on <a href="https://github.com/gohead-cms/gohead">GoHead</a>.
-  This manual is generated from <code>src/lib/help.ts</code> — the same text the app shows on each page.</p>
+  This manual is generated from <code>src/lib/help/en.ts</code> — the same text the app shows on each page.</p>
 </footer>
 </body>
 </html>
@@ -341,7 +347,7 @@ defaults in <code>docker-compose.yml</code>. Change them before this is reachabl
   <dt><code>npm run gohead:access</code></dt><dd>Creates the <code>studio-staff</code> role, the read-only
   <code>calendar-feed</code> role, its token and the calendar URL's secret. With <code>-- --user alex</code> it also creates a
   person and prints their password once.</dd>
-  <dt><code>npm run docs</code></dt><dd>Rebuilds this site from <code>src/lib/help.ts</code>.</dd>
+  <dt><code>npm run docs</code></dt><dd>Rebuilds this site from <code>src/lib/help/en.ts</code>.</dd>
   <dt><code>npm run lint</code> / <code>typecheck</code></dt><dd>What CI would run.</dd>
 </dl>
 

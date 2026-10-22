@@ -4,6 +4,7 @@
  * (`npm run typecheck` tells you which are missing).
  */
 import type { Booking, Cable, Device, Location, PatchPoint, Port } from "@/gohead";
+import type { T } from "@/lib/i18n/translate";
 
 export type Signal = Port["signal"];
 export type Connector = NonNullable<Port["connector"]>;
@@ -118,6 +119,39 @@ export const SESSION_TYPES: Record<SessionType, string> = {
 };
 
 export type Tone = "ok" | "warn" | "bad" | "info" | "muted";
+
+// ---- The same options, in the reader's language ----
+//
+// The records above keep the colours and tones, which are the same in every
+// language; the words live in the message files. `t` comes from getI18n() on
+// the server or useI18n() in a client component.
+
+export const signalLabel = (t: T, v: Signal) => t(`signal.${v}`);
+export const signalColor = (v: Signal) => SIGNALS[v].color;
+export const connectorLabel = (t: T, v: Connector) => t(`connector.${v}`);
+export const directionLabel = (t: T, v: Direction) => t(`direction.${v}`);
+export const categoryLabel = (t: T, v: Category) => t(`category.${v}`);
+export const deviceStateLabel = (t: T, v: DeviceState) => t(`deviceState.${v}`);
+export const deviceStateTone = (v: DeviceState) => DEVICE_STATES[v].tone;
+export const cableStateLabel = (t: T, v: CableState) => t(`cableState.${v}`);
+export const cableStateTone = (v: CableState) => CABLE_STATES[v].tone;
+export const locationKindLabel = (t: T, v: LocationKind) => t(`locationKind.${v}`);
+export const bookingStateLabel = (t: T, v: BookingState) => t(`bookingState.${v}`);
+export const bookingStateTone = (v: BookingState) => BOOKING_STATES[v].tone;
+export const sessionTypeLabel = (t: T, v: SessionType) => t(`sessionType.${v}`);
+
+/** A patchbay column's mode: its name, what's printed on the switch, and what it does. */
+export const patchModeLabel = (t: T, v: PatchMode) => ({
+  label: t(`patchMode.${v}`),
+  short: t(`patchMode.${v}.short`),
+  help: t(`patchMode.${v}.help`),
+  color: PATCH_MODES[v].color,
+});
+
+/** `<Select options={...}>` for an enum of the content model, translated and in the model's order. */
+export function translatedOptions<K extends string>(t: T, record: Record<K, unknown>, label: (t: T, value: K) => string) {
+  return (Object.keys(record) as K[]).map((value) => ({ value, label: label(t, value) }));
+}
 
 export const options = <K extends string>(record: Record<K, string | { label: string }>) =>
   (Object.entries(record) as [K, string | { label: string }][]).map(([value, v]) => ({

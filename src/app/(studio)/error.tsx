@@ -1,18 +1,21 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n/client";
+
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  const { t } = useI18n();
   return (
     <div className="mx-auto max-w-lg py-20 text-center">
-      <h1 className="text-xl font-semibold">Something went wrong</h1>
+      <h1 className="text-xl font-semibold">{t("ops.error.title")}</h1>
       <p className="mt-2 text-sm text-dim">
         {error.message.includes("cannot reach") || error.message.includes("no answer")
-          ? "GoHead isn't answering. Is it running, and is GOHEAD_URL right?"
+          ? t("ops.error.unreachable")
           : error.message.includes("404")
-            ? "GoHead doesn't know this content type: run npm run gohead:push."
-            : "The error was logged on the server."}
+            ? t("ops.error.unknownType")
+            : t("ops.error.logged")}
       </p>
       <button onClick={reset} className="mt-6 rounded-md border border-line-strong px-3 py-1.5 text-sm hover:bg-raised">
-        Try again
+        {t("ops.error.retry")}
       </button>
     </div>
   );

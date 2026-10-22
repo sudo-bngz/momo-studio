@@ -5,6 +5,7 @@
  */
 import { isGoHeadError } from "@gohead-cms/client";
 
+import type { T } from "@/lib/i18n/translate";
 import { fromLocal } from "@/lib/time";
 
 export interface FormState {
@@ -100,12 +101,16 @@ export function compact<T extends Record<string, unknown>>(values: T): T {
   return Object.fromEntries(Object.entries(values).filter(([, v]) => v !== undefined)) as T;
 }
 
-/** What to tell the user when a write fails. */
-export function failure(err: unknown): FormState {
+/**
+ * What to tell the user when a write fails. A FieldError carries a message
+ * that is already in the reader's language; GoHead's own messages are not
+ * translatable, so they are shown as they come.
+ */
+export function failure(t: T, err: unknown): FormState {
   if (err instanceof FieldError) return { error: err.message };
   if (isGoHeadError(err)) {
-    if (err.status === 403) return { error: "Your GoHead role may not do this." };
-    if (err.status === 0) return { error: `GoHead can't be reached: ${err.message}` };
+    if (err.status === 403) return { error: t("error.role.forbidden") };
+    if (err.status === 0) return { error: t("error.unreachable", { message: err.message }) };
     return { error: err.message };
   }
   // Next.js redirects and notFound() are thrown: let them through.

@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { deleteCable } from "@/app/actions";
 import { DeleteForm } from "@/components/action-form";
+import { getI18n } from "@/lib/i18n";
+import { issueMessage } from "@/lib/issues";
 import { CableForm } from "@/components/cable-form";
 import { Help } from "@/components/help";
 import { Card, PageHeader } from "@/components/ui";
@@ -10,9 +12,13 @@ import { getCable, getCables, getDevices } from "@/lib/data";
 import { cablesByPort, findIssues } from "@/lib/patch";
 import { toPlanCable, toPlanDevice } from "@/lib/plan-data";
 
-export const metadata: Metadata = { title: "Cable" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("cables.meta.detail") };
+}
 
 export default async function CablePage({ params }: { params: Promise<{ id: string }> }) {
+  const { t } = await getI18n();
   const id = Number((await params).id);
   if (!Number.isInteger(id)) notFound();
   const [cable, devices, cables] = await Promise.all([getCable(id), getDevices(), getCables()]);
@@ -22,19 +28,19 @@ export default async function CablePage({ params }: { params: Promise<{ id: stri
   );
   return (
     <>
-      <PageHeader title={`Cable ${cable.code}`} />
+      <PageHeader title={t("cables.detail.title", { code: cable.code })} />
       <Help topic="cable-form" />
       {issues.length ? (
         <ul className="mb-6 space-y-1 rounded-md border border-warn/40 bg-warn/10 px-4 py-3 text-sm text-warn">
           {issues.map((i, k) => (
-            <li key={k}>{i.message}</li>
+            <li key={k}>{issueMessage(t, i)}</li>
           ))}
         </ul>
       ) : null}
       <CableForm cable={cable} devices={devices} usage={cablesByPort(cables.map(toPlanCable))} />
-      <Card title="Delete" className="mt-10 border-bad/30">
-        <p className="mb-3 text-sm text-dim">Unplugged but still in the drawer? Set it to Spare instead.</p>
-        <DeleteForm action={deleteCable} id={cable.id} label="Delete this cable" confirm={`Delete cable ${cable.code}?`} />
+      <Card title={t("action.delete")} className="mt-10 border-bad/30">
+        <p className="mb-3 text-sm text-dim">{t("cables.delete.hint")}</p>
+        <DeleteForm action={deleteCable} id={cable.id} label={t("cables.delete.button")} confirm={t("cables.delete.confirm", { code: cable.code })} />
       </Card>
     </>
   );

@@ -2,20 +2,36 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Help } from "@/components/help";
+import { getI18n } from "@/lib/i18n";
+import { issueLabel, issueMessage } from "@/lib/issues";
 import { Badge, ButtonLink, Card, Code, Empty, PageHeader, SignalDot } from "@/components/ui";
 import { getCables, getDevices, refId } from "@/lib/data";
 import { findIssues } from "@/lib/patch";
 import { toPlanCable, toPlanDevice } from "@/lib/plan-data";
-import { CABLE_STATES, CONNECTORS, SIGNALS, isKey, options } from "@/lib/vocab";
+import {
+  CABLE_STATES,
+  SIGNALS,
+  cableStateLabel,
+  cableStateTone,
+  connectorLabel,
+  isKey,
+  signalColor,
+  signalLabel,
+  translatedOptions,
+} from "@/lib/vocab";
 
-export const metadata: Metadata = { title: "Cables" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("cables.meta.title") };
+}
 
 type Search = { q?: string; signal?: string; state?: string; device?: string };
 
 export default async function CablesPage({ searchParams }: { searchParams: Promise<Search> }) {
+  const { t, p, d } = await getI18n();
   const sp = await searchParams;
   const [devices, cables] = await Promise.all([getDevices(), getCables()]);
-  const byId = new Map(devices.map((d) => [d.id, d]));
+  const byId = new Map(devices.map((x) => [x.id, x]));
   const issues = findIssues(devices.map(toPlanDevice), cables.map(toPlanCable));
   const flagged = new Set(issues.map((i) => i.cable.id));
 
@@ -34,12 +50,12 @@ export default async function CablesPage({ searchParams }: { searchParams: Promi
   const metres = list.reduce((s, c) => s + (c.length_m ?? 0), 0);
 
   const end = (device: number | undefined, port: string | null | undefined) => {
-    const d = device ? byId.get(device) : undefined;
-    if (!d) return <span className="text-faint">—</span>;
+    const dev = device ? byId.get(device) : undefined;
+    if (!dev) return <span className="text-faint">{t("state.none")}</span>;
     return (
       <>
-        <Link href={`/assets/${d.id}`} className="hover:text-amber">
-          {d.name}
+        <Link href={`/assets/${dev.id}`} className="hover:text-amber">
+          {dev.name}
         </Link>
         <div className="text-xs text-dim">{port ?? "?"}</div>
       </>
@@ -49,14 +65,14 @@ export default async function CablesPage({ searchParams }: { searchParams: Promi
   return (
     <>
       <PageHeader
-        title="Cables"
-        subtitle={`${list.length} of ${cables.length} cables · ${metres.toLocaleString("en", { maximumFractionDigits: 1 })} m`}
+        title={t("cables.title")}
+        subtitle={p("cables.subtitle", list.length, { total: cables.length, metres: d.metres(metres) })}
         actions={
           <>
-            <ButtonLink href="/plan">Patch plan</ButtonLink>
-            <ButtonLink href={`/cables/labels${sp.device ? `?device=${sp.device}` : ""}`}>Print labels</ButtonLink>
+            <ButtonLink href="/plan">{t("cables.plan.title")}</ButtonLink>
+            <ButtonLink href={`/cables/labels${sp.device ? `?device=${sp.device}` : ""}`}>{t("cables.printLabels")}</ButtonLink>
             <ButtonLink href="/cables/new" primary>
-              Add cable
+              {t("cables.add")}
             </ButtonLink>
           </>
         }
@@ -64,32 +80,32 @@ export default async function CablesPage({ searchParams }: { searchParams: Promi
       <Help topic="cables" />
 
       <form className="mb-4 grid gap-2 sm:grid-cols-[1fr_auto_auto_auto_auto]" method="get">
-        <input name="q" defaultValue={sp.q} placeholder="Search code, device, port, color…" className="control" />
+        <input name="q" defaultValue={sp.q} placeholder={t("cables.search.placeholder")} className="control" />
         <select name="signal" defaultValue={sp.signal ?? ""} className="control">
-          <option value="">All signals</option>
-          {options(SIGNALS).map((o) => (
+          <option value="">{t("cables.filter.allSignals")}</option>
+          {translatedOptions(t, SIGNALS, signalLabel).map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
           ))}
         </select>
         <select name="state" defaultValue={sp.state ?? ""} className="control">
-          <option value="">Any state</option>
-          {options(CABLE_STATES).map((o) => (
+          <option value="">{t("cables.filter.anyState")}</option>
+          {translatedOptions(t, CABLE_STATES, cableStateLabel).map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
           ))}
         </select>
         <select name="device" defaultValue={sp.device ?? ""} className="control">
-          <option value="">Any device</option>
-          {devices.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.code} · {d.name}
+          <option value="">{t("cables.filter.anyDevice")}</option>
+          {devices.map((dev) => (
+            <option key={dev.id} value={dev.id}>
+              {dev.code} · {dev.name}
             </option>
           ))}
         </select>
-        <button className="rounded-md border border-line-strong px-3 py-1.5 text-sm hover:bg-raised">Filter</button>
+        <button className="rounded-md border border-line-strong px-3 py-1.5 text-sm hover:bg-raised">{t("action.filter")}</button>
       </form>
 
       {list.length ? (
@@ -97,13 +113,13 @@ export default async function CablesPage({ searchParams }: { searchParams: Promi
           <table className="data">
             <thead>
               <tr>
-                <th>Code</th>
-                <th>Signal</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Plugs</th>
-                <th>Length</th>
-                <th>State</th>
+                <th>{t("cables.col.code")}</th>
+                <th>{t("cables.col.signal")}</th>
+                <th>{t("cables.col.from")}</th>
+                <th>{t("cables.col.to")}</th>
+                <th>{t("cables.col.plugs")}</th>
+                <th>{t("cables.col.length")}</th>
+                <th>{t("cables.col.state")}</th>
               </tr>
             </thead>
             <tbody>
@@ -113,20 +129,20 @@ export default async function CablesPage({ searchParams }: { searchParams: Promi
                     <Link href={`/cables/${c.id}`} className="hover:underline">
                       <Code>{c.code}</Code>
                     </Link>
-                    {flagged.has(c.id) ? <span className="ml-1 text-warn" title="See issues below">⚠</span> : null}
+                    {flagged.has(c.id) ? <span className="ml-1 text-warn" title={t("cables.seeIssues")}>⚠</span> : null}
                     {c.color ? <div className="text-xs text-faint">{c.color}</div> : null}
                   </td>
                   <td>
-                    <SignalDot color={SIGNALS[c.signal].color} label={SIGNALS[c.signal].label} />
+                    <SignalDot color={signalColor(c.signal)} label={signalLabel(t, c.signal)} />
                   </td>
                   <td>{end(refId(c.from_device), c.from_port)}</td>
                   <td>{end(refId(c.to_device), c.to_port)}</td>
                   <td className="text-xs text-dim">
-                    {c.connector_a ? CONNECTORS[c.connector_a] : "—"} → {c.connector_b ? CONNECTORS[c.connector_b] : "—"}
+                    {c.connector_a ? connectorLabel(t, c.connector_a) : t("state.none")} → {c.connector_b ? connectorLabel(t, c.connector_b) : t("state.none")}
                   </td>
-                  <td className="tabular-nums text-dim">{c.length_m ? `${c.length_m} m` : "—"}</td>
+                  <td className="tabular-nums text-dim">{d.metres(c.length_m)}</td>
                   <td>
-                    <Badge tone={CABLE_STATES[c.state].tone}>{CABLE_STATES[c.state].label}</Badge>
+                    <Badge tone={cableStateTone(c.state)}>{cableStateLabel(t, c.state)}</Badge>
                   </td>
                 </tr>
               ))}
@@ -134,26 +150,24 @@ export default async function CablesPage({ searchParams }: { searchParams: Promi
           </table>
         </div>
       ) : (
-        <Empty>{cables.length ? "No cable matches these filters." : "No cables yet. Add your devices with their ports, then patch them here."}</Empty>
+        <Empty>{cables.length ? t("cables.none.filtered") : t("cables.none")}</Empty>
       )}
 
       <div id="issues" className="mt-8 scroll-mt-6">
-        <Card title={`Issues (${issues.length})`}>
+        <Card title={p("cables.issues", issues.length)}>
           {issues.length ? (
             <ul className="space-y-2 text-sm">
               {issues.map((i, k) => (
                 <li key={k} className="flex items-start gap-2">
-                  <Badge tone={i.kind === "busy_port" || i.kind === "direction" ? "warn" : "bad"}>{i.kind.replace("_", " ")}</Badge>
+                  <Badge tone={i.kind === "busy_port" || i.kind === "direction" ? "warn" : "bad"}>{issueLabel(t, i.kind)}</Badge>
                   <Link href={`/cables/${i.cable.id}`} className="hover:underline">
-                    {i.message}
+                    {issueMessage(t, i)}
                   </Link>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-dim">
-              None: every connected cable joins two existing ports of the same signal, one cable per port, outputs to inputs.
-            </p>
+            <p className="text-sm text-dim">{t("cables.issues.none")}</p>
           )}
         </Card>
       </div>

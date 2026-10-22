@@ -9,13 +9,14 @@
 import { startTransition, useActionState, useEffect, useRef, type ReactNode } from "react";
 
 import type { FormState } from "@/lib/form";
+import { useI18n } from "@/lib/i18n/client";
 
 type Action = (prev: FormState, form: FormData) => Promise<FormState>;
 
 export function ActionForm({
   action,
   children,
-  submit = "Save",
+  submit,
   className = "",
   footer,
 }: {
@@ -25,6 +26,7 @@ export function ActionForm({
   className?: string;
   footer?: ReactNode;
 }) {
+  const { t } = useI18n();
   const [state, run, pending] = useActionState(action, {});
   const ref = useRef<HTMLFormElement>(null);
   useEffect(() => {
@@ -53,7 +55,7 @@ export function ActionForm({
           disabled={pending}
           className="rounded-md bg-amber px-4 py-2 text-sm font-medium text-amber-ink hover:brightness-110 disabled:opacity-60"
         >
-          {pending ? "Saving…" : submit}
+          {pending ? t("action.saving") : (submit ?? t("action.save"))}
         </button>
         {footer}
       </div>
@@ -65,7 +67,7 @@ export function ActionForm({
 export function DeleteForm({
   action,
   id,
-  label = "Delete",
+  label,
   confirm,
   extra,
 }: {
@@ -75,6 +77,7 @@ export function DeleteForm({
   confirm: string;
   extra?: Record<string, string>;
 }) {
+  const { t } = useI18n();
   const [state, run, pending] = useActionState(action, {});
   return (
     <form
@@ -91,7 +94,7 @@ export function DeleteForm({
         <input key={k} type="hidden" name={k} value={v} />
       ))}
       <button type="submit" disabled={pending} className="rounded-md border border-bad/40 px-3 py-1.5 text-sm text-bad hover:bg-bad/10 disabled:opacity-60">
-        {pending ? "Deleting…" : label}
+        {pending ? t("action.deleting") : (label ?? t("action.delete"))}
       </button>
       {state.error ? <p className="max-w-md text-sm text-bad">{state.error}</p> : null}
     </form>

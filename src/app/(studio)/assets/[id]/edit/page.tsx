@@ -7,24 +7,33 @@ import { DeviceForm } from "@/components/device-form";
 import { Help } from "@/components/help";
 import { Card, PageHeader } from "@/components/ui";
 import { getDevice, getLocations } from "@/lib/data";
+import { getI18n } from "@/lib/i18n";
+import { deviceStateLabel } from "@/lib/vocab";
 
-export const metadata: Metadata = { title: "Edit asset" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("assets.meta.edit") };
+}
 
 export default async function EditDevicePage({ params }: { params: Promise<{ id: string }> }) {
+  const { t } = await getI18n();
   const id = Number((await params).id);
   if (!Number.isInteger(id)) notFound();
   const [device, locations] = await Promise.all([getDevice(id), getLocations()]);
   if (!device) notFound();
   return (
     <>
-      <PageHeader title={`Edit ${device.name}`} />
+      <PageHeader title={t("assets.edit.title", { name: device.name })} />
       <Help topic="asset-form" />
       <DeviceForm device={device} locations={locations} />
-      <Card title="Delete" className="mt-10 border-bad/30">
-        <p className="mb-3 text-sm text-dim">
-          Sold it? Set its state to <em>Sold</em> to keep its history. Delete it only if it was a mistake: its cables must be removed first.
-        </p>
-        <DeleteForm action={deleteDevice} id={device.id} label="Delete this device" confirm={`Delete ${device.name}? This can't be undone.`} />
+      <Card title={t("action.delete")} className="mt-10 border-bad/30">
+        <p className="mb-3 text-sm text-dim">{t("assets.delete.hint", { state: deviceStateLabel(t, "sold") })}</p>
+        <DeleteForm
+          action={deleteDevice}
+          id={device.id}
+          label={t("assets.delete.button")}
+          confirm={t("assets.delete.confirm", { name: device.name })}
+        />
       </Card>
     </>
   );

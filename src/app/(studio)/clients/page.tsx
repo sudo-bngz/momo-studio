@@ -6,11 +6,15 @@ import { ActionForm, DeleteForm } from "@/components/action-form";
 import { Help } from "@/components/help";
 import { ButtonLink, Card, Empty, Field, Input, PageHeader, Textarea } from "@/components/ui";
 import { getBookings, getClients, refId } from "@/lib/data";
-import { formatMoney } from "@/lib/time";
+import { getI18n } from "@/lib/i18n";
 
-export const metadata: Metadata = { title: "Clients" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return { title: t("bookings.clients.meta.title") };
+}
 
 export default async function ClientsPage({ searchParams }: { searchParams: Promise<{ edit?: string; new?: string }> }) {
+  const { t, d } = await getI18n();
   const sp = await searchParams;
   const [clients, bookings] = await Promise.all([getClients(), getBookings("2000-01-01T00:00:00Z", "2100-01-01T00:00:00Z")]);
   const editing = clients.find((c) => c.id === Number(sp.edit));
@@ -24,34 +28,51 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
 
   return (
     <>
-      <PageHeader title="Clients" subtitle="Artists and people who book the studio." actions={<ButtonLink href="/clients?new=1" primary>Add client</ButtonLink>} />
+      <PageHeader
+        title={t("bookings.clients.title")}
+        subtitle={t("bookings.clients.subtitle")}
+        actions={
+          <ButtonLink href="/clients?new=1" primary>
+            {t("bookings.clients.add")}
+          </ButtonLink>
+        }
+      />
       <Help topic="clients" />
 
       {showForm ? (
-        <Card title={editing ? `Edit ${editing.name}` : "New client"} className="mb-6">
-          <ActionForm action={saveClient} footer={<ButtonLink href="/clients">Cancel</ButtonLink>}>
+        <Card
+          title={editing ? t("bookings.clients.edit", { name: editing.name }) : t("bookings.clients.new")}
+          className="mb-6"
+        >
+          <ActionForm action={saveClient} footer={<ButtonLink href="/clients">{t("action.cancel")}</ButtonLink>}>
             {editing ? <input type="hidden" name="id" value={editing.id} /> : null}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Field label="Name">
+              <Field label={t("bookings.clients.name")}>
                 <Input name="name" required defaultValue={editing?.name} />
               </Field>
-              <Field label="Artist name">
+              <Field label={t("bookings.clients.artistName")}>
                 <Input name="artist_name" defaultValue={editing?.artist_name ?? ""} />
               </Field>
-              <Field label="Email">
+              <Field label={t("bookings.clients.email")}>
                 <Input name="email" type="email" defaultValue={editing?.email ?? ""} />
               </Field>
-              <Field label="Phone">
+              <Field label={t("bookings.clients.phone")}>
                 <Input name="phone" type="tel" defaultValue={editing?.phone ?? ""} />
               </Field>
-              <Field label="Notes" className="sm:col-span-2 lg:col-span-4">
+              <Field label={t("bookings.notes")} className="sm:col-span-2 lg:col-span-4">
                 <Textarea name="notes" defaultValue={editing?.notes ?? ""} />
               </Field>
             </div>
           </ActionForm>
           {editing ? (
             <div className="mt-6 border-t border-line pt-4">
-              <DeleteForm action={deletePlaceOrClient} id={editing.id} extra={{ type: "clients" }} label="Delete client" confirm={`Delete ${editing.name}? Their bookings stay, without a client.`} />
+              <DeleteForm
+                action={deletePlaceOrClient}
+                id={editing.id}
+                extra={{ type: "clients" }}
+                label={t("bookings.clients.delete")}
+                confirm={t("bookings.clients.deleteConfirm", { name: editing.name })}
+              />
             </div>
           ) : null}
         </Card>
@@ -62,11 +83,11 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
           <table className="data">
             <thead>
               <tr>
-                <th>Client</th>
-                <th>Contact</th>
-                <th className="text-right">Sessions</th>
-                <th className="text-right">Billed</th>
-                <th className="text-right">Unpaid</th>
+                <th>{t("bookings.clients.col.client")}</th>
+                <th>{t("bookings.clients.col.contact")}</th>
+                <th className="text-right">{t("bookings.clients.col.sessions")}</th>
+                <th className="text-right">{t("bookings.clients.col.billed")}</th>
+                <th className="text-right">{t("bookings.clients.col.unpaid")}</th>
                 <th />
               </tr>
             </thead>
@@ -84,11 +105,11 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
                       {c.phone ? <div className="text-xs">{c.phone}</div> : null}
                     </td>
                     <td className="text-right tabular-nums">{s.sessions}</td>
-                    <td className="text-right tabular-nums text-dim">{formatMoney(s.billed)}</td>
-                    <td className={`text-right tabular-nums ${s.due ? "text-warn" : "text-dim"}`}>{formatMoney(s.due)}</td>
+                    <td className="text-right tabular-nums text-dim">{d.money(s.billed)}</td>
+                    <td className={`text-right tabular-nums ${s.due ? "text-warn" : "text-dim"}`}>{d.money(s.due)}</td>
                     <td className="text-right">
                       <Link href={`/clients?edit=${c.id}`} className="text-xs text-dim hover:text-ink">
-                        Edit
+                        {t("action.edit")}
                       </Link>
                     </td>
                   </tr>
@@ -98,7 +119,7 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
           </table>
         </div>
       ) : (
-        <Empty>No clients yet.</Empty>
+        <Empty>{t("bookings.clients.empty")}</Empty>
       )}
     </>
   );

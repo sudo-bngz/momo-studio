@@ -2,6 +2,7 @@ import type { Media } from "@gohead-cms/client";
 
 import { DeviceFigure, type Figure } from "@/components/device-figure";
 import type { DeviceEntry } from "@/lib/data";
+import { getI18n } from "@/lib/i18n";
 import { mediaSrc } from "@/lib/media";
 import type { Category } from "@/lib/vocab";
 
@@ -23,7 +24,7 @@ export const coverOf = (d: Pick<DeviceEntry, "photo" | "photos">): Media | numbe
  * none. `fit` is "cover" in a grid of equal tiles and "contain" when the
  * whole machine should be visible.
  */
-export function AssetImage({
+export async function AssetImage({
   device,
   className = "",
   fit = "cover",
@@ -32,6 +33,7 @@ export function AssetImage({
   className?: string;
   fit?: "cover" | "contain";
 }) {
+  const { t } = await getI18n();
   const src = mediaSrc(coverOf(device));
   if (src) {
     // eslint-disable-next-line @next/next/no-img-element
@@ -39,7 +41,7 @@ export function AssetImage({
   }
   return (
     <div className={`${className} grid place-items-center bg-[#15171a] p-3`}>
-      <DeviceFigure figure={figureOf(device)} className="max-h-full w-full" title={`${device.name}: drawing, no photo yet`} />
+      <DeviceFigure figure={figureOf(device)} className="max-h-full w-full" title={t("assets.figure.title", { name: device.name })} />
     </div>
   );
 }

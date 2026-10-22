@@ -272,7 +272,13 @@ export function findConsoleLoops(devices: PlanDevice[], cables: PlanCable[], str
           kind: "loop",
           cable: cablesOnPath[0]!,
           others: cablesOnPath.slice(1),
-          message: `Aux ${aux} feedback on ${c.name}: Aux ${aux} Out → ${[...new Set(through)].join(" → ")} → Ch ${n} (${strip.label || "unnamed"}), which sends to Aux ${aux}. Turn that channel's Aux ${aux} down, or route the return to an FX return.`,
+          vars: {
+            aux,
+            console: c.name,
+            through: [...new Set(through)].join(" → "),
+            channel: n,
+            label: strip.label || "",
+          },
         });
       }
     }
