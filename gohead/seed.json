@@ -1,0 +1,2064 @@
+{
+ "collections": {
+  "rooms": [
+   {
+    "$id": "control",
+    "name": "Control Room",
+    "slug": "control-room",
+    "color": "#e4572e",
+    "description": "Mixing desk, monitors, the main racks and most of the synths.",
+    "hourly_rate": 45,
+    "daily_rate": 320,
+    "bookable": true
+   },
+   {
+    "$id": "live",
+    "name": "Live Room",
+    "slug": "live-room",
+    "color": "#5b8def",
+    "description": "Tracking room for vocals and live machines sets.",
+    "hourly_rate": 30,
+    "daily_rate": 220,
+    "bookable": true
+   }
+  ],
+  "locations": [
+   {
+    "$id": "rack-a",
+    "name": "Rack A",
+    "kind": "rack",
+    "room": "@ref:rooms/control",
+    "rack_units": 12,
+    "notes": "Left of the desk: interface, patchbays, MIDI, power."
+   },
+   {
+    "$id": "rack-b",
+    "name": "Rack B",
+    "kind": "rack",
+    "room": "@ref:rooms/control",
+    "rack_units": 8,
+    "notes": "Right of the desk: expanders and outboard."
+   },
+   {
+    "$id": "desk",
+    "name": "Mix desk",
+    "kind": "desk",
+    "room": "@ref:rooms/control"
+   },
+   {
+    "$id": "shelf",
+    "name": "Synth stand",
+    "kind": "shelf",
+    "room": "@ref:rooms/control",
+    "notes": "Two-tier stand behind the desk."
+   },
+   {
+    "$id": "case",
+    "name": "Eurorack case",
+    "kind": "case",
+    "room": "@ref:rooms/control"
+   },
+   {
+    "$id": "storage",
+    "name": "Storage cupboard",
+    "kind": "storage",
+    "room": "@ref:rooms/live"
+   }
+  ],
+  "devices": [
+   {
+    "$id": "power",
+    "name": "Furman M-8x2",
+    "code": "PWR-01",
+    "brand": "Furman",
+    "model": "M-8x2",
+    "category": "power",
+    "state": "in_use",
+    "location": "@ref:locations/rack-a",
+    "rack_position": 12,
+    "rack_height": 1,
+    "ports": [
+     {
+      "name": "Mains In",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     },
+     {
+      "name": "Outlet 1",
+      "direction": "out",
+      "signal": "power",
+      "connector": "other"
+     },
+     {
+      "name": "Outlet 2",
+      "direction": "out",
+      "signal": "power",
+      "connector": "other"
+     },
+     {
+      "name": "Outlet 3",
+      "direction": "out",
+      "signal": "power",
+      "connector": "other"
+     },
+     {
+      "name": "Outlet 4",
+      "direction": "out",
+      "signal": "power",
+      "connector": "other"
+     },
+     {
+      "name": "Outlet 5",
+      "direction": "out",
+      "signal": "power",
+      "connector": "other"
+     },
+     {
+      "name": "Outlet 6",
+      "direction": "out",
+      "signal": "power",
+      "connector": "other"
+     },
+     {
+      "name": "Outlet 7",
+      "direction": "out",
+      "signal": "power",
+      "connector": "other"
+     },
+     {
+      "name": "Outlet 8",
+      "direction": "out",
+      "signal": "power",
+      "connector": "other"
+     }
+    ]
+   },
+   {
+    "$id": "rme",
+    "name": "RME Fireface UFX II",
+    "code": "INT-01",
+    "brand": "RME",
+    "model": "Fireface UFX II",
+    "category": "audio_interface",
+    "state": "in_use",
+    "location": "@ref:locations/rack-a",
+    "rack_position": 1,
+    "rack_height": 1,
+    "serial_number": "UFX2-23001842",
+    "purchase_date": "2023-03-14",
+    "purchase_price": 1999,
+    "current_value": 1500,
+    "supplier": "Thomann",
+    "warranty_until": "2026-03-14",
+    "manual_url": "https://www.rme-audio.de/fireface-ufx-ii.html",
+    "ports": [
+     {
+      "name": "Mic/Line In 1",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Mic/Line In 2",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Mic/Line In 3",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Mic/Line In 4",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Line In 5",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line In 6",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line In 7",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line In 8",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line In 9",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line In 10",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line In 11",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line In 12",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line Out 1",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line Out 2",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line Out 3",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line Out 4",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line Out 5",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line Out 6",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line Out 7",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Line Out 8",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "ADAT In 1",
+      "direction": "in",
+      "signal": "digital_audio",
+      "connector": "adat"
+     },
+     {
+      "name": "ADAT Out 1",
+      "direction": "out",
+      "signal": "digital_audio",
+      "connector": "adat"
+     },
+     {
+      "name": "MIDI In 1",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Out 1",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "USB",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_b"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     }
+    ]
+   },
+   {
+    "$id": "pb1",
+    "name": "Patchbay 1 (synth returns)",
+    "code": "PB-01",
+    "brand": "Samson",
+    "model": "S-Patch Plus",
+    "category": "patchbay",
+    "state": "in_use",
+    "location": "@ref:locations/rack-a",
+    "rack_position": 3,
+    "rack_height": 1,
+    "ports": [
+     {
+      "name": "Top 1",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, top row"
+     },
+     {
+      "name": "Top 2",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, top row"
+     },
+     {
+      "name": "Top 3",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, top row"
+     },
+     {
+      "name": "Top 4",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, top row"
+     },
+     {
+      "name": "Top 5",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, top row"
+     },
+     {
+      "name": "Top 6",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, top row"
+     },
+     {
+      "name": "Top 7",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, top row"
+     },
+     {
+      "name": "Top 8",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, top row"
+     },
+     {
+      "name": "Bottom 1",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, bottom row, half-normalled"
+     },
+     {
+      "name": "Bottom 2",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, bottom row, half-normalled"
+     },
+     {
+      "name": "Bottom 3",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, bottom row, half-normalled"
+     },
+     {
+      "name": "Bottom 4",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, bottom row, half-normalled"
+     },
+     {
+      "name": "Bottom 5",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, bottom row, half-normalled"
+     },
+     {
+      "name": "Bottom 6",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, bottom row, half-normalled"
+     },
+     {
+      "name": "Bottom 7",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, bottom row, half-normalled"
+     },
+     {
+      "name": "Bottom 8",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear, bottom row, half-normalled"
+     }
+    ]
+   },
+   {
+    "$id": "mio",
+    "name": "iConnectivity mioXL",
+    "code": "MID-01",
+    "brand": "iConnectivity",
+    "model": "mioXL",
+    "category": "midi_interface",
+    "state": "in_use",
+    "location": "@ref:locations/rack-a",
+    "rack_position": 5,
+    "rack_height": 1,
+    "purchase_date": "2022-11-02",
+    "purchase_price": 599,
+    "ports": [
+     {
+      "name": "DIN In 1",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN In 2",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN In 3",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN In 4",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN In 5",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN In 6",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN In 7",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN In 8",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN Out 1",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN Out 2",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN Out 3",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN Out 4",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN Out 5",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN Out 6",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN Out 7",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "DIN Out 8",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "USB Host",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_a"
+     },
+     {
+      "name": "USB Device",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_b"
+     },
+     {
+      "name": "Network",
+      "direction": "io",
+      "signal": "network",
+      "connector": "ethernet"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "dc"
+     }
+    ]
+   },
+   {
+    "$id": "jv",
+    "name": "Roland JV-1080",
+    "code": "EXP-01",
+    "brand": "Roland",
+    "model": "JV-1080",
+    "category": "expander",
+    "state": "in_use",
+    "location": "@ref:locations/rack-b",
+    "rack_position": 1,
+    "rack_height": 1,
+    "midi_channel": 5,
+    "purchase_date": "2019-06-21",
+    "purchase_price": 280,
+    "ports": [
+     {
+      "name": "Main Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "balanced": false
+     },
+     {
+      "name": "Main Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "balanced": false
+     },
+     {
+      "name": "Out 2 L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "balanced": false
+     },
+     {
+      "name": "Out 2 R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "balanced": false
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Out",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Thru",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     }
+    ]
+   },
+   {
+    "$id": "blofeld",
+    "name": "Waldorf Blofeld",
+    "code": "EXP-02",
+    "brand": "Waldorf",
+    "model": "Blofeld Desktop",
+    "category": "expander",
+    "state": "in_use",
+    "location": "@ref:locations/rack-b",
+    "rack_position": 3,
+    "rack_height": 2,
+    "midi_channel": 6,
+    "ports": [
+     {
+      "name": "Main Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "balanced": false
+     },
+     {
+      "name": "Main Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "balanced": false
+     },
+     {
+      "name": "Aux Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "balanced": false
+     },
+     {
+      "name": "Aux Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "balanced": false
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "USB",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_b"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "dc"
+     }
+    ]
+   },
+   {
+    "$id": "heat",
+    "name": "Elektron Analog Heat MKII",
+    "code": "FX-01",
+    "brand": "Elektron",
+    "model": "Analog Heat MKII",
+    "category": "effect",
+    "state": "in_use",
+    "location": "@ref:locations/rack-b",
+    "rack_position": 6,
+    "rack_height": 2,
+    "ports": [
+     {
+      "name": "In L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "In R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Main Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Main Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Out",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Thru",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "USB",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_b"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "dc"
+     }
+    ]
+   },
+   {
+    "$id": "p5",
+    "name": "Sequential Prophet-5",
+    "code": "SYN-01",
+    "brand": "Sequential",
+    "model": "Prophet-5 Rev4",
+    "category": "synth",
+    "state": "in_use",
+    "location": "@ref:locations/shelf",
+    "midi_channel": 1,
+    "serial_number": "P5R4-0042117",
+    "purchase_date": "2021-09-10",
+    "purchase_price": 3699,
+    "current_value": 3400,
+    "ports": [
+     {
+      "name": "Audio Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Headphones",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "Filter CV In",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Sustain",
+      "direction": "in",
+      "signal": "control",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Out",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Thru",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "USB",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_b"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     }
+    ]
+   },
+   {
+    "$id": "juno",
+    "name": "Roland Juno-106",
+    "code": "SYN-02",
+    "brand": "Roland",
+    "model": "Juno-106",
+    "category": "synth",
+    "state": "in_repair",
+    "location": "@ref:locations/shelf",
+    "midi_channel": 2,
+    "purchase_date": "2016-04-02",
+    "purchase_price": 900,
+    "current_value": 2200,
+    "notes": "Voice chip 80017A on voice 4 replaced in 2024; voice 6 drifting again.",
+    "ports": [
+     {
+      "name": "Out L/Mono",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Phones",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs"
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Out",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     }
+    ]
+   },
+   {
+    "$id": "ms20",
+    "name": "Korg MS-20 mini",
+    "code": "SYN-03",
+    "brand": "Korg",
+    "model": "MS-20 mini",
+    "category": "synth",
+    "state": "in_use",
+    "location": "@ref:locations/shelf",
+    "midi_channel": 3,
+    "ports": [
+     {
+      "name": "Audio Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Ext Signal In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "minijack"
+     },
+     {
+      "name": "CV In",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "minijack"
+     },
+     {
+      "name": "Trig In",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "minijack"
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "USB",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_b"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "dc"
+     }
+    ]
+   },
+   {
+    "$id": "digitakt",
+    "name": "Elektron Digitakt",
+    "code": "DRM-01",
+    "brand": "Elektron",
+    "model": "Digitakt",
+    "category": "sampler",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "midi_channel": 10,
+    "ports": [
+     {
+      "name": "Main Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Main Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "In L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "In R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Out",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Thru",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "USB",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_b"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "dc"
+     }
+    ]
+   },
+   {
+    "$id": "tr8s",
+    "name": "Roland TR-8S",
+    "code": "DRM-02",
+    "brand": "Roland",
+    "model": "TR-8S",
+    "category": "drum_machine",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "midi_channel": 11,
+    "ports": [
+     {
+      "name": "Mix Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Mix Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Assign Out 1",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Assign Out 2",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Assign Out 3",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Assign Out 4",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Assign Out 5",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Assign Out 6",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Trig Out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Out",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "USB",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_c"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "dc"
+     }
+    ]
+   },
+   {
+    "$id": "euro",
+    "name": "Eurorack 7U",
+    "code": "EUR-01",
+    "brand": "Intellijel",
+    "model": "7U Performance Case",
+    "category": "eurorack",
+    "state": "in_use",
+    "location": "@ref:locations/case",
+    "ports": [
+     {
+      "name": "Out 1",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts",
+      "note": "Intellijel Audio I/O, line level"
+     },
+     {
+      "name": "Out 2",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Clock In",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "minijack"
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5",
+      "note": "Hermod+"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     }
+    ]
+   },
+   {
+    "$id": "keystep",
+    "name": "Arturia KeyStep Pro",
+    "code": "CTL-01",
+    "brand": "Arturia",
+    "model": "KeyStep Pro",
+    "category": "sequencer",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "ports": [
+     {
+      "name": "CV Out 1",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "minijack"
+     },
+     {
+      "name": "CV Out 2",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "minijack"
+     },
+     {
+      "name": "CV Out 3",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "minijack"
+     },
+     {
+      "name": "CV Out 4",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "minijack"
+     },
+     {
+      "name": "Gate Out 1",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "minijack"
+     },
+     {
+      "name": "Gate Out 2",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "minijack"
+     },
+     {
+      "name": "Gate Out 3",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "minijack"
+     },
+     {
+      "name": "Gate Out 4",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "minijack"
+     },
+     {
+      "name": "Clock Out",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "minijack"
+     },
+     {
+      "name": "MIDI In",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "MIDI Out",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "din5"
+     },
+     {
+      "name": "USB",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_b"
+     }
+    ]
+   },
+   {
+    "$id": "genelec-l",
+    "name": "Genelec 8040B (L)",
+    "code": "MON-01",
+    "brand": "Genelec",
+    "model": "8040B",
+    "category": "monitor",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "purchase_price": 1150,
+    "ports": [
+     {
+      "name": "Input",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     }
+    ]
+   },
+   {
+    "$id": "genelec-r",
+    "name": "Genelec 8040B (R)",
+    "code": "MON-02",
+    "brand": "Genelec",
+    "model": "8040B",
+    "category": "monitor",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "purchase_price": 1150,
+    "ports": [
+     {
+      "name": "Input",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     }
+    ]
+   },
+   {
+    "$id": "mac",
+    "name": "Mac Studio",
+    "code": "CPU-01",
+    "brand": "Apple",
+    "model": "Mac Studio M2 Max",
+    "category": "computer",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "ports": [
+     {
+      "name": "USB-C 1",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_c"
+     },
+     {
+      "name": "USB-C 2",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_c"
+     },
+     {
+      "name": "USB-C 3",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_c"
+     },
+     {
+      "name": "USB-C 4",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_c"
+     },
+     {
+      "name": "USB-A 1",
+      "direction": "io",
+      "signal": "usb",
+      "connector": "usb_a"
+     },
+     {
+      "name": "Ethernet",
+      "direction": "io",
+      "signal": "network",
+      "connector": "ethernet"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     }
+    ]
+   },
+   {
+    "$id": "re201",
+    "name": "Roland RE-201 Space Echo",
+    "code": "FX-02",
+    "brand": "Roland",
+    "model": "RE-201",
+    "category": "effect",
+    "state": "spare",
+    "location": "@ref:locations/storage",
+    "notes": "Needs a new tape loop before going back on the desk.",
+    "ports": [
+     {
+      "name": "Instrument In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Mic In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "other"
+     }
+    ]
+   }
+  ],
+  "cables": [
+   {
+    "code": "C-001",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/p5",
+    "from_port": "Audio Out",
+    "to_device": "@ref:devices/pb1",
+    "to_port": "Top 1",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "red"
+   },
+   {
+    "code": "C-002",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/juno",
+    "from_port": "Out L/Mono",
+    "to_device": "@ref:devices/pb1",
+    "to_port": "Top 2",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "red"
+   },
+   {
+    "code": "C-003",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/ms20",
+    "from_port": "Audio Out",
+    "to_device": "@ref:devices/pb1",
+    "to_port": "Top 3",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "red"
+   },
+   {
+    "code": "C-004",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/jv",
+    "from_port": "Main Out L",
+    "to_device": "@ref:devices/pb1",
+    "to_port": "Top 4",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1,
+    "color": "blue"
+   },
+   {
+    "code": "C-005",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/jv",
+    "from_port": "Main Out R",
+    "to_device": "@ref:devices/pb1",
+    "to_port": "Top 5",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1,
+    "color": "blue"
+   },
+   {
+    "code": "C-006",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/blofeld",
+    "from_port": "Main Out L",
+    "to_device": "@ref:devices/pb1",
+    "to_port": "Top 6",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1,
+    "color": "green"
+   },
+   {
+    "code": "C-007",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/blofeld",
+    "from_port": "Main Out R",
+    "to_device": "@ref:devices/pb1",
+    "to_port": "Top 7",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 1,
+    "color": "green"
+   },
+   {
+    "code": "C-008",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/euro",
+    "from_port": "Out 1",
+    "to_device": "@ref:devices/pb1",
+    "to_port": "Top 8",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 2,
+    "color": "yellow"
+   },
+   {
+    "code": "C-009",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb1",
+    "from_port": "Bottom 1",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 5",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-010",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb1",
+    "from_port": "Bottom 2",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 6",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-011",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb1",
+    "from_port": "Bottom 3",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 7",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-012",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb1",
+    "from_port": "Bottom 4",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 8",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-013",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb1",
+    "from_port": "Bottom 5",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 9",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-014",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb1",
+    "from_port": "Bottom 6",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 10",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-015",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb1",
+    "from_port": "Bottom 7",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 11",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-016",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb1",
+    "from_port": "Bottom 8",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Line In 12",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-017",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/digitakt",
+    "from_port": "Main Out L",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 1",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-018",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/digitakt",
+    "from_port": "Main Out R",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 2",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-019",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/tr8s",
+    "from_port": "Mix Out L",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 3",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-020",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/tr8s",
+    "from_port": "Mix Out R",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 4",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-021",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/rme",
+    "from_port": "Line Out 1",
+    "to_device": "@ref:devices/genelec-l",
+    "to_port": "Input",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 5,
+    "color": "white"
+   },
+   {
+    "code": "C-022",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/rme",
+    "from_port": "Line Out 2",
+    "to_device": "@ref:devices/genelec-r",
+    "to_port": "Input",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 5,
+    "color": "white"
+   },
+   {
+    "code": "C-023",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/rme",
+    "from_port": "Line Out 3",
+    "to_device": "@ref:devices/heat",
+    "to_port": "In L",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 1,
+    "color": "orange"
+   },
+   {
+    "code": "C-024",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/rme",
+    "from_port": "Line Out 4",
+    "to_device": "@ref:devices/heat",
+    "to_port": "In R",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 1,
+    "color": "orange"
+   },
+   {
+    "code": "C-025",
+    "signal": "midi",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "DIN Out 1",
+    "to_device": "@ref:devices/p5",
+    "to_port": "MIDI In",
+    "connector_a": "din5",
+    "connector_b": "din5",
+    "length_m": 3,
+    "color": "purple"
+   },
+   {
+    "code": "C-026",
+    "signal": "midi",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "DIN Out 2",
+    "to_device": "@ref:devices/juno",
+    "to_port": "MIDI In",
+    "connector_a": "din5",
+    "connector_b": "din5",
+    "length_m": 3,
+    "color": "purple"
+   },
+   {
+    "code": "C-027",
+    "signal": "midi",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "DIN Out 3",
+    "to_device": "@ref:devices/ms20",
+    "to_port": "MIDI In",
+    "connector_a": "din5",
+    "connector_b": "din5",
+    "length_m": 3,
+    "color": "purple"
+   },
+   {
+    "code": "C-028",
+    "signal": "midi",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "DIN Out 4",
+    "to_device": "@ref:devices/jv",
+    "to_port": "MIDI In",
+    "connector_a": "din5",
+    "connector_b": "din5",
+    "length_m": 1.5,
+    "color": "purple"
+   },
+   {
+    "code": "C-029",
+    "signal": "midi",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "DIN Out 5",
+    "to_device": "@ref:devices/blofeld",
+    "to_port": "MIDI In",
+    "connector_a": "din5",
+    "connector_b": "din5",
+    "length_m": 1.5,
+    "color": "purple"
+   },
+   {
+    "code": "C-030",
+    "signal": "midi",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "DIN Out 6",
+    "to_device": "@ref:devices/digitakt",
+    "to_port": "MIDI In",
+    "connector_a": "din5",
+    "connector_b": "din5",
+    "length_m": 1.5,
+    "color": "purple"
+   },
+   {
+    "code": "C-031",
+    "signal": "midi",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "DIN Out 7",
+    "to_device": "@ref:devices/tr8s",
+    "to_port": "MIDI In",
+    "connector_a": "din5",
+    "connector_b": "din5",
+    "length_m": 1.5,
+    "color": "purple"
+   },
+   {
+    "code": "C-032",
+    "signal": "midi",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "DIN Out 8",
+    "to_device": "@ref:devices/euro",
+    "to_port": "MIDI In",
+    "connector_a": "din5",
+    "connector_b": "din5",
+    "length_m": 3,
+    "color": "purple"
+   },
+   {
+    "code": "C-033",
+    "signal": "midi",
+    "state": "connected",
+    "from_device": "@ref:devices/keystep",
+    "from_port": "MIDI Out",
+    "to_device": "@ref:devices/mio",
+    "to_port": "DIN In 1",
+    "connector_a": "din5",
+    "connector_b": "din5",
+    "length_m": 1.5,
+    "color": "purple"
+   },
+   {
+    "code": "C-034",
+    "signal": "cv",
+    "state": "connected",
+    "from_device": "@ref:devices/keystep",
+    "from_port": "CV Out 1",
+    "to_device": "@ref:devices/ms20",
+    "to_port": "CV In",
+    "connector_a": "minijack",
+    "connector_b": "minijack",
+    "length_m": 1,
+    "color": "yellow"
+   },
+   {
+    "code": "C-035",
+    "signal": "gate",
+    "state": "connected",
+    "from_device": "@ref:devices/keystep",
+    "from_port": "Gate Out 1",
+    "to_device": "@ref:devices/ms20",
+    "to_port": "Trig In",
+    "connector_a": "minijack",
+    "connector_b": "minijack",
+    "length_m": 1,
+    "color": "yellow"
+   },
+   {
+    "code": "C-036",
+    "signal": "clock",
+    "state": "connected",
+    "from_device": "@ref:devices/keystep",
+    "from_port": "Clock Out",
+    "to_device": "@ref:devices/euro",
+    "to_port": "Clock In",
+    "connector_a": "minijack",
+    "connector_b": "minijack",
+    "length_m": 2,
+    "color": "yellow"
+   },
+   {
+    "code": "C-037",
+    "signal": "usb",
+    "state": "connected",
+    "from_device": "@ref:devices/rme",
+    "from_port": "USB",
+    "to_device": "@ref:devices/mac",
+    "to_port": "USB-C 1",
+    "connector_a": "usb_b",
+    "connector_b": "usb_c",
+    "length_m": 2
+   },
+   {
+    "code": "C-038",
+    "signal": "usb",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "USB Device",
+    "to_device": "@ref:devices/mac",
+    "to_port": "USB-C 2",
+    "connector_a": "usb_b",
+    "connector_b": "usb_c",
+    "length_m": 2
+   },
+   {
+    "code": "C-039",
+    "signal": "network",
+    "state": "connected",
+    "from_device": "@ref:devices/mio",
+    "from_port": "Network",
+    "to_device": "@ref:devices/mac",
+    "to_port": "Ethernet",
+    "connector_a": "ethernet",
+    "connector_b": "ethernet",
+    "length_m": 2,
+    "notes": "RTP-MIDI to the laptop rig"
+   },
+   {
+    "code": "C-040",
+    "signal": "audio",
+    "state": "spare",
+    "from_device": "@ref:devices/re201",
+    "from_port": "Out",
+    "to_device": "@ref:devices/pb1",
+    "to_port": "Top 8",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "red",
+    "notes": "Swap with C-008 when the Space Echo is back."
+   }
+  ],
+  "maintenance": [
+   {
+    "device": "@ref:devices/juno",
+    "date": "2024-02-12",
+    "kind": "repair",
+    "description": "Voice chip 80017A replaced on voice 4.",
+    "cost": 180,
+    "done_by": "Atelier Synthé, Montreuil"
+   },
+   {
+    "device": "@ref:devices/juno",
+    "date": "2026-10-05",
+    "kind": "repair",
+    "description": "Voice 6 detuning, sent back to the tech.",
+    "done_by": "Atelier Synthé, Montreuil"
+   },
+   {
+    "device": "@ref:devices/p5",
+    "date": "2025-06-30",
+    "kind": "calibration",
+    "description": "Full autotune and filter calibration after firmware 2.0.",
+    "cost": 0,
+    "done_by": "In house"
+   },
+   {
+    "device": "@ref:devices/genelec-l",
+    "date": "2026-01-15",
+    "kind": "calibration",
+    "description": "Room measurement, -2 dB bass tilt.",
+    "done_by": "In house"
+   }
+  ],
+  "clients": [
+   {
+    "$id": "nova",
+    "name": "Inès Marchand",
+    "artist_name": "NOVA RITE",
+    "email": "nova@example.com",
+    "phone": "+33 6 00 00 00 01"
+   },
+   {
+    "$id": "kollaps",
+    "name": "Théo Laurent",
+    "artist_name": "Kollaps",
+    "email": "kollaps@example.com"
+   },
+   {
+    "$id": "label",
+    "name": "Label sessions",
+    "artist_name": "In-house",
+    "notes": "Internal label work: edits, masters, artist development."
+   }
+  ],
+  "bookings": [
+   {
+    "title": "NOVA RITE - EP tracking",
+    "client": "@ref:clients/nova",
+    "room": "@ref:rooms/control",
+    "starts_at": "2026-10-26T09:00:00Z",
+    "ends_at": "2026-10-26T17:00:00Z",
+    "state": "confirmed",
+    "session_type": "production",
+    "engineer": "Nicolas",
+    "devices": [
+     "@ref:devices/p5",
+     "@ref:devices/tr8s",
+     "@ref:devices/heat"
+    ],
+    "price": 320,
+    "paid": false,
+    "notes": "Wants the Prophet and the TR-8S patched in before arrival."
+   },
+   {
+    "title": "Kollaps - live set rehearsal",
+    "client": "@ref:clients/kollaps",
+    "room": "@ref:rooms/live",
+    "starts_at": "2026-10-28T13:00:00Z",
+    "ends_at": "2026-10-28T18:00:00Z",
+    "state": "tentative",
+    "session_type": "rehearsal",
+    "devices": [
+     "@ref:devices/digitakt",
+     "@ref:devices/euro"
+    ],
+    "price": 150
+   },
+   {
+    "title": "Label - mastering batch",
+    "client": "@ref:clients/label",
+    "room": "@ref:rooms/control",
+    "starts_at": "2026-10-30T08:00:00Z",
+    "ends_at": "2026-10-30T12:00:00Z",
+    "state": "confirmed",
+    "session_type": "mastering",
+    "engineer": "Nicolas"
+   },
+   {
+    "title": "NOVA RITE - mix",
+    "client": "@ref:clients/nova",
+    "room": "@ref:rooms/control",
+    "starts_at": "2026-10-19T08:00:00Z",
+    "ends_at": "2026-10-19T15:00:00Z",
+    "state": "completed",
+    "session_type": "mixing",
+    "engineer": "Nicolas",
+    "price": 280,
+    "paid": true
+   }
+  ]
+ }
+}
