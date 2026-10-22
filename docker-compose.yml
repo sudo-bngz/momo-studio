@@ -1,0 +1,32 @@
+# GoHead for the studio, in one container: `gohead standalone` runs the API,
+# the admin UI, webhooks and the scheduler in one process on SQLite (about
+# 45 MB of memory, a Raspberry Pi is enough). Data and uploads live in the
+# gohead-data volume.
+#
+#   docker compose up -d       # GoHead and its admin on http://localhost:8080
+#   npm run gohead:setup       # content model, types, the studio-staff role
+#   npm run gohead:seed        # optional: a sample studio to play with
+#   npm run dev                # the app on http://localhost:3000
+#
+# Back up the volume (or the ./gohead-data folder if you bind-mount one):
+# it is your whole inventory.
+
+services:
+  gohead:
+    image: ghcr.io/gohead-cms/gohead:${GOHEAD_VERSION:-latest}
+    command: ["standalone", "--data", "/data"]
+    environment:
+      # The first administrator, created on an empty database. The defaults
+      # match GOHEAD_USERNAME / GOHEAD_PASSWORD of .env.example; change both
+      # before exposing GoHead anywhere but your machine.
+      GOHEAD_ADMIN_USERNAME: ${GOHEAD_USERNAME:-admin}
+      GOHEAD_ADMIN_EMAIL: ${GOHEAD_ADMIN_EMAIL:-admin@studio.local}
+      GOHEAD_ADMIN_PASSWORD: ${GOHEAD_PASSWORD:-gohead-local-password}
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - gohead-data:/data
+    restart: unless-stopped
+
+volumes:
+  gohead-data:

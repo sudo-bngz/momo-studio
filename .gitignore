@@ -1,0 +1,21 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# env files (.env.example is committed)
+.env*
+!.env.example
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+.vercel
+
+# GoHead's data when it runs with `gohead standalone --data .gohead`
+/.gohead/
