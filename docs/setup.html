@@ -32,6 +32,7 @@ setup is really two things — a GoHead with the studio's content model pushed i
 cd studio-manager
 cp .env.example .env.local
 npm install
+docker compose pull    # once, and whenever you move GoHead forward
 docker compose up -d   # GoHead (API + admin) on :8080
 npm run gohead:setup   # model + types + the studio-staff role and feed secrets
 npm run gohead:seed    # optional: a sample studio
@@ -102,6 +103,20 @@ They talk over Render's private network, so no token ever leaves it.</p>
 </ol>
 <p class="note">The CMS service must be on a paid plan: Render's free services can send private-network requests but not
 receive them, and the app needs to reach the CMS.</p>
+
+<h2 id="restart-loop">When GoHead restarts every minute: <code>unknown command "standalone"</code></h2>
+<pre><code>Error: unknown command "standalone" for "gohead"
+2026/10/22 20:12:34 Error executing command: unknown command "standalone" for "gohead"</code></pre>
+<p>The image is older than GoHead v0.6.0, which is where <code>standalone</code> landed.
+<code>docker compose up -d</code> reuses a tag it has already pulled without asking the registry, so an image
+fetched before then keeps starting the old binary — and <code>restart: unless-stopped</code> turns that into a loop,
+one restart a minute.</p>
+<pre><code>docker compose pull &amp;&amp; docker compose up -d
+docker compose logs -f gohead</code></pre>
+<p><code>docker-compose.yml</code> pins the minor (<code>0.7</code>), so a fresh clone can't land in this; <code>docker
+compose pull</code> moves it forward, and <code>GOHEAD_VERSION=0.8 docker compose up -d</code> picks another line. If
+<code>gohead</code> is a binary on your PATH rather than the container, it's the same cause — <code>gohead
+version</code> tells you what you have.</p>
 
 <h2 id="trouble">When <code>npm install</code> fails with <code>UNABLE_TO_GET_ISSUER_CERT_LOCALLY</code></h2>
 <p>That's TLS interception — a corporate proxy or a security agent re-signing HTTPS with its own root. macOS trusts that

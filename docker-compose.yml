@@ -13,7 +13,13 @@
 
 services:
   gohead:
-    image: ghcr.io/gohead-cms/gohead:${GOHEAD_VERSION:-latest}
+    # Pinned to the minor, not `latest`: `standalone` arrived in v0.6.0, and
+    # `docker compose up` reuses a tag it has already pulled without asking
+    # the registry — so a `latest` pulled before that keeps starting an older
+    # binary, which exits with `unknown command "standalone"` and restarts
+    # every minute. `docker compose pull` is what moves a pinned tag forward;
+    # GOHEAD_VERSION=0.8 docker compose up -d picks another line.
+    image: ghcr.io/gohead-cms/gohead:${GOHEAD_VERSION:-0.7}
     command: ["standalone", "--data", "/data"]
     environment:
       # The first administrator, created on an empty database. The defaults

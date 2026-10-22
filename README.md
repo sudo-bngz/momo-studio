@@ -38,6 +38,7 @@ git clone https://github.com/sudo-bngz/momo-studio.git studio-manager
 cd studio-manager
 cp .env.example .env.local
 npm install
+docker compose pull      # once, and whenever you move GoHead forward
 docker compose up -d     # GoHead (API + admin) on http://localhost:8080
 npm run gohead:setup     # content model, TypeScript types, roles, calendar secrets
 npm run gohead:seed      # optional: a sample studio to click around
@@ -65,6 +66,28 @@ spreadsheet, paste it a column at a time into the patchbay and console boards ra
 typing it again.
 
 After a `git pull` that changed the content model, run `npm run gohead:setup` again.
+
+### GoHead restarts every minute: `unknown command "standalone"`
+
+```
+Error: unknown command "standalone" for "gohead"
+2026/10/22 20:12:34 Error executing command: unknown command "standalone" for "gohead"
+```
+
+The image is older than GoHead v0.6.0, which is where `standalone` landed. `docker compose up -d`
+reuses a tag it has already pulled without asking the registry, so a `ghcr.io/gohead-cms/gohead`
+image fetched before then keeps starting the old binary; `restart: unless-stopped` is what turns
+that into a loop, one restart a minute.
+
+```bash
+docker compose pull && docker compose up -d
+docker compose logs -f gohead      # "listening on :8080" means it's up
+```
+
+`docker-compose.yml` pins the minor (`0.7`), so this can't happen again on a fresh clone; `docker
+compose pull` is how you move it forward, and `GOHEAD_VERSION=0.8 docker compose up -d` picks
+another line. If `gohead` is a binary on your PATH rather than the container, it's the same cause —
+update it, `gohead version` tells you what you have.
 
 ### `npm install` fails with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`
 
@@ -124,12 +147,18 @@ People sign in with their GoHead user; the app keeps GoHead's token in an httpOn
 
 ### Single sign-on
 
-GoHead authenticates with a username and password (plus API tokens); it has no OIDC or OAuth,
-so there is no "sign in with Google" today. The clean way to get one is to add OIDC to GoHead
-itself: the app would keep doing exactly what it does now, because it only ever holds a GoHead
-token. Doing it in this app instead would mean the app storing a GoHead credential for each
-person, which is worse, and using one shared API token would destroy the activity trail — every
-change would read as the token rather than as a person.
+GoHead grew OpenID Connect sign-in on `master` (`feat(auth): sign in with Google`, 22 Oct):
+authorization code flow with PKCE, `GET /auth/sso` to list the providers, `/auth/sso/:provider/start`
+and `/auth/sso/:provider/callback`, with a migration linking a GoHead user to its provider subject.
+It is **not in v0.7.0**, the version `docker-compose.yml` pins — it lands in the release after it.
+
+This app doesn't use it yet: its login page still takes a username and a password. Wiring it up is
+a *Sign in with Google* button that hands off to GoHead and a route that accepts the token it sends
+back, and it changes nothing else, because the app only ever holds a GoHead token — roles,
+permissions and the activity trail keep working untouched. That is why SSO belonged in GoHead
+rather than here: doing it in this app would have meant storing a GoHead credential per person,
+and one shared API token would have destroyed the trail, since every change would read as the
+token rather than as a person.
 
 ## Calendar
 

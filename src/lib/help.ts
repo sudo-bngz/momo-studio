@@ -403,7 +403,7 @@ export const TOPICS: Record<TopicId, HelpTopic> = {
       { term: "Why no shared login", text: "Each person signs in as themselves so the trail says who did what. A shared account or a shared token would make every change read as the same actor, which is the one thing the trail is for." },
     ],
     long: [
-      "Signing in with Google isn't possible today: the CMS authenticates with a username and password plus API tokens, and has no OIDC or OAuth. The clean way to get it is to add OIDC to the CMS itself — the app only ever holds a CMS token, so roles, permissions and this trail would keep working untouched. Doing it in the app instead would mean storing a recoverable password per person, and a single shared token would destroy the trail.",
+      "Signing in with Google is coming. GoHead grew OpenID Connect sign-in on `master` (authorization code flow with PKCE, `GET /auth/sso/google/start`), so it will be there in the release after v0.7.0 — which is the version this app's `docker-compose.yml` pins. This app doesn't use it yet: its login page still takes a username and a password. Wiring it up means offering a *Sign in with Google* button that hands off to GoHead and accepting the token it sends back, and it changes nothing else — the app only ever holds a GoHead token, so roles, permissions and this trail keep working untouched.",
     ],
     see: ["activity"],
   },
