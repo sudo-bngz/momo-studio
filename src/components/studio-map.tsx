@@ -638,7 +638,7 @@ export function StudioMap(props: Props) {
           {homeless.map((d, i) => (
             <span key={d.id}>
               {i ? ", " : ""}
-              <Link href={`/gear/${d.id}/edit`} className="text-ink hover:text-amber">
+              <Link href={`/assets/${d.id}/edit`} className="text-ink hover:text-amber">
                 {d.name}
               </Link>
             </span>
@@ -1104,7 +1104,7 @@ function DeviceTile({
     </g>
   );
   // Outside edit mode, a machine opens its page.
-  return onDown ? body : <a href={`/gear/${d.id}`}>{body}</a>;
+  return onDown ? body : <a href={`/assets/${d.id}`}>{body}</a>;
 }
 
 function truncate(s: string, n: number) {

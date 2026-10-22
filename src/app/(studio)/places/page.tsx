@@ -20,7 +20,7 @@ export default async function PlacesPage({ searchParams }: { searchParams: Promi
 
   return (
     <>
-      <PageHeader title="Rooms & locations" subtitle="Rooms are what you book; locations are where gear sits (racks, desks, shelves, cases)." actions={<ButtonLink href="/racks">Back to racks</ButtonLink>} />
+      <PageHeader title="Rooms & locations" subtitle="Rooms are what you book; locations are where the machines sit (racks, desks, shelves, cases)." actions={<ButtonLink href="/racks">Back to racks</ButtonLink>} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Rooms" actions={<Link href="/places?room=new" className="text-xs text-dim hover:text-ink">+ Room</Link>}>

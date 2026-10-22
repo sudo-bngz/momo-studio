@@ -1,23 +1,24 @@
 import { saveDevice } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
 import { PortsWithTemplate } from "@/components/template-picker";
-import { ButtonLink, Card, Checkbox, Field, Input, Select, Textarea } from "@/components/ui";
+import { PhotoInput } from "@/components/photo-input";
+import { ButtonLink, Card, Field, Input, Select, Textarea } from "@/components/ui";
 import type { DeviceEntry, LocationEntry } from "@/lib/data";
 import { refId } from "@/lib/data";
-import { mediaSrc } from "@/lib/media";
 import { CATEGORIES, DEVICE_STATES, options, type Category } from "@/lib/vocab";
 
 export function DeviceForm({ device, locations, category }: { device?: DeviceEntry; locations: LocationEntry[]; category?: Category }) {
-  const photo = mediaSrc(device?.photo);
-  const photoId = device?.photo && typeof device.photo === "object" ? device.photo.id : typeof device?.photo === "number" ? device.photo : undefined;
+  // The cover first, then the rest of the gallery.
+  const cover = device?.photo;
+  const rest = (device?.photos ?? []).filter((m) => refId(m) !== refId(cover));
+  const gallery = cover ? [cover, ...rest] : rest;
   return (
     <ActionForm
       action={saveDevice}
       submit={device ? "Save changes" : "Add to the studio"}
-      footer={<ButtonLink href={device ? `/gear/${device.id}` : "/gear"}>Cancel</ButtonLink>}
+      footer={<ButtonLink href={device ? `/assets/${device.id}` : "/assets"}>Cancel</ButtonLink>}
     >
       {device ? <input type="hidden" name="id" value={device.id} /> : null}
-      {photoId ? <input type="hidden" name="photo_id" value={photoId} /> : null}
 
       <div className="grid gap-6 xl:grid-cols-3">
         <Card title="Identity" className="xl:col-span-2">
@@ -62,15 +63,17 @@ export function DeviceForm({ device, locations, category }: { device?: DeviceEnt
                 <Input name="rack_height" type="number" min={1} max={12} defaultValue={device?.rack_height ?? ""} />
               </Field>
             </div>
-            <Field label="Photo">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              {photo ? <img src={photo} alt="" className="mb-2 max-h-40 rounded-md border border-line object-cover" /> : null}
-              <input name="photo" type="file" accept="image/*" className="block w-full text-sm text-dim file:mr-3 file:rounded file:border-0 file:bg-raised file:px-3 file:py-1.5 file:text-ink" />
-            </Field>
-            {photo ? <Checkbox name="remove_photo" label="Remove the photo" /> : null}
           </div>
         </Card>
       </div>
+
+      <Card title="Photos" className="mt-6">
+        <p className="mb-4 text-sm text-dim">
+          The machine as it really is: a front, the rear panel, the serial plate. Without a photo the app draws the
+          machine from its category, so the inventory is never a wall of empty squares.
+        </p>
+        <PhotoInput existing={gallery} />
+      </Card>
 
       <Card title="Ports" className="mt-6">
         <p className="mb-4 text-sm text-dim">

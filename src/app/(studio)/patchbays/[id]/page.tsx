@@ -41,7 +41,7 @@ export default async function PatchbayPage({ params }: { params: Promise<{ id: s
             <ButtonLink href={`/plan?focus=${id}`}>Show in plan</ButtonLink>
             <ButtonLink href={`/cables/labels?device=${id}`}>Cable labels</ButtonLink>
             <ButtonLink href={`/patchbays/${id}/strip`}>Print strips</ButtonLink>
-            <ButtonLink href={`/gear/${id}/edit`}>Edit device</ButtonLink>
+            <ButtonLink href={`/assets/${id}/edit`}>Edit device</ButtonLink>
           </>
         }
       />

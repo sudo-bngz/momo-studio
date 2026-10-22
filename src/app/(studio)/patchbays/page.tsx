@@ -15,7 +15,7 @@ export default async function PatchbaysPage() {
       <PageHeader
         title="Patchbays"
         subtitle="What's behind every point, how it's normalled, and where it goes in the DAW."
-        actions={<ButtonLink href="/gear/new?category=patchbay">Add a patchbay</ButtonLink>}
+        actions={<ButtonLink href="/assets/new?category=patchbay">Add a patchbay</ButtonLink>}
       />
       <ModeLegend />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
@@ -44,7 +44,7 @@ export default async function PatchbaysPage() {
           ))}
         </div>
       ) : (
-        <Empty>No patchbay yet. Add one as gear with the category “Patchbay”, then lay out its columns here.</Empty>
+        <Empty>No patchbay yet. Add one as an asset with the category “Patchbay”, then lay out its columns here.</Empty>
       )}
     </>
   );

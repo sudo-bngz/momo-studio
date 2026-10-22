@@ -7,7 +7,7 @@ import { DeviceForm } from "@/components/device-form";
 import { Card, PageHeader } from "@/components/ui";
 import { getDevice, getLocations } from "@/lib/data";
 
-export const metadata: Metadata = { title: "Edit gear" };
+export const metadata: Metadata = { title: "Edit asset" };
 
 export default async function EditDevicePage({ params }: { params: Promise<{ id: string }> }) {
   const id = Number((await params).id);

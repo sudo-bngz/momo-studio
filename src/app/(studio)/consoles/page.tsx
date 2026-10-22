@@ -16,7 +16,7 @@ export default async function ConsolesPage() {
       <PageHeader
         title="Consoles"
         subtitle="Every channel of the desk: what's plugged in, what it's called, where it goes."
-        actions={<ButtonLink href="/gear/new?category=mixer">Add a console</ButtonLink>}
+        actions={<ButtonLink href="/assets/new?category=mixer">Add a console</ButtonLink>}
       />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
       {views.length ? (
@@ -45,7 +45,7 @@ export default async function ConsolesPage() {
         </div>
       ) : (
         <Empty>
-          No console yet. Add one as gear with the category “Mixer” and fill its ports from a template (the Allen &amp; Heath GS3 is there), or name its ports “Ch 1 Line”, “Ch 1 Insert”…
+          No console yet. Add one as an asset with the category “Mixer” and fill its ports from a template (the Allen &amp; Heath GS3 is there), or name its ports “Ch 1 Line”, “Ch 1 Insert”…
         </Empty>
       )}
     </>

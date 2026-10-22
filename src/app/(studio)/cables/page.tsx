@@ -37,7 +37,7 @@ export default async function CablesPage({ searchParams }: { searchParams: Promi
     if (!d) return <span className="text-faint">—</span>;
     return (
       <>
-        <Link href={`/gear/${d.id}`} className="hover:text-amber">
+        <Link href={`/assets/${d.id}`} className="hover:text-amber">
           {d.name}
         </Link>
         <div className="text-xs text-dim">{port ?? "?"}</div>

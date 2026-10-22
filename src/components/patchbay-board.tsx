@@ -344,7 +344,7 @@ function RearInfo({ rear, pbId, side }: { rear?: RearView; pbId: number; side: "
           </Link>{" "}
           ↔{" "}
           {e.deviceId ? (
-            <Link href={`/gear/${e.deviceId}`} className="text-ink hover:text-amber">
+            <Link href={`/assets/${e.deviceId}`} className="text-ink hover:text-amber">
               {e.deviceName}
             </Link>
           ) : (
@@ -406,7 +406,7 @@ function ColumnEditor({
           <RearInfo rear={row?.bottom} pbId={pbId} side="bottom" />
         </div>
       </div>
-      <p className="mt-2 text-[11px] text-faint">A cable plugged in the rear names the point; the label is used when there is none (or for gear you haven&apos;t added).</p>
+      <p className="mt-2 text-[11px] text-faint">A cable plugged in the rear names the point; the label is used when there is none (or for a machine you haven&apos;t added).</p>
 
       <div className="mt-5 grid gap-6 md:grid-cols-[auto_1fr]">
         <div>

@@ -2,7 +2,7 @@
 
 A private back-office for an electronic music studio, built on [GoHead](https://github.com/gohead-cms/gohead):
 
-- **Gear**: every synth, expander, drum machine, interface, patchbay and monitor, with its code, location, rack position, serial, purchase price, value, warranty, photo and maintenance log.
+- **Assets**: every synth, expander, drum machine, interface, patchbay and monitor, with its code, location, rack position, serial, purchase price, value, warranty and maintenance log. A gallery of **photographs** (front, rear panel, serial plate — scaled down in the browser so the server keeps small files), and for anything not photographed yet the app **draws the machine** from its category: keys for a synth, pads for a drum machine, two rows of jacks for a patchbay, faders for a console.
 - **Ports**: each device lists its sockets (name, in/out, signal, connector). Cables plug into ports by name.
 - **Cables**: every cable has a label code (`C-001`) and joins two ports. The app refuses a cable into a port that is already taken, refuses renaming a port that still has a cable, and flags anything odd: wrong signal, two outputs joined, unknown ports.
 - **Studio map**: a floor plan of the rooms, with every rack, desk, stand and pedalboard where it really is, and the cable runs between them bundled by signal (hover a bundle for its cables). Click a place to zoom in: a rack opens as a front view, unit by unit; a desk or stand shows its machines, the cables between them, and where the others go. Edit the layout by dragging, resizing and turning places, moving them between rooms, and placing machines on a desk.
@@ -80,7 +80,7 @@ is newer than what `eslint-plugin-import` declares. The install works.
 Starting with your own studio rather than the sample: skip `gohead:seed`, then in this order
 
 1. **Racks & places → Rooms & locations**: your rooms, then your racks (with their height in U), desks, shelves, cases. Then **Studio map → Edit layout**: set each room's size, and drag every place where it stands.
-2. **Gear → Add gear**: each device with its ports. The port editor has presets (stereo out, MIDI in/out/thru…) and numbered batches (“Line In × 8”).
+2. **Assets → Add an asset**: each machine with its ports. The port editor has presets (stereo out, MIDI in/out/thru…) and numbered batches (“Line In × 8”).
 3. **Patchbays**: open each one, set its columns, paste your sheet's rows (labels, modes, Ableton tracks) under *All columns · paste from a sheet*, then **Add the rear ports**.
 4. **Cables → Add cable**, *patch it* next to a free port on a device's page, or *Patch the rear* on a patchbay column. Write the code on both ends, or print the labels.
 
@@ -197,7 +197,7 @@ on a Raspberry Pi or a small VPS:
 gohead/model.json, seed.json   content model and sample studio
 scripts/                       role and user setup
 src/
-  app/(studio)/                pages: overview, gear, racks, places, cables, patchbays, plan, bookings, clients
+  app/(studio)/                pages: overview, assets, racks, places, cables, patchbays, consoles, plan, map, bookings, clients
   app/actions.ts               every write (Server Actions)
   app/login/                   sign-in
   app/media/                   private proxy for uploaded photos
@@ -206,6 +206,7 @@ src/
   lib/patch.ts                 the cable graph: port usage, issues, signal through normals, loops, plan layout
   lib/patchbay.ts              a patchbay as columns, labels from rear cables, pasting from a sheet
   lib/console.ts               a console as strips, routing, following a signal through the desk, aux loops
+  components/device-figure.tsx a drawing of a machine per category, when there is no photo
   lib/templates.ts, templates/ device templates (GS3, generic console / interface / patchbay)
   lib/studio-map.ts            the floor plan: default layout, cable bundles between places, zoom cards
   lib/session.ts               sign-in and the per-user GoHead client

@@ -37,16 +37,16 @@ export default async function OverviewPage() {
         actions={
           <>
             <ButtonLink href="/bookings/new">New booking</ButtonLink>
-            <ButtonLink href="/gear/new" primary>
-              Add gear
+            <ButtonLink href="/assets/new" primary>
+              Add an asset
             </ButtonLink>
           </>
         }
       />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat label="Gear" value={owned.length} hint={`${owned.filter((d) => d.state === "in_use").length} in use`} />
-        <Stat label="Gear value" value={formatMoney(value)} hint="current value, or purchase price" />
+        <Stat label="Assets" value={owned.length} hint={`${owned.filter((d) => d.state === "in_use").length} in use`} />
+        <Stat label="Total value" value={formatMoney(value)} hint="current value, or purchase price" />
         <Stat label="Cables" value={connected} hint={`connected · ${cables.length - connected} spare or broken${broken ? ` (${broken} broken)` : ""}`} />
         <Stat
           label="Patch issues"
@@ -80,7 +80,7 @@ export default async function OverviewPage() {
                         ) : null}
                         {client ? ` · ${client.artist_name || client.name}` : null}
                       </div>
-                      {gear.length ? <div className="mt-1 text-xs text-faint">Gear: {gear.join(", ")}</div> : null}
+                      {gear.length ? <div className="mt-1 text-xs text-faint">Assets: {gear.join(", ")}</div> : null}
                     </div>
                     <Badge tone={BOOKING_STATES[b.state].tone}>{BOOKING_STATES[b.state].label}</Badge>
                   </li>
@@ -98,7 +98,7 @@ export default async function OverviewPage() {
               <ul className="space-y-2 text-sm">
                 {away.map((d) => (
                   <li key={`d${d.id}`} className="flex items-center justify-between gap-2">
-                    <Link href={`/gear/${d.id}`} className="hover:text-amber">
+                    <Link href={`/assets/${d.id}`} className="hover:text-amber">
                       {d.name}
                     </Link>
                     <Badge tone={DEVICE_STATES[d.state].tone}>{DEVICE_STATES[d.state].label}</Badge>
@@ -106,7 +106,7 @@ export default async function OverviewPage() {
                 ))}
                 {warranties.map((d) => (
                   <li key={`w${d.id}`} className="flex items-center justify-between gap-2">
-                    <Link href={`/gear/${d.id}`} className="hover:text-amber">
+                    <Link href={`/assets/${d.id}`} className="hover:text-amber">
                       {d.name}
                     </Link>
                     <span className="text-xs text-warn">warranty ends {formatDate(d.warranty_until!)}</span>
@@ -140,7 +140,7 @@ export default async function OverviewPage() {
                   return (
                     <li key={m.id}>
                       <div className="flex items-center justify-between gap-2">
-                        <Link href={`/gear/${id}`} className="hover:text-amber">
+                        <Link href={`/assets/${id}`} className="hover:text-amber">
                           {id ? deviceName.get(id) ?? "Unknown device" : "Unknown device"}
                         </Link>
                         <span className="text-xs text-faint">{formatDate(m.date)}</span>

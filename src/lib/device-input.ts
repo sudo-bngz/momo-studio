@@ -38,6 +38,7 @@ export function toDeviceInput(d: DeviceEntry): DeviceInput {
     warranty_until: d.warranty_until ? d.warranty_until.slice(0, 10) : undefined,
     manual_url: d.manual_url ?? undefined,
     photo: id(d.photo),
+    photos: d.photos?.length ? d.photos.map(id).filter((n): n is number => n !== undefined) : undefined,
     notes: d.notes ?? undefined,
   });
 }

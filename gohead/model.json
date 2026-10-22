@@ -404,6 +404,14 @@
             "image/*"
           ]
         },
+        "photos": {
+          "type": "media",
+          "multiple": true,
+          "max": 8,
+          "allowed_types": [
+            "image/*"
+          ]
+        },
         "notes": {
           "type": "text"
         }

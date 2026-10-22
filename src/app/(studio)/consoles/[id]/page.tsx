@@ -36,7 +36,7 @@ export default async function ConsolePage({ params }: { params: Promise<{ id: st
             <ButtonLink href={`/plan?focus=${id}`}>Show in plan</ButtonLink>
             <ButtonLink href={`/cables/labels?device=${id}`}>Cable labels</ButtonLink>
             <ButtonLink href={`/consoles/${id}/strip`}>Print scribble strip</ButtonLink>
-            <ButtonLink href={`/gear/${id}/edit`}>Edit device</ButtonLink>
+            <ButtonLink href={`/assets/${id}/edit`}>Edit device</ButtonLink>
           </>
         }
       />

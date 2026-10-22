@@ -37,7 +37,7 @@ function Rack({ location, devices }: { location: LocationEntry; devices: DeviceE
           {placed.map((d) => (
             <Link
               key={d.id}
-              href={`/gear/${d.id}`}
+              href={`/assets/${d.id}`}
               className="absolute inset-x-1 flex items-center justify-between gap-2 overflow-hidden rounded-sm border border-line-strong bg-raised px-2 hover:border-amber"
               style={{ top: (d.rack_position! - 1) * U + 2, height: (d.rack_height ?? 1) * U - 4 }}
             >
@@ -71,7 +71,7 @@ function Spot({ location, devices }: { location: LocationEntry; devices: DeviceE
         <ul className="space-y-1.5 text-sm">
           {devices.map((d) => (
             <li key={d.id} className="flex items-center justify-between gap-2">
-              <Link href={`/gear/${d.id}`} className="truncate hover:text-amber">
+              <Link href={`/assets/${d.id}`} className="truncate hover:text-amber">
                 <Code>{d.code}</Code> {d.name}
               </Link>
               <span className="whitespace-nowrap text-xs text-faint">{CATEGORIES[d.category]}</span>
@@ -127,7 +127,7 @@ export default async function RacksPage() {
           <ul className="flex flex-wrap gap-2 text-sm">
             {nowhere.map((d) => (
               <li key={d.id}>
-                <Link href={`/gear/${d.id}/edit`} className="rounded border border-line px-2 py-1 hover:border-amber">
+                <Link href={`/assets/${d.id}/edit`} className="rounded border border-line px-2 py-1 hover:border-amber">
                   {d.name}
                 </Link>
               </li>

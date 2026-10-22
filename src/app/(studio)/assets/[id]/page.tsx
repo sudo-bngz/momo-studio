@@ -6,6 +6,9 @@ import { deleteMaintenance, saveMaintenance } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
 import { Badge, ButtonLink, Card, Code, Empty, Field, Input, PageHeader, Select, SignalDot } from "@/components/ui";
 import { getCables, getDevice, getDevices, getMaintenance, refId } from "@/lib/data";
+import { coverOf, figureOf } from "@/components/asset-image";
+import { DeviceFigure } from "@/components/device-figure";
+import { PhotoGallery } from "@/components/photo-gallery";
 import { mediaSrc } from "@/lib/media";
 import { cablesByPort, portKey, type PlanCable } from "@/lib/patch";
 import { toPlanCable } from "@/lib/plan-data";
@@ -14,7 +17,7 @@ import { CATEGORIES, CONNECTORS, DEVICE_STATES, DIRECTIONS, LOCATION_KINDS, SIGN
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const device = await getDevice(Number((await params).id));
-  return { title: device?.name ?? "Gear" };
+  return { title: device?.name ?? "Asset" };
 }
 
 const MAINTENANCE_KINDS = ["repair", "service", "calibration", "cleaning", "upgrade", "inspection"];
@@ -38,7 +41,12 @@ export default async function DevicePage({ params }: { params: Promise<{ id: str
   const log = maintenance.filter((m) => refId(m.device) === id);
   const location = device.location && typeof device.location === "object" ? device.location : undefined;
   const room = location?.room && typeof location.room === "object" ? location.room : undefined;
-  const photo = mediaSrc(device.photo);
+  const cover = coverOf(device);
+  const gallery = [cover, ...(device.photos ?? []).filter((m) => refId(m) !== refId(cover))]
+    .flatMap((m) => {
+      const src = mediaSrc(m);
+      return src && m && typeof m === "object" ? [{ id: m.id, src, name: m.name }] : [];
+    });
   const linked = new Set<number>();
   for (const c of plan) {
     if (c.state !== "connected") continue;
@@ -88,7 +96,7 @@ export default async function DevicePage({ params }: { params: Promise<{ id: str
             {device.category === "mixer" ? <ButtonLink href={`/consoles/${device.id}`}>Console view</ButtonLink> : null}
             {location ? <ButtonLink href={`/map?place=${location.id}`}>On the map</ButtonLink> : null}
             <ButtonLink href={`/plan?focus=${device.id}`}>Show in plan</ButtonLink>
-            <ButtonLink href={`/gear/${device.id}/edit`} primary>
+            <ButtonLink href={`/assets/${device.id}/edit`} primary>
               Edit
             </ButtonLink>
           </>
@@ -98,8 +106,21 @@ export default async function DevicePage({ params }: { params: Promise<{ id: str
       <div className="grid gap-6 xl:grid-cols-3">
         <div className="space-y-6">
           <Card>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            {photo ? <img src={photo} alt={device.name} className="mb-4 w-full rounded-md border border-line object-cover" /> : null}
+            <div className="mb-4">
+              {gallery.length ? (
+                <PhotoGallery photos={gallery} alt={device.name} />
+              ) : (
+                <div className="rounded-md border border-dashed border-line-strong bg-[#15171a] p-4">
+                  <DeviceFigure figure={figureOf(device)} className="w-full" title={`${device.name}: drawing, no photo yet`} />
+                  <p className="mt-2 text-center text-[11px] text-faint">
+                    Drawn from its category ·{" "}
+                    <Link href={`/assets/${device.id}/edit`} className="underline hover:text-amber">
+                      add a photo
+                    </Link>
+                  </p>
+                </div>
+              )}
+            </div>
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
               {facts.map(([k, v]) => (
                 <div key={k} className="contents">
@@ -116,7 +137,7 @@ export default async function DevicePage({ params }: { params: Promise<{ id: str
               <ul className="flex flex-wrap gap-2 text-sm">
                 {[...linked].map((d) => (
                   <li key={d}>
-                    <Link href={`/gear/${d}`} className="rounded border border-line px-2 py-1 hover:border-amber hover:text-amber">
+                    <Link href={`/assets/${d}`} className="rounded border border-line px-2 py-1 hover:border-amber hover:text-amber">
                       {names.get(d)?.name ?? `#${d}`}
                     </Link>
                   </li>
@@ -168,7 +189,7 @@ export default async function DevicePage({ params }: { params: Promise<{ id: str
                                       </Link>{" "}
                                       →{" "}
                                       {other ? (
-                                        <Link href={`/gear/${other.id}`} className="hover:text-amber">
+                                        <Link href={`/assets/${other.id}`} className="hover:text-amber">
                                           {other.name}
                                         </Link>
                                       ) : (

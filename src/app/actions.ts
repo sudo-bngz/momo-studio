@@ -88,13 +88,14 @@ export async function saveDevice(_prev: FormState, form: FormData): Promise<Form
   try {
     const ports = parsePorts(f.str("ports"));
     savedId = await withSession(async (g) => {
-      let photo = f.bool("remove_photo") ? undefined : f.id("photo_id");
-      const upload = f.file("photo");
-      if (upload) {
-        if (!upload.type.startsWith("image/")) throw new FieldError("The photo must be an image.");
-        const [media] = await g.media.upload(upload, { alt: f.str("name") });
-        photo = media?.id;
-      }
+      // Photos kept (in the order shown, the first being the cover) plus the
+      // new ones, which the browser has already scaled down.
+      const kept = f.idList("photo_ids");
+      const uploads = f.files("photos");
+      if (uploads.some((u) => !u.type.startsWith("image/"))) throw new FieldError("Photos have to be images.");
+      if (kept.length + uploads.length > MAX_PHOTOS) throw new FieldError(`A machine takes at most ${MAX_PHOTOS} photos.`);
+      const added = uploads.length ? await g.media.upload(uploads, { alt: f.str("name") }) : [];
+      const photos = [...kept, ...added.map((m) => m.id)];
       // Renaming a port would leave its cables pointing at the old name.
       if (id) {
         const renamed = await orphanedPorts(id, ports);
@@ -127,7 +128,8 @@ export async function saveDevice(_prev: FormState, form: FormData): Promise<Form
         supplier: f.str("supplier"),
         warranty_until: f.str("warranty_until"),
         manual_url: f.str("manual_url"),
-        photo,
+        photo: photos[0],
+        photos: photos.length ? photos : undefined,
         notes: f.str("notes"),
       });
       const devices = g.collection("devices");
@@ -149,7 +151,7 @@ export async function saveDevice(_prev: FormState, form: FormData): Promise<Form
     return failure(err);
   }
   revalidatePath("/", "layout");
-  redirect(`/gear/${savedId}`);
+  redirect(`/assets/${savedId}`);
 }
 
 /** Ports a device is losing that still have connected cables. */
@@ -178,7 +180,7 @@ export async function deleteDevice(_prev: FormState, form: FormData): Promise<Fo
     return failure(err);
   }
   revalidatePath("/", "layout");
-  redirect("/gear");
+  redirect("/assets");
 }
 
 export async function saveMaintenance(_prev: FormState, form: FormData): Promise<FormState> {
@@ -198,7 +200,7 @@ export async function saveMaintenance(_prev: FormState, form: FormData): Promise
   } catch (err) {
     return failure(err);
   }
-  revalidatePath(`/gear/${device}`);
+  revalidatePath(`/assets/${device}`);
   return { ok: true };
 }
 
@@ -207,7 +209,7 @@ export async function deleteMaintenance(form: FormData): Promise<void> {
   const id = f.id("id");
   if (!id) return;
   await withSession((g) => g.collection("maintenance").delete(id));
-  revalidatePath(`/gear/${f.id("device") ?? ""}`);
+  revalidatePath(`/assets/${f.id("device") ?? ""}`);
 }
 
 // ---- Cables ----
@@ -451,6 +453,7 @@ function slugify(s: string): string {
 // ---- Patchbays ----
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
+const MAX_PHOTOS = 8;
 
 /** Saves a patchbay's column count and every column's labels, mode, DAW track, color and note. */
 export async function savePatchPoints(_prev: FormState, form: FormData): Promise<FormState> {

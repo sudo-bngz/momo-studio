@@ -156,7 +156,7 @@ export function PlanDiagram({ devices, cables, focus: initialFocus }: { devices:
               return (
                 <g key={n.device.id} opacity={faded ? 0.45 : 1} onMouseEnter={() => setHoverDevice(n.device.id)} onMouseLeave={() => setHoverDevice(null)}>
                   <rect x={n.x} y={n.y} width={n.width} height={n.height} rx={7} fill="#202226" stroke={n.device.id === focus ? "#f2a541" : "#3a3e45"} />
-                  <a href={`/gear/${n.device.id}`}>
+                  <a href={`/assets/${n.device.id}`}>
                     <text x={n.x + 10} y={n.y + 17} fontSize={10} fill="#f2a541" fontFamily="ui-monospace, monospace">
                       {n.device.code}
                     </text>

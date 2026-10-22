@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <Logo />
           <div>
             <div className="text-lg font-semibold">Studio</div>
-            <div className="text-xs text-dim">Gear · cables · bookings</div>
+            <div className="text-xs text-dim">Assets · cables · bookings</div>
           </div>
         </div>
         <div className="rounded-lg border border-line bg-panel p-6">

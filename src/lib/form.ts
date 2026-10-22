@@ -71,6 +71,18 @@ export class Fields {
     return v instanceof File && v.size > 0 ? v : undefined;
   }
 
+  files(name: string): File[] {
+    return this.form.getAll(name).filter((v): v is File => v instanceof File && v.size > 0);
+  }
+
+  /** A comma-separated list of ids, in the order given. */
+  idList(name: string): number[] {
+    return (this.str(name) ?? "")
+      .split(",")
+      .map((v) => Number(v.trim()))
+      .filter((n) => Number.isInteger(n) && n > 0);
+  }
+
   /** A datetime-local value ("2026-10-26T10:00") in the studio's time zone, as UTC ISO 8601. */
   datetime(name: string): string | undefined {
     const v = this.str(name);

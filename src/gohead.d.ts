@@ -167,6 +167,7 @@ export interface Device {
   warranty_until?: string | null;
   manual_url?: string | null;
   photo?: Media | number | null;
+  photos?: Array<Media | number>;
   notes?: string | null;
 }
 
@@ -200,6 +201,7 @@ export interface DeviceInput {
   warranty_until?: string | null;
   manual_url?: string | null;
   photo?: number | null;
+  photos?: number[];
   notes?: string | null;
 }
 

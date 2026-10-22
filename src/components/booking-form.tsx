@@ -72,13 +72,13 @@ export function BookingForm({
             </Field>
             <Checkbox name="paid" label="Paid" defaultChecked={!!booking?.paid} />
             <div className="border-t border-line pt-4">
-              <Checkbox name="allow_overlap" label="Book anyway if the room or gear is taken" />
+              <Checkbox name="allow_overlap" label="Book anyway if the room or a machine is taken" />
             </div>
           </div>
         </Card>
       </div>
 
-      <Card title="Gear to reserve" className="mt-6">
+      <Card title="Assets to reserve" className="mt-6">
         <p className="mb-4 text-sm text-dim">Machines the session needs. A machine reserved by two overlapping sessions is refused unless you book anyway.</p>
         <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2 xl:grid-cols-4">
           {[...groups.entries()].map(([cat, list]) => (

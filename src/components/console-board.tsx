@@ -221,7 +221,7 @@ function SocketLine({ s, consoleId }: { s: Socket; consoleId: number }) {
                 {e.cableCode}
               </Link>{" "}
               {e.deviceId ? (
-                <Link href={`/gear/${e.deviceId}`} className="hover:text-amber">
+                <Link href={`/assets/${e.deviceId}`} className="hover:text-amber">
                   {e.deviceName}
                 </Link>
               ) : (
@@ -536,7 +536,7 @@ function MasterSection({ view }: { view: ConsoleView }) {
                     {t ? (
                       <span className={s.ends.length > 1 ? "text-warn" : ""}>
                         {s.direction === "in" ? "← " : s.direction === "out" ? "→ " : "↔ "}
-                        {s.ends[0]!.deviceId ? <Link href={`/gear/${s.ends[0]!.deviceId}`} className="hover:text-amber">{t.main}</Link> : t.main}
+                        {s.ends[0]!.deviceId ? <Link href={`/assets/${s.ends[0]!.deviceId}`} className="hover:text-amber">{t.main}</Link> : t.main}
                         <span className="text-dim"> · {t.sub}</span>
                         {s.ends.length > 1 ? <span className="text-faint"> +{s.ends.length - 1}</span> : null}
                       </span>

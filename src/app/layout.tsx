@@ -5,7 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "Studio", template: "%s · Studio" },
-  description: "Gear, cable plan and bookings of the studio",
+  description: "Assets, cable plan and bookings of the studio",
   robots: { index: false, follow: false },
 };
 
