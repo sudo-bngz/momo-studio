@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Guide · Studio manager</title>
+<meta name="description" content="How the app is put together, and how the studio it describes is put together — including why an in-line desk like the Allen &amp; Heath GS3 behaves the way it does." />
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html"><img class="mark" src="img/favicon.svg" alt="" width="24" height="24" /> Studio manager</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="guide.html" class="here" aria-current="page">Guide</a>
+    <a href="setup.html">Setup &amp; deploy</a>
+    <a href="https://github.com/sudo-bngz/momo-studio" class="out">GitHub</a>
+  </nav>
+</header>
+<div class="shell with-toc">
+<nav class="toc" aria-label="Contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><span class="part">The idea</span>
+      <ul><li><a href="#model">How the pieces fit</a></li><li><a href="#overview">Overview</a></li></ul>
+    </li>
+    <li><span class="part">The gear</span>
+      <ul><li><a href="#assets">Assets</a></li><li><a href="#asset">One asset</a></li><li><a href="#asset-form">Adding and editing an asset</a></li><li><a href="#racks">Racks &amp; places</a></li><li><a href="#places">Rooms &amp; locations</a></li><li><a href="#map">Studio map</a></li></ul>
+    </li>
+    <li><span class="part">The wiring</span>
+      <ul><li><a href="#cables">Cables</a></li><li><a href="#cable-form">Patching a cable</a></li><li><a href="#cable-labels">Cable labels</a></li><li><a href="#patchbays">Patchbays</a></li><li><a href="#patchbay">One patchbay</a></li><li><a href="#patchbay-strip">Printing a patchbay strip</a></li><li><a href="#consoles">Consoles</a></li><li><a href="#console">The console, and the Allen &amp; Heath GS3</a></li><li><a href="#console-strip">Printing a scribble strip</a></li><li><a href="#plan">Patch plan</a></li></ul>
+    </li>
+    <li><span class="part">The business</span>
+      <ul><li><a href="#bookings">Bookings</a></li><li><a href="#booking-form">Booking a session</a></li><li><a href="#clients">Clients</a></li></ul>
+    </li>
+    <li><span class="part">Running it</span>
+      <ul><li><a href="#activity">Activity</a></li><li><a href="#history">One entry's history</a></li><li><a href="#people">Accounts</a></li></ul>
+    </li>
+    <li><a href="#glossary" class="part-link">Glossary</a></li>
+  </ol>
+</nav>
+<main id="main">
+<h1>Guide</h1>
+<p class="lede">How the app is put together, and how the studio it describes is put together. This is the same text the app
+shows on each page, at length and with the drawings. The <a href="#console">console chapter</a> is the one worth reading
+properly: an in-line desk like the Allen &amp; Heath GS3 behaves in a way that looks like a bug until you know it isn't.</p>
+
+<section class="part">
+  <h2><span class="num">1</span> The idea</h2>
+  <p class="blurb">What the app is made of, and the one screen that summarises it.</p>
+  <article id="model">
+      <h3>How the pieces fit</h3>
+      <p class="lede">Everything here is three things: assets, locations and cables. Every other page is a way of looking at those three.</p>
+      
+      <p>Because cables point at a port by its name, renaming a port that a cable uses is refused: the cable would be left pointing at nothing. Rename the cable's end first, or delete and re-patch.</p><p>Two kinds of asset carry a little extra. A patchbay has columns, and each column can be normalled, half-normalled or thru. A console has channel strips: the label, source, routing and aux sends of each channel. Both exist so the app can follow a signal through the machine instead of stopping at it.</p>
+      <dl class="points"><dt>Asset</dt><dd>One piece of gear, with its ports. A port is a physical socket: a name, a direction (in, out or both), a signal and a connector. The ports are the back panel — they change when you rewire the machine, not between sessions.</dd><dt>Location</dt><dd>Where an asset sits: a rack, a desk, a shelf, a wall, a case. A location belongs to a room and has a position and size in centimetres, which is what the studio map draws.</dd><dt>Cable</dt><dd>One run between two ports: from an asset and a port name, to an asset and a port name. The cable is what the patch plan follows, and what the issue list checks.</dd><dt>Everything else</dt><dd>Patchbays, consoles, the plan, the map and the labels hold no data of their own. They read the same assets and cables and show them in the shape you think in.</dd></dl>
+      
+      <p class="see">See also <a href="#assets">Assets</a> · <a href="#cables">Cables</a> · <a href="#plan">Patch plan</a></p>
+    </article>
+  <article id="overview">
+      <h3>Overview</h3>
+      <p class="lede">The state of the studio in one screen: what's booked, what's patched, what's broken and what needs attention.</p>
+      <figure class="shot">
+      <a href="img/overview.webp" target="_blank" rel="noreferrer"><img src="img/overview.webp" alt="The overview: what's in the studio, how it's wired, who's coming." loading="lazy" /></a>
+      <figcaption>The overview: what's in the studio, how it's wired, who's coming.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>Counts</dt><dd>Assets in use, cables connected, sessions this week. Each one links to the page it came from.</dd><dt>Issues</dt><dd>Anything the patch plan found wrong — a port with two cables on it, a cable to a device that no longer exists, a feedback loop. Zero here means the plan is coherent.</dd><dt>Maintenance</dt><dd>Jobs logged against an asset: a repair, a service, a recap. Anything overdue shows up here.</dd><dt>This week</dt><dd>The sessions between today and Sunday, with their room and client.</dd></dl>
+      
+      <p class="see">See also <a href="#plan">Patch plan</a> · <a href="#bookings">Bookings</a></p>
+    </article>
+</section>
+<section class="part">
+  <h2><span class="num">2</span> The gear</h2>
+  <p class="blurb">Assets, their ports, and where they physically are.</p>
+  <article id="assets">
+      <h3>Assets</h3>
+      <p class="lede">Every machine in the studio — synths, expanders, interfaces, pedals, the desk, the patchbays, the computers — with its ports, its place and its photos.</p>
+      <figure class="shot">
+      <a href="img/assets.webp" target="_blank" rel="noreferrer"><img src="img/assets.webp" alt="The gallery. A machine with no photo yet is drawn from its category and its size." loading="lazy" /></a>
+      <figcaption>The gallery. A machine with no photo yet is drawn from its category and its size.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>Gallery and Table</dt><dd>The same assets either as cards with their photo or drawing, or as a table you can scan and sort. The filters stay when you switch.</dd><dt>Code</dt><dd>The short code you write on the machine and on its cable labels. Keep it short: it's printed at label size.</dd><dt>Drawing</dt><dd>An asset with no photo is drawn from its category and its size, so a rack of unphotographed gear still reads at a glance. Add a photo and the photo wins.</dd><dt>State</dt><dd>In use, spare, in repair, loaned, for sale, sold. Sold assets are left out of the patch plan and the map; everything else is drawn.</dd><dt>Ports</dt><dd>The sockets on the machine. Everything downstream — patching, the plan, the console view, cable labels — reads these, so they're worth getting right once.</dd></dl>
+      <h4>Doing it</h4><ol><li>Add the asset, choose its category and give it a code.</li><li>Fill the ports from a template if there is one for it, then correct what differs.</li><li>Put it in a place so it appears in the right rack and on the map.</li><li>Drop in a photo or two — the first one is the cover.</li></ol>
+      <p class="see">See also <a href="#asset-form">Adding and editing an asset</a> · <a href="#racks">Racks &amp; places</a> · <a href="#cables">Cables</a></p>
+    </article>
+  <article id="asset">
+      <h3>One asset</h3>
+      <p class="lede">Everything about one machine: its photos, its place, its ports and what is plugged into each of them.</p>
+      
+      
+      <dl class="points"><dt>Ports</dt><dd>Each socket with its direction, signal and connector, and the cable on it if there is one. A free port offers to patch it.</dd><dt>Patch it →</dt><dd>Starts a new cable with this port already filled in, so you don't have to find the asset again.</dd><dt>Show in plan</dt><dd>Opens the patch plan centred on this asset, with what feeds it and what it feeds.</dd><dt>Maintenance</dt><dd>The jobs logged against this machine, newest first.</dd></dl>
+      
+      <p class="see">See also <a href="#assets">Assets</a> · <a href="#cables">Cables</a> · <a href="#plan">Patch plan</a></p>
+    </article>
+  <article id="asset-form">
+      <h3>Adding and editing an asset</h3>
+      <p class="lede">The identity of the machine, where it lives, and its ports. Ports are the part that matters: everything else in the app reads them.</p>
+      <figure class="shot">
+      <a href="img/assets-table.webp" target="_blank" rel="noreferrer"><img src="img/assets-table.webp" alt="The same assets as a table, for scanning and sorting." loading="lazy" /></a>
+      <figcaption>The same assets as a table, for scanning and sorting.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>Fill the ports</dt><dd>Pick a template and the ports are written for you — the Allen &amp; Heath GS3 24/8/2 fills 163 of them, correctly named. Then fix whatever your unit differs on.</dd><dt>Port name</dt><dd>Free text, but the names carry meaning. “Ch 7 Line”, “Ch 7 Insert”, “Ch 7 Track Out” make channel 7 of a console. “Top 12” and “Bottom 12” make column 12 of a patchbay. Anything else is just a socket.</dd><dt>Direction</dt><dd>In, Out or In/Out. The plan uses it to check you haven't joined two outputs, and to know which way a signal travels.</dd><dt>Signal</dt><dd>Audio, MIDI, CV, gate, clock, digital audio, USB, network, power, control. Mismatches between a cable and the port it lands on are reported, not blocked — sometimes you really do send CV down an audio cable.</dd><dt>Photos</dt><dd>Up to eight, resized in the browser before upload so a phone photo doesn't cost you megabytes. The first is the cover; drag to reorder.</dd><dt>Renaming a patched port</dt><dd>Refused while a cable uses it, because the cable stores the name. Move the cable first.</dd></dl>
+      
+      <p class="see">See also <a href="#assets">Assets</a> · <a href="#console">The console, and the Allen &amp; Heath GS3</a></p>
+    </article>
+  <article id="racks">
+      <h3>Racks &amp; places</h3>
+      <p class="lede">Every rack, desk, shelf, wall and case, with what's in it — read top to bottom the way you'd look at the rack itself.</p>
+      <figure class="shot">
+      <a href="img/racks.webp" target="_blank" rel="noreferrer"><img src="img/racks.webp" alt="Rack elevations, unit by unit, counted from U1 at the top." loading="lazy" /></a>
+      <figcaption>Rack elevations, unit by unit, counted from U1 at the top.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>Rack units</dt><dd>A location with a height in U draws its slots, so you can see what's free before you buy the next 1U box. Positions count from U1 at the top.</dd><dt>Room</dt><dd>Locations belong to a room. The map draws one room at a time.</dd><dt>Position</dt><dd>The x and y in centimetres, and the size and rotation, are what the studio map uses. A location with no position is laid out automatically.</dd></dl>
+      
+      <p class="see">See also <a href="#places">Rooms &amp; locations</a> · <a href="#map">Studio map</a> · <a href="#assets">Assets</a></p>
+    </article>
+  <article id="places">
+      <h3>Rooms &amp; locations</h3>
+      <p class="lede">Rooms are what you book; locations are where the machines sit. Sizes are in centimetres, measured however you like as long as you're consistent.</p>
+      
+      
+      <dl class="points"><dt>Room size</dt><dd>Width and depth in cm. The map scales to fit, so a rough measurement still gives a usable plan.</dd><dt>Location position</dt><dd>x and y in cm from the room's top-left corner, plus a rotation in degrees for anything at an angle.</dd><dt>Rack units</dt><dd>Give a rack its height in U and the racks page draws its slots.</dd><dt>Colour</dt><dd>A room's colour tints its bookings in the calendar and its outline on the map.</dd></dl>
+      
+      <p class="see">See also <a href="#racks">Racks &amp; places</a> · <a href="#map">Studio map</a></p>
+    </article>
+  <article id="map">
+      <h3>Studio map</h3>
+      <p class="lede">The room from above: where each place stands, what's in it, and the cable runs between them. Click a place to zoom into it.</p>
+      <figure class="shot">
+      <a href="img/map.webp" target="_blank" rel="noreferrer"><img src="img/map.webp" alt="The room from above, in real centimetres, with the cable runs bundled between places." loading="lazy" /></a>
+      <figcaption>The room from above, in real centimetres, with the cable runs bundled between places.</figcaption>
+    </figure><figure class="shot">
+      <a href="img/map-zoom.webp" target="_blank" rel="noreferrer"><img src="img/map-zoom.webp" alt="Click a place and it is drawn alone, large, with every cable entering and leaving it named." loading="lazy" /></a>
+      <figcaption>Click a place and it is drawn alone, large, with every cable entering and leaving it named.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>Scale</dt><dd>Real centimetres. A place drawn small really is small — the zoom exists because a 50 cm pedalboard can't carry ten labels at room scale.</dd><dt>Bundles</dt><dd>Cables between the same two places are drawn as one run, labelled with how many cables it carries. That's the thing you actually trip over.</dd><dt>Zoom into a place</dt><dd>Draws that place alone, large, with every asset in it and every cable entering or leaving, named.</dd><dt>A place with no position</dt><dd>Gets laid out automatically along the room's edges. Set x and y on it to pin it where it really is.</dd></dl>
+      
+      <p class="see">See also <a href="#places">Rooms &amp; locations</a> · <a href="#plan">Patch plan</a></p>
+    </article>
+</section>
+<section class="part">
+  <h2><span class="num">3</span> The wiring</h2>
+  <p class="blurb">Cables, the patchbays and the desk — and following a signal through all three.</p>
+  <article id="cables">
+      <h3>Cables</h3>
+      <p class="lede">Every run in the studio, and the list of everything wrong with the current patch.</p>
+      <figure class="shot">
+      <a href="img/cables.webp" target="_blank" rel="noreferrer"><img src="img/cables.webp" alt="Every run, and everything the plan found wrong with the current patch." loading="lazy" /></a>
+      <figcaption>Every run, and everything the plan found wrong with the current patch.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>Code</dt><dd>What you write on the label at both ends. Printable from Cable labels.</dd><dt>State</dt><dd>Connected, spare or broken. Only connected cables are followed by the plan and checked for issues.</dd><dt>Issues</dt><dd>Checked on every load, never blocking: you can always save a patch the app disagrees with.</dd><dt>busy port</dt><dd>Two or more cables on one socket. Fine on a passive mult or a stacked Eurorack jack, a mistake nearly everywhere else — so it's a warning, not an error.</dd><dt>direction</dt><dd>The cable joins two inputs or two outputs. Usually a typo in one end.</dd><dt>signal mismatch</dt><dd>The cable says audio and the port says MIDI, or similar. Worth a look, sometimes deliberate.</dd><dt>unknown port</dt><dd>The asset has no port by that name any more — someone renamed or removed it. Re-point the cable.</dd><dt>missing device</dt><dd>The asset at one end was deleted. The cable is now dangling.</dd><dt>loose end</dt><dd>The cable is marked connected but one end was never filled in.</dd><dt>loop</dt><dd>The signal comes back to where it started. Nearly always an aux send returning into a channel that feeds the same aux — see the console chapter.</dd></dl>
+      <h4>Doing it</h4><ol><li>Pick the source asset, then its port; the list only offers ports that exist.</li><li>Pick the destination the same way.</li><li>Give it a code, a length and a colour if you label by colour.</li><li>Leave it connected, or mark it spare if it's coiled on the wall.</li></ol>
+      <p class="see">See also <a href="#plan">Patch plan</a> · <a href="#patchbays">Patchbays</a> · <a href="#console">The console, and the Allen &amp; Heath GS3</a></p>
+    </article>
+  <article id="cable-form">
+      <h3>Patching a cable</h3>
+      <p class="lede">A cable is an asset and a port at each end. Pick the asset first and the port list narrows to what that machine actually has.</p>
+      
+      
+      <dl class="points"><dt>Pre-filled ends</dt><dd>Arriving here from a free port on an asset, patchbay or console fills that end in for you.</dd><dt>Signal</dt><dd>Defaults from the source port. Change it if the cable carries something else.</dd><dt>Length</dt><dd>In metres. Used in the label print and to total up what a run costs you in cable.</dd></dl>
+      
+      <p class="see">See also <a href="#cables">Cables</a> · <a href="#cable-labels">Cable labels</a></p>
+    </article>
+  <article id="cable-labels">
+      <h3>Cable labels</h3>
+      <p class="lede">A printable sheet of labels for the cables you select — code, both ends and the signal, at a size that fits a cable tie.</p>
+      
+      
+      <dl class="points"><dt>Filtering</dt><dd>Arriving from an asset prints only that machine's cables. Otherwise you get every connected cable.</dd><dt>Printing</dt><dd>Print to A4 with margins off. Each label shows the code large and both ends small, so it reads the same whichever end you pick up.</dd></dl>
+      
+      <p class="see">See also <a href="#cables">Cables</a></p>
+    </article>
+  <article id="patchbays">
+      <h3>Patchbays</h3>
+      <p class="lede">Each patchbay as the board it is: a row of columns, each with a top and a bottom point, and a mode that says how the two are joined.</p>
+      <figure class="shot wide">
+      <a href="img/normalling.webp" target="_blank" rel="noreferrer"><img src="img/normalling.webp" alt="What a column's three modes do. The app follows a signal through the first two as if the points were one wire, and stops at the third — because that is what the hardware does." loading="lazy" /></a>
+      <figcaption>What a column's three modes do. The app follows a signal through the first two as if the points were one wire, and stops at the third — because that is what the hardware does.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>Column</dt><dd>One vertical pair. Its rear points are named “Top 12” and “Bottom 12”; its front jacks are what you plug a cord into.</dd><dt>Normal</dt><dd>Top and bottom are wired together behind the panel. Plugging into either front jack breaks the link and takes over.</dd><dt>Half-normal</dt><dd>Wired together as well, but the top front jack only takes a copy — the link stays. Only the bottom front jack breaks it. This is the one you want for tapping a send without killing it.</dd><dt>Thru</dt><dd>Not joined at all: each rear point reaches only its own front jack. Patch it with a cord.</dd><dt>Why it matters here</dt><dd>The plan follows a signal through a normalled or half-normalled column as if the two points were one wire. A thru column stops it, because in real life it does too.</dd></dl>
+      <h4>Doing it</h4><ol><li>Patch the rear points as cables to Top n and Bottom n, like any other port.</li><li>Set each column's mode to match the switch or the wiring on the actual bay.</li><li>Name the column so the board reads in words — “Prophet L”, “Comp in” — rather than in numbers.</li></ol>
+      <p class="see">See also <a href="#patchbay">One patchbay</a> · <a href="#cables">Cables</a> · <a href="#plan">Patch plan</a></p>
+    </article>
+  <article id="patchbay">
+      <h3>One patchbay</h3>
+      <p class="lede">The board, column by column: what's wired to the back, how the column is normalled, and what's patched on the front.</p>
+      <figure class="shot">
+      <a href="img/patchbay.webp" target="_blank" rel="noreferrer"><img src="img/patchbay.webp" alt="A bay drawn like the hardware: two rows of jacks, each column's label, its mode and where it goes." loading="lazy" /></a>
+      <figcaption>A bay drawn like the hardware: two rows of jacks, each column's label, its mode and where it goes.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>Top and bottom rows</dt><dd>What the rear of each column is wired to. By convention the top row is sources and the bottom row destinations, but nothing here enforces it.</dd><dt>Mode badge</dt><dd>N, H or T on each column — normal, half-normal or thru.</dd><dt>Paste from a sheet</dt><dd>Copy a row of cells out of your old spreadsheet and drop it in: names, modes or both, from whichever column you choose.</dd><dt>Print strip</dt><dd>A paper strip sized to the bay, to slide above or below the jacks.</dd></dl>
+      
+      <p class="see">See also <a href="#patchbays">Patchbays</a> · <a href="#patchbay-strip">Printing a patchbay strip</a></p>
+    </article>
+  <article id="patchbay-strip">
+      <h3>Printing a patchbay strip</h3>
+      <p class="lede">The column names as a paper strip at the bay's own spacing — one strip for the top row, one for the bottom.</p>
+      
+      
+      <dl class="points"><dt>Pieces</dt><dd>A bay wider than the paper is split into pieces you tape end to end. The count is in the subtitle.</dd><dt>Printing</dt><dd>Print at 100 % with margins off — any scaling and the names stop lining up with the jacks.</dd></dl>
+      
+      <p class="see">See also <a href="#patchbay">One patchbay</a></p>
+    </article>
+  <article id="consoles">
+      <h3>Consoles</h3>
+      <p class="lede">Each desk drawn as its channel strips: what's plugged into every channel, what it's called, where it's routed and which socket it leaves by.</p>
+      <figure class="shot">
+      <a href="img/console.webp" target="_blank" rel="noreferrer"><img src="img/console.webp" alt="The GS3 as its 24 channel strips, with the master section underneath." loading="lazy" /></a>
+      <figcaption>The GS3 as its 24 channel strips, with the master section underneath.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>A strip</dt><dd>One channel, top to bottom: scribble strip, what's in its mic / line / tape sockets, its insert, its routing, and what its output is wired to.</dd><dt>Amber dot</dt><dd>The source you said is in use on that channel, when more than one socket is wired.</dd><dt>Red strip</dt><dd>That channel is part of a feedback loop. The warning above says which aux.</dd><dt>Master section</dt><dd>Everything that isn't a channel — groups, auxes, cue, mix, FX returns, 2-track, monitors, headphones, MIDI, power — with what each socket is wired to.</dd></dl>
+      
+      <p class="see">See also <a href="#console">The console, and the Allen &amp; Heath GS3</a> · <a href="#cables">Cables</a></p>
+    </article>
+  <article id="console">
+      <h3>The console, and the Allen &amp; Heath GS3</h3>
+      <p class="lede">The desk has two layers here: its ports, which are the back panel and never change, and its channel strips, which are what the desk is doing today.</p>
+      <figure class="drawing">
+      <svg viewBox="0 0 700 252" class="w-full" role="img" aria-label="One in-line console channel: mic and line inputs through the preamp, insert, EQ and fader, leaving by the direct out, a group, the mix or an aux; and the tape return on its own monitor path."><defs><marker id="sf-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0.5 L8 4 L0 7.5 z" fill="#3a3e45"></path></marker><marker id="sf-arrow-amber" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0.5 L8 4 L0 7.5 z" fill="#f2a541"></path></marker><marker id="sf-arrow-info" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0.5 L8 4 L0 7.5 z" fill="#7dd3fc"></path></marker></defs><text x="6" y="16" font-size="9" fill="#6b6e76" letter-spacing="0.6">CHANNEL PATH</text><g><rect x="6" y="33" width="66" height="30" rx="4" fill="#202226" stroke="#3a3e45" stroke-width="1"></rect><text x="39" y="46" text-anchor="middle" font-size="11" fill="#ecebe7">Mic</text><text x="39" y="59" text-anchor="middle" font-size="8.5" fill="#6b6e76">XLR</text></g><g><rect x="6" y="89" width="66" height="30" rx="4" fill="#202226" stroke="#3a3e45" stroke-width="1"></rect><text x="39" y="102" text-anchor="middle" font-size="11" fill="#ecebe7">Line</text><text x="39" y="115" text-anchor="middle" font-size="8.5" fill="#6b6e76">jack</text></g><path d="M72 48 H84 V76" fill="none" stroke="#3a3e45"></path><path d="M72 104 H84 V76" fill="none" stroke="#3a3e45"></path><path d="M84 76 H96" fill="none" stroke="#3a3e45" marker-end="url(#sf-arrow)"></path><g><rect x="96" y="61" width="72" height="30" rx="4" fill="#202226" stroke="#3a3e45" stroke-width="1"></rect><text x="132" y="80" text-anchor="middle" font-size="11" fill="#ecebe7">Preamp</text></g><path d="M168 76 H192" fill="none" stroke="#3a3e45" marker-end="url(#sf-arrow)"></path><g><rect x="192" y="61" width="72" height="30" rx="4" fill="#202226" stroke="#7dd3fc" stroke-width="1"></rect><text x="228" y="74" text-anchor="middle" font-size="11" fill="#7dd3fc">Insert</text><text x="228" y="87" text-anchor="middle" font-size="8.5" fill="#6b6e76">pre-EQ</text></g><path d="M264 76 H288" fill="none" stroke="#3a3e45" marker-end="url(#sf-arrow)"></path><g><rect x="288" y="61" width="52" height="30" rx="4" fill="#202226" stroke="#3a3e45" stroke-width="1"></rect><text x="314" y="80" text-anchor="middle" font-size="11" fill="#ecebe7">EQ</text></g><path d="M340 76 H364" fill="none" stroke="#3a3e45" marker-end="url(#sf-arrow)"></path><g><rect x="364" y="61" width="52" height="30" rx="4" fill="#202226" stroke="#3a3e45" stroke-width="1"></rect><text x="390" y="80" text-anchor="middle" font-size="11" fill="#ecebe7">Fader</text></g><path d="M210 91 V120" fill="none" stroke="#7dd3fc" stroke-dasharray="3 3" marker-end="url(#sf-arrow-info)"></path><path d="M246 120 V91" fill="none" stroke="#7dd3fc" stroke-dasharray="3 3" marker-end="url(#sf-arrow-info)"></path><text x="204" y="107" text-anchor="end" font-size="8" fill="#7dd3fc">tip</text><text x="252" y="107" font-size="8" fill="#7dd3fc">ring</text><g><rect x="180" y="120" width="96" height="30" rx="4" fill="#202226" stroke="#7dd3fc" stroke-width="1"></rect><text x="228" y="133" text-anchor="middle" font-size="11" fill="#7dd3fc">Outboard</text><text x="228" y="146" text-anchor="middle" font-size="8.5" fill="#6b6e76">comp, EQ, pedal</text></g><path d="M416 76 H441" fill="none" stroke="#f2a541"></path><path d="M441 20 V152" fill="none" stroke="#f2a541"></path><g><path d="M441 20 H466" fill="none" stroke="#f2a541" marker-end="url(#sf-arrow-amber)"></path><g><rect x="466" y="3" width="200" height="34" rx="4" fill="#202226" stroke="#f2a541" stroke-width="1"></rect><text x="566" y="18" text-anchor="middle" font-size="11" fill="#f2a541">Direct out</text><text x="566" y="31" text-anchor="middle" font-size="8.5" fill="#6b6e76">→ Ch n Track Out</text></g></g><g><path d="M441 64 H466" fill="none" stroke="#f2a541" marker-end="url(#sf-arrow-amber)"></path><g><rect x="466" y="47" width="200" height="34" rx="4" fill="#202226" stroke="#f2a541" stroke-width="1"></rect><text x="566" y="62" text-anchor="middle" font-size="11" fill="#f2a541">Group 1–8</text><text x="566" y="75" text-anchor="middle" font-size="8.5" fill="#6b6e76">→ track outs of channels g, g+8, g+16</text></g></g><g><path d="M441 108 H466" fill="none" stroke="#f2a541" marker-end="url(#sf-arrow-amber)"></path><g><rect x="466" y="91" width="200" height="34" rx="4" fill="#202226" stroke="#f2a541" stroke-width="1"></rect><text x="566" y="106" text-anchor="middle" font-size="11" fill="#f2a541">Mix L/R</text><text x="566" y="119" text-anchor="middle" font-size="8.5" fill="#6b6e76">→ Mix Out L / Mix Out R</text></g></g><g><path d="M441 152 H466" fill="none" stroke="#f2a541" marker-end="url(#sf-arrow-amber)"></path><g><rect x="466" y="135" width="200" height="34" rx="4" fill="#202226" stroke="#f2a541" stroke-width="1"></rect><text x="566" y="150" text-anchor="middle" font-size="11" fill="#f2a541">Aux 1–4</text><text x="566" y="163" text-anchor="middle" font-size="8.5" fill="#6b6e76">post-fade → Aux n Out</text></g></g><text x="6" y="205" font-size="9" fill="#6b6e76" letter-spacing="0.6">MONITOR PATH</text><g><rect x="6" y="213" width="66" height="30" rx="4" fill="#202226" stroke="#3a3e45" stroke-width="1"></rect><text x="39" y="226" text-anchor="middle" font-size="11" fill="#ecebe7">Tape In</text><text x="39" y="239" text-anchor="middle" font-size="8.5" fill="#6b6e76">track return</text></g><path d="M72 228 H96" fill="none" stroke="#3a3e45" marker-end="url(#sf-arrow)"></path><g><rect x="96" y="213" width="96" height="30" rx="4" fill="#202226" stroke="#3a3e45" stroke-width="1"></rect><text x="144" y="232" text-anchor="middle" font-size="11" fill="#ecebe7">Monitor level</text></g><path d="M192 228 H216" fill="none" stroke="#3a3e45" marker-end="url(#sf-arrow)"></path><g><rect x="216" y="213" width="120" height="30" rx="4" fill="#202226" stroke="#3a3e45" stroke-width="1"></rect><text x="276" y="232" text-anchor="middle" font-size="11" fill="#ecebe7">Cue / monitors</text></g><text x="350" y="232" font-size="9" fill="#6b6e76">Auxes 3 and 4 can be switched to follow this path instead.</text></svg>
+      <figcaption>One channel of the GS3. The channel path carries mic or line through the insert, the EQ and the fader, and leaves by one of four routes. The monitor path carries the tape return on its own level — which is why every channel has a Tape In.</figcaption>
+    </figure><figure class="drawing">
+      <svg viewBox="0 0 732 122" class="w-full" role="img" aria-label="The 24 track-out sockets, with group 1 landing on channels 1, 9, 17 and group 2 on 2, 10, 18."><path d="M45 44 V24" fill="none" stroke="#7dd3fc"></path><path d="M253 44 V24" fill="none" stroke="#7dd3fc"></path><path d="M461 44 V24" fill="none" stroke="#7dd3fc"></path><path d="M45 24 H461" fill="none" stroke="#7dd3fc"></path><text x="469" y="28" font-size="11" fill="#7dd3fc">Group 2</text><g><rect x="8" y="44" width="22" height="26" rx="3" fill="color-mix(in srgb, #f2a541 18%, #202226)" stroke="#f2a541"></rect><circle cx="19" cy="53" r="3.5" fill="none" stroke="#f2a541"></circle><text x="19" y="67" text-anchor="middle" font-size="8" fill="#f2a541">1</text></g><g><rect x="34" y="44" width="22" height="26" rx="3" fill="color-mix(in srgb, #7dd3fc 18%, #202226)" stroke="#7dd3fc"></rect><circle cx="45" cy="53" r="3.5" fill="none" stroke="#7dd3fc"></circle><text x="45" y="67" text-anchor="middle" font-size="8" fill="#7dd3fc">2</text></g><g><rect x="60" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="71" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="71" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">3</text></g><g><rect x="86" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="97" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="97" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">4</text></g><g><rect x="112" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="123" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="123" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">5</text></g><g><rect x="138" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="149" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="149" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">6</text></g><g><rect x="164" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="175" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="175" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">7</text></g><g><rect x="190" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="201" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="201" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">8</text></g><g><rect x="216" y="44" width="22" height="26" rx="3" fill="color-mix(in srgb, #f2a541 18%, #202226)" stroke="#f2a541"></rect><circle cx="227" cy="53" r="3.5" fill="none" stroke="#f2a541"></circle><text x="227" y="67" text-anchor="middle" font-size="8" fill="#f2a541">9</text></g><g><rect x="242" y="44" width="22" height="26" rx="3" fill="color-mix(in srgb, #7dd3fc 18%, #202226)" stroke="#7dd3fc"></rect><circle cx="253" cy="53" r="3.5" fill="none" stroke="#7dd3fc"></circle><text x="253" y="67" text-anchor="middle" font-size="8" fill="#7dd3fc">10</text></g><g><rect x="268" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="279" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="279" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">11</text></g><g><rect x="294" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="305" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="305" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">12</text></g><g><rect x="320" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="331" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="331" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">13</text></g><g><rect x="346" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="357" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="357" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">14</text></g><g><rect x="372" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="383" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="383" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">15</text></g><g><rect x="398" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="409" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="409" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">16</text></g><g><rect x="424" y="44" width="22" height="26" rx="3" fill="color-mix(in srgb, #f2a541 18%, #202226)" stroke="#f2a541"></rect><circle cx="435" cy="53" r="3.5" fill="none" stroke="#f2a541"></circle><text x="435" y="67" text-anchor="middle" font-size="8" fill="#f2a541">17</text></g><g><rect x="450" y="44" width="22" height="26" rx="3" fill="color-mix(in srgb, #7dd3fc 18%, #202226)" stroke="#7dd3fc"></rect><circle cx="461" cy="53" r="3.5" fill="none" stroke="#7dd3fc"></circle><text x="461" y="67" text-anchor="middle" font-size="8" fill="#7dd3fc">18</text></g><g><rect x="476" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="487" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="487" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">19</text></g><g><rect x="502" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="513" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="513" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">20</text></g><g><rect x="528" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="539" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="539" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">21</text></g><g><rect x="554" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="565" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="565" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">22</text></g><g><rect x="580" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="591" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="591" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">23</text></g><g><rect x="606" y="44" width="22" height="26" rx="3" fill="#202226" stroke="#3a3e45"></rect><circle cx="617" cy="53" r="3.5" fill="none" stroke="#9a9ca3"></circle><text x="617" y="67" text-anchor="middle" font-size="8" fill="#6b6e76">24</text></g><text x="8" y="38" font-size="9" fill="#6b6e76" letter-spacing="0.6">TRACK OUT SOCKETS, CHANNELS 1–<!-- -->24</text><path d="M19 70 V96" fill="none" stroke="#f2a541"></path><path d="M227 70 V96" fill="none" stroke="#f2a541"></path><path d="M435 70 V96" fill="none" stroke="#f2a541"></path><path d="M19 96 H435" fill="none" stroke="#f2a541"></path><text x="443" y="100" font-size="11" fill="#f2a541">Group 1</text><text x="8" y="117" font-size="9" fill="#6b6e76">Each socket carries its own channel's direct out, or the group it is switched to — never both at once.</text></svg>
+      <figcaption>Why the desk has eight groups and no group output sockets: the group buses are paralleled onto the channels' track outs. Group 1 comes out of channel 1, 9 or 17; group 2 out of 2, 10 or 18.</figcaption>
+    </figure><figure class="shot">
+      <a href="img/console-channel.webp" target="_blank" rel="noreferrer"><img src="img/console-channel.webp" alt="Channel 5 routed to groups 3-4. The app names the six track outs the group lands on, and says why there is more than one." loading="lazy" /></a>
+      <figcaption>Channel 5 routed to groups 3-4. The app names the six track outs the group lands on, and says why there is more than one.</figcaption>
+    </figure>
+      <p><strong>The GS3 is an in-line desk, and that is the whole reason it needs explaining.</strong> On a split desk, each group has its own output jack: you route a channel to Group 3 and you take Group 3 out of the socket marked Group 3 Out. The GS3 24/8/2 has 24 channels, 8 groups and a 2-track mix, but no group output sockets at all. The eight group buses are paralleled onto the channels' Track Outs: group <em>g</em> appears on the Track Out of channels <em>g</em>, <em>g</em>+8, <em>g</em>+16. Group 1 comes out of the Track Out of channel 1, 9 or 17; group 8 out of channel 8, 16 or 24. The same 24 jacks carry either a channel's own direct signal or a group, depending on how the strip is switched.</p><p>So when you tick “Grp 1-2” on channel 17 and the app tells you the signal leaves by “Ch 1 Track Out, Ch 9 Track Out, Ch 17 Track Out”, that is not a bug — those are the three sockets group 1 lands on, and whichever of them you have wired to your interface is where the signal is. The app works this out from the ports: a desk with no “Group n Out” socket but with “Group n Insert” sockets is treated as in-line, and the group is followed onto the track outs.</p><p><strong>Each channel carries two paths.</strong> The channel path takes the Mic or the Line input, through the preamp, the insert, the EQ and the big fader. The monitor path takes Tape In, at its own level. When tracking you record through the channel path and listen on the monitor path, which is why every GS3 channel has a Tape In and why the app asks which source is in use rather than assuming the one that happens to be wired.</p><p><strong>The insert is pre-EQ</strong> and wired tip send, ring return on a single TRS jack. In the app the insert is a port with direction In/Out: a signal that arrives there leaves by whatever the strip's routing says, so the outboard you patch into it becomes part of that channel's chain when you follow the signal rather than a dead end.</p><p><strong>Auxes 1 to 4 are post-fade</strong>, and 3 and 4 can be switched to follow the monitor path. The app doesn't model the switch — it models the consequence. If Aux 2 Out goes to a delay, the delay comes back into channel 7's line input, and channel 7's strip says it sends to Aux 2, you have built an oscillator. That is what the red strips and the loop warning are: the trace follows Aux 2 Out through every pedal and patchbay in the way, and if it arrives back at a channel that feeds Aux 2, it says so, names the channels and tells you which send to pull down.</p><p><strong>The FX returns and the mix insert land on the mix.</strong> A signal entering FX Return 3 leaves by Mix Out L and R, so a reverb returned there is followed through to the monitors rather than stopping at the return.</p><p><strong>Filling the desk in.</strong> Add the console as an asset with the category Mixer and fill its ports from the Allen &amp; Heath GS3 24/8/2 template: 163 ports, correctly named, including the four auxes, eight group inserts, four stereo FX returns, two 2-track machines, both monitor pairs and the MIDI mute processor. The 16-channel GS3 is there too. If your unit differs — a modified insert, a dead channel — fix those ports by hand afterwards; the template is a starting point, not a contract.</p>
+      <dl class="points"><dt>Ports vs strips</dt><dd>A port is a socket you can patch a cable into. A strip is a label, a source, a routing and a set of aux sends — the session, not the hardware. Repatching means editing cables; renaming a channel means editing a strip.</dd><dt>Source in use</dt><dd>Mic, line or tape. A GS3 channel has all three wired at once often enough that the app can't guess; telling it which one is live is what makes the trace follow the right path.</dd><dt>Routing</dt><dd>Direct out, group pairs, mix L/R, or free text for anything odd. This is what decides which socket the channel's signal leaves the desk by.</dd><dt>Aux sends up</dt><dd>Which auxes this channel feeds. Used for one thing above all: catching an aux that comes back into a channel sending to the same aux.</dd><dt>Insert</dt><dd>Tip send, ring return. A compressor patched into channel 4's insert shows up inside channel 4's chain when you trace it, not as a separate island.</dd><dt>Track Out</dt><dd>On an in-line desk like the GS3 this socket does two jobs — the channel's direct out, or a group. Which one depends on the routing you set.</dd><dt>Paste from a sheet</dt><dd>One column at a time — labels, sources, routings, auxes, notes — starting at whichever channel you choose. The old spreadsheet goes in in four pastes.</dd></dl>
+      
+      <p class="see">See also <a href="#consoles">Consoles</a> · <a href="#patchbays">Patchbays</a> · <a href="#plan">Patch plan</a></p>
+    </article>
+  <article id="console-strip">
+      <h3>Printing a scribble strip</h3>
+      <p class="lede">The channel names as a paper strip, at the desk's own channel spacing, to tape over the faders.</p>
+      
+      
+      <dl class="points"><dt>What's printed</dt><dd>The channel number, the label and the routing, in channel order, with the strip's colour if it has one.</dd><dt>Printing</dt><dd>A4 landscape, margins off. Cut along the line and tape it down.</dd></dl>
+      
+      <p class="see">See also <a href="#console">The console, and the Allen &amp; Heath GS3</a></p>
+    </article>
+  <article id="plan">
+      <h3>Patch plan</h3>
+      <p class="lede">Every connected cable as one diagram, ranked left to right by how far a signal has travelled — sources on the left, the monitors on the right.</p>
+      <figure class="shot">
+      <a href="img/plan.webp" target="_blank" rel="noreferrer"><img src="img/plan.webp" alt="The whole studio as one signal-flow diagram, sources on the left." loading="lazy" /></a>
+      <figcaption>The whole studio as one signal-flow diagram, sources on the left.</figcaption>
+    </figure>
+      <p>The plan follows a signal through anything that passes it on: a normalled or half-normalled patchbay column, a pedal or preamp or compressor, and a console's routing. It stops at anything that doesn't — an interface, a monitor, a recorder — and at a socket it has already been through, which is how a signal can cross the same patchbay three times without the trace spinning.</p>
+      <dl class="points"><dt>Ranking</dt><dd>Each asset sits as far right as its longest path from a source. It's not a tidy grid, but it reads in the direction the sound moves.</dd><dt>Colours</dt><dd>The signal's colour — audio amber, MIDI violet, CV green, clock pink, and so on. The legend is on the page.</dd><dt>Loops</dt><dd>A cycle in the patch, found with a strongly-connected-components pass, drawn in red. Feedback through a pedal is sometimes what you want; through an aux it's rarely what you want.</dd><dt>Focus</dt><dd>Arriving from an asset draws only that machine and what it reaches, in both directions.</dd><dt>Signal hops</dt><dd>Hovering a cable counts how many machines the signal has already passed through. Useful when something sounds thinner than it should.</dd></dl>
+      
+      <p class="see">See also <a href="#cables">Cables</a> · <a href="#patchbays">Patchbays</a> · <a href="#console">The console, and the Allen &amp; Heath GS3</a></p>
+    </article>
+</section>
+<section class="part">
+  <h2><span class="num">4</span> The business</h2>
+  <p class="blurb">Sessions, who they're for, and the calendar feed.</p>
+  <article id="bookings">
+      <h3>Bookings</h3>
+      <p class="lede">The week as a grid, one column per day, tinted by room. Click a day to book it, a session to open it.</p>
+      <figure class="shot">
+      <a href="img/bookings.webp" target="_blank" rel="noreferrer"><img src="img/bookings.webp" alt="The week, one column per day, tinted by room." loading="lazy" /></a>
+      <figcaption>The week, one column per day, tinted by room.</figcaption>
+    </figure>
+      <p>The feed is read-only and one-way: it shows your bookings in your calendar, it doesn't take events back. Subscribe to it at <code>/bookings.ics?key=…</code>, with the key the access script wrote into your environment. Google refreshes an external calendar on its own schedule — often hours — so treat it as the week in your pocket, not as something that updates the moment you confirm a session.</p>
+      <dl class="points"><dt>Tentative</dt><dd>Drawn dashed and pale: a hold, not a booking. Confirmed is solid.</dd><dt>Cancelled</dt><dd>Struck through and kept, not deleted, so the week still tells you what happened.</dd><dt>Room filter</dt><dd>Shown when there's more than one room; the chips keep the week you're looking at.</dd><dt>Income</dt><dd>The week's prices added up, cancellations left out. Paid sessions are marked in the list below.</dd><dt>Calendar feed</dt><dd>A subscribable .ics of every session. Set it up once with the access script, then subscribe in Google Calendar, Apple Calendar or anything else that takes a URL.</dd></dl>
+      
+      <p class="see">See also <a href="#booking-form">Booking a session</a> · <a href="#clients">Clients</a></p>
+    </article>
+  <article id="booking-form">
+      <h3>Booking a session</h3>
+      <p class="lede">A title, a room, a time, and whoever it's for. Everything else is optional.</p>
+      
+      
+      <dl class="points"><dt>Overlaps</dt><dd>Two sessions in the same room at the same time are flagged when you save. Nothing stops you — sometimes a setup overlaps a teardown.</dd><dt>Session type</dt><dd>Recording, production, mixing, mastering, rehearsal, gear rental. Only used for reading back what the month was made of.</dd><dt>Price and paid</dt><dd>Totalled per week on the bookings page; the paid flag is yours to keep honest.</dd><dt>Engineer</dt><dd>Free text — who's running it.</dd></dl>
+      
+      <p class="see">See also <a href="#bookings">Bookings</a></p>
+    </article>
+  <article id="clients">
+      <h3>Clients</h3>
+      <p class="lede">Who books the studio: name, artist name, how to reach them, and every session they've had.</p>
+      
+      
+      <dl class="points"><dt>Artist name</dt><dd>Shown in the calendar when it's there, because that's what you call them.</dd><dt>Sessions</dt><dd>Counted and totalled per client, so you can see who actually comes back.</dd></dl>
+      
+      <p class="see">See also <a href="#bookings">Bookings</a></p>
+    </article>
+</section>
+<section class="part">
+  <h2><span class="num">5</span> Running it</h2>
+  <p class="blurb">Who can do what, and what everyone did.</p>
+  <article id="activity">
+      <h3>Activity</h3>
+      <p class="lede">Every change ever made, by whom and when, with the before and after — and a way back to any earlier version.</p>
+      <figure class="shot">
+      <a href="img/activity.webp" target="_blank" rel="noreferrer"><img src="img/activity.webp" alt="Every change, by whom, with a way back to any earlier version." loading="lazy" /></a>
+      <figcaption>Every change, by whom, with a way back to any earlier version.</figcaption>
+    </figure>
+      
+      <dl class="points"><dt>Where it comes from</dt><dd>The CMS records a revision in the same transaction as the change itself. This page reads them. The trail can't drift from the data, and nothing can write to the data without being recorded.</dd><dt>Actor</dt><dd>A person, an API token, an agent or the system. Tokens are named, so the calendar feed reading bookings looks like the calendar feed, not like you.</dd><dt>Filters</dt><dd>By person, by what was changed, by the kind of change, by the kind of actor. Arriving from an account filters to that person.</dd><dt>Bring it back</dt><dd>Shown on deleted entries. The entry comes back under its own id, so cables that pointed at it point at it again.</dd><dt>Restoring</dt><dd>Recorded as a change in its own right, so a restore can be undone like anything else.</dd></dl>
+      
+      <p class="see">See also <a href="#history">One entry's history</a> · <a href="#people">Accounts</a></p>
+    </article>
+  <article id="history">
+      <h3>One entry's history</h3>
+      <p class="lede">Every version of this entry, and exactly which fields changed between any two of them.</p>
+      
+      
+      <dl class="points"><dt>vs previous</dt><dd>What that version changed, compared with the one before it.</dd><dt>vs now</dt><dd>What that version would change, compared with the content as it stands. This is the one to read before restoring.</dd><dt>Restore</dt><dd>Writes that version's content back as a new version. If it's already identical to what's there, you're told instead.</dd></dl>
+      
+      <p class="see">See also <a href="#activity">Activity</a></p>
+    </article>
+  <article id="people">
+      <h3>Accounts</h3>
+      <p class="lede">Who can sign in, and what they're allowed to do. These are the CMS's own users, so there's one list of people, not two.</p>
+      <figure class="shot">
+      <a href="img/accounts.webp" target="_blank" rel="noreferrer"><img src="img/accounts.webp" alt="Who can sign in, and what they are allowed to do." loading="lazy" /></a>
+      <figcaption>Who can sign in, and what they are allowed to do.</figcaption>
+    </figure>
+      <p>Signing in with Google isn't possible today: the CMS authenticates with a username and password plus API tokens, and has no OIDC or OAuth. The clean way to get it is to add OIDC to the CMS itself — the app only ever holds a CMS token, so roles, permissions and this trail would keep working untouched. Doing it in the app instead would mean storing a recoverable password per person, and a single shared token would destroy the trail.</p>
+      <dl class="points"><dt>Roles</dt><dd>An admin can do everything, including this page. studio-staff can read and write the studio's content and media and nothing else — no accounts, no settings. The access script creates that role.</dd><dt>Passwords</dt><dd>Set when you create the account and shown once. Suggest one if you'd rather not invent it.</dd><dt>What they changed →</dt><dd>Filters the activity trail to that person.</dd><dt>Why no shared login</dt><dd>Each person signs in as themselves so the trail says who did what. A shared account or a shared token would make every change read as the same actor, which is the one thing the trail is for.</dd></dl>
+      
+      <p class="see">See also <a href="#activity">Activity</a></p>
+    </article>
+</section>
+
+<section class="part" id="glossary">
+  <h2><span class="num">6</span> Glossary</h2>
+  <dl class="points">
+    <dt>Normal</dt><dd>A patchbay column whose top and bottom are wired together behind the panel. Plugging into either front jack breaks the link.</dd>
+    <dt>Half-normal</dt><dd>Wired together as well, but the top front jack takes only a copy and leaves the link alone. Only the bottom jack breaks it.</dd>
+    <dt>Thru</dt><dd>A column whose two points aren't joined: each reaches only its own front jack.</dd>
+    <dt>Insert</dt><dd>A single TRS jack carrying both a send (tip) and a return (ring), for putting outboard inside a channel. Pre-EQ on the GS3.</dd>
+    <dt>In-line desk</dt><dd>A desk whose channels carry both the channel path and the monitor path, and whose group buses come out of the channels' track outs rather than their own sockets. The GS3 is one.</dd>
+    <dt>Track out</dt><dd>A GS3 channel's output socket. It carries that channel's direct signal, or a group — the routing decides which.</dd>
+    <dt>Group</dt><dd>A bus several channels are routed to and controlled together. The GS3 has eight, paralleled onto the track outs of channels g, g+8, g+16.</dd>
+    <dt>Aux send</dt><dd>A separate mix taken off the channels, for effects or for a musician's headphones. Post-fade on the GS3.</dd>
+    <dt>Direct out</dt><dd>A channel's own signal, straight out, bypassing the groups and the mix. On the GS3 it shares the track-out socket with the groups.</dd>
+    <dt>Channel strip</dt><dd>In this app: the label, source, routing, aux sends, colour and note of one channel. The session's state, not the hardware's.</dd>
+    <dt>Port</dt><dd>One physical socket on a machine, with a name, a direction, a signal and a connector.</dd>
+    <dt>Revision</dt><dd>A recorded version of an entry, written by the CMS in the same transaction as the change.</dd>
+  </dl>
+</section>
+</main>
+</div>
+<footer>
+  <p>A private back-office for an electronic music studio, built on <a href="https://github.com/gohead-cms/gohead">GoHead</a>.
+  This manual is generated from <code>src/lib/help.ts</code> — the same text the app shows on each page.</p>
+</footer>
+</body>
+</html>

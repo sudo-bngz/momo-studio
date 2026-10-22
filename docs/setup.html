@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Setup &amp; deploy · Studio manager</title>
+<meta name="description" content="Installing, running against your own GoHead, the scripts, the environment, and deploying to Render." />
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html"><img class="mark" src="img/favicon.svg" alt="" width="24" height="24" /> Studio manager</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="guide.html">Guide</a>
+    <a href="setup.html" class="here" aria-current="page">Setup &amp; deploy</a>
+    <a href="https://github.com/sudo-bngz/momo-studio" class="out">GitHub</a>
+  </nav>
+</header>
+<div class="shell">
+
+<main id="main" class="wide">
+<h1>Setup &amp; deploy</h1>
+<p class="lede">The app keeps no database of its own: everything lives in GoHead, and the app talks to it as you. So the
+setup is really two things — a GoHead with the studio's content model pushed into it, and this app pointed at it.</p>
+
+<h2 id="install">Install and run</h2>
+<p>You need Node.js 20.9 or newer, and Docker to run GoHead locally.</p>
+<pre><code>git clone https://github.com/sudo-bngz/momo-studio.git studio-manager
+cd studio-manager
+cp .env.example .env.local
+npm install
+docker compose up -d   # GoHead (API + admin) on :8080
+npm run gohead:setup   # model + types + the studio-staff role and feed secrets
+npm run gohead:seed    # optional: a sample studio
+npm run dev</code></pre>
+<p>Open <code>http://localhost:3000</code> and sign in with <code>admin</code> / <code>gohead-local-password</code> — the
+defaults in <code>docker-compose.yml</code>. Change them before this is reachable from anywhere but your laptop.</p>
+
+<h2 id="your-studio">Your own studio instead of the sample</h2>
+<p>Skip <code>npm run gohead:seed</code> and start empty. The order that saves the most work:</p>
+<ol>
+  <li>Rooms and locations first — the racks, desks and stands you'll put things in.</li>
+  <li>The machines. Fill the ports from a template where there is one; the Allen &amp; Heath GS3 24/8/2 fills 163 ports,
+  correctly named. Templates live in <code>src/lib/templates/devices.json</code> — add your own gear there.</li>
+  <li>The patchbays, with each column's mode set to match the hardware.</li>
+  <li>The cables. If the patch already lives in a spreadsheet, paste it a column at a time into the patchbay and console
+  boards rather than typing it again.</li>
+</ol>
+
+<h2 id="scripts">Scripts</h2>
+<dl class="points">
+  <dt><code>npm run dev</code></dt><dd>The app, in development, on :3000.</dd>
+  <dt><code>npm run build</code> / <code>npm start</code></dt><dd>A production build, and serving it.</dd>
+  <dt><code>docker compose up -d</code></dt><dd>GoHead itself, API and admin, on :8080, with its data in a named volume.</dd>
+  <dt><code>npm run gohead:setup</code></dt><dd>The usual one: pushes the model, regenerates the TypeScript types, creates the
+  roles and the calendar feed's secrets. Run it after every <code>git pull</code> that changed the model.</dd>
+  <dt><code>npm run gohead:push</code></dt><dd>Just the model — <code>gohead/model.json</code>, the collections and components
+  the app reads.</dd>
+  <dt><code>npm run gohead:types</code></dt><dd>Regenerates <code>src/gohead.d.ts</code> from the model, so the app stops
+  compiling when the two disagree.</dd>
+  <dt><code>npm run gohead:seed</code></dt><dd>Loads <code>gohead/seed.json</code>: the sample studio.</dd>
+  <dt><code>npm run gohead:access</code></dt><dd>Creates the <code>studio-staff</code> role, the read-only
+  <code>calendar-feed</code> role, its token and the calendar URL's secret. With <code>-- --user alex</code> it also creates a
+  person and prints their password once.</dd>
+  <dt><code>npm run docs</code></dt><dd>Rebuilds this site from <code>src/lib/help.ts</code>.</dd>
+  <dt><code>npm run lint</code> / <code>typecheck</code></dt><dd>What CI would run.</dd>
+</dl>
+
+<h2 id="environment">Environment</h2>
+<dl class="points">
+  <dt><code>GOHEAD_URL</code></dt><dd>Where GoHead is, as this server reaches it. Defaults to <code>http://localhost:8080</code>.</dd>
+  <dt><code>GOHEAD_HOSTPORT</code></dt><dd>Set by the Render blueprint from the CMS service's private address; used when
+  <code>GOHEAD_URL</code> is unset, so the two services talk over the private network.</dd>
+  <dt><code>GOHEAD_FEED_TOKEN</code></dt><dd>A read-only API token for the calendar feed. Written by
+  <code>npm run gohead:access</code>.</dd>
+  <dt><code>STUDIO_ICS_SECRET</code></dt><dd>The <code>?key=</code> in the calendar URL. Also written by that script.</dd>
+  <dt><code>STUDIO_TZ</code></dt><dd>The studio's time zone, for the calendar and the booking grid. Defaults to
+  <code>Europe/Paris</code>.</dd>
+</dl>
+<p class="note">The app never holds a GoHead admin password. Each person signs in as themselves and the app keeps that
+person's own GoHead token in an httpOnly cookie, which is what makes the activity trail say who did what.</p>
+
+<h2 id="calendar">Subscribing to the calendar</h2>
+<p>After <code>npm run gohead:access</code>, <code>.env.local</code> holds <code>STUDIO_ICS_SECRET</code>. Subscribe to:</p>
+<pre><code>https://&lt;your-app&gt;/bookings.ics?key=&lt;STUDIO_ICS_SECRET&gt;</code></pre>
+<p>It's read-only and one way: it shows your sessions in your calendar, it doesn't take events back. Google refreshes an
+external calendar on its own schedule, often hours — fine for the week in your pocket, not for a change you just made.</p>
+
+<h2 id="deploy">Deploying to Render</h2>
+<p><code>render.yaml</code> in the repo is a blueprint for two services: GoHead with a disk for its data, and this app.
+They talk over Render's private network, so no token ever leaves it.</p>
+<ol>
+  <li>Push the repo to your own GitHub account.</li>
+  <li>In Render: <em>New → Blueprint</em>, pick the repo, apply.</li>
+  <li>Set <code>GOHEAD_USERNAME</code> and <code>GOHEAD_PASSWORD</code> on the <strong>CMS</strong> service only — not on the
+  app, so that a compromise of the app doesn't hand over admin.</li>
+  <li>Once it's up, run <code>gohead:push</code> and <code>gohead:access</code> against it with
+  <code>GOHEAD_URL</code> pointing at the CMS's URL.</li>
+</ol>
+<p class="note">The CMS service must be on a paid plan: Render's free services can send private-network requests but not
+receive them, and the app needs to reach the CMS.</p>
+
+<h2 id="trouble">When <code>npm install</code> fails with <code>UNABLE_TO_GET_ISSUER_CERT_LOCALLY</code></h2>
+<p>That's TLS interception — a corporate proxy or a security agent re-signing HTTPS with its own root. macOS trusts that
+root, Node doesn't, so the browser works and <code>npm</code> doesn't. Nothing in this repo needs changing. Either:</p>
+<pre><code># Node 22.15+ / 24+: trust the system keychain
+NODE_OPTIONS=--use-system-ca npm install
+
+# or point Node at the proxy's root certificate
+NODE_EXTRA_CA_CERTS=/path/to/corporate-root.pem npm install</code></pre>
+<p>Don't reach for <code>strict-ssl=false</code>: it turns off the check instead of fixing it.</p>
+
+<h2 id="model">Content model</h2>
+<p><code>gohead/model.json</code> is the whole thing. Collections: <code>rooms</code>, <code>locations</code>,
+<code>devices</code>, <code>cables</code>, <code>maintenance</code>, <code>clients</code>, <code>bookings</code>.
+Components: <code>port</code>, <code>patch_point</code>, <code>channel_strip</code>. Cables point at a device and a port
+<em>by name</em>, which is why renaming a port that a cable uses is refused.</p>
+<p>Change the model and push it with <code>npm run gohead:push</code>; add <code>-- --dry-run</code> first to see what it
+would do, and <code>-- --allow-removals</code> when you really mean to drop a field.</p>
+</main>
+</div>
+<footer>
+  <p>A private back-office for an electronic music studio, built on <a href="https://github.com/gohead-cms/gohead">GoHead</a>.
+  This manual is generated from <code>src/lib/help.ts</code> — the same text the app shows on each page.</p>
+</footer>
+</body>
+</html>

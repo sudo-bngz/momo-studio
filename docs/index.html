@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Studio manager · Studio manager</title>
+<meta name="description" content="A private back-office for an electronic music studio: assets, cable management, the patchbays, the desk, and bookings." />
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html"><img class="mark" src="img/favicon.svg" alt="" width="24" height="24" /> Studio manager</a>
+  <nav>
+    <a href="index.html" class="here" aria-current="page">Home</a>
+    <a href="guide.html">Guide</a>
+    <a href="setup.html">Setup &amp; deploy</a>
+    <a href="https://github.com/sudo-bngz/momo-studio" class="out">GitHub</a>
+  </nav>
+</header>
+<div class="shell">
+
+<main id="main" class="wide">
+<section class="hero">
+  <h1>Studio manager</h1>
+  <p class="lede">Every machine, every cable and every session in one private back-office — with the patchbays and the
+  desk modelled properly, so the app can tell you where a signal actually goes.</p>
+  <p class="actions">
+    <a class="btn primary" href="guide.html">Read the guide</a>
+    <a class="btn" href="setup.html">Set it up</a>
+    <a class="btn" href="https://github.com/sudo-bngz/momo-studio">Source</a>
+  </p>
+  <figure class="shot wide">
+      <a href="img/console.webp" target="_blank" rel="noreferrer"><img src="img/console.webp" alt="The Allen &amp; Heath GS3 24/8/2 drawn as its channel strips." loading="lazy" /></a>
+      <figcaption>The Allen &amp; Heath GS3 24/8/2 drawn as its channel strips.</figcaption>
+    </figure>
+</section>
+
+<section>
+  <h2>What it does</h2>
+  <div class="features">
+    <section class="feature">
+      <h3><a href="guide.html#assets">Every machine, with its sockets</a></h3>
+      <p>Synths, expanders, interfaces, pedals, the desk, the patchbays, the computers — with the code you write on the box, where it lives, what it cost, and its ports. A machine you haven't photographed yet is drawn from its category and its size, so a rack still reads at a glance.</p>
+      <figure class="shot">
+      <a href="img/assets.webp" target="_blank" rel="noreferrer"><img src="img/assets.webp" alt="Assets, as a gallery. Photos are resized in the browser before upload." loading="lazy" /></a>
+      <figcaption>Assets, as a gallery. Photos are resized in the browser before upload.</figcaption>
+    </figure>
+    </section>
+    <section class="feature">
+      <h3><a href="guide.html#map">The room, to scale</a></h3>
+      <p>A floor plan in real centimetres: every rack, desk, stand and pedalboard where it actually stands, and the cable runs between them bundled into the one thing you trip over. Click a place and it opens alone, large, with every cable entering and leaving it named.</p>
+      <figure class="shot">
+      <a href="img/map-zoom.webp" target="_blank" rel="noreferrer"><img src="img/map-zoom.webp" alt="A rack, zoomed, with its stubs to everywhere else." loading="lazy" /></a>
+      <figcaption>A rack, zoomed, with its stubs to everywhere else.</figcaption>
+    </figure>
+    </section>
+    <section class="feature">
+      <h3><a href="guide.html#patchbays">The patchbays, as boards</a></h3>
+      <p>Two rows of jacks numbered like the front panel, the label of every point, and each column's mode — normal, half-normal or thru. Paste a row straight out of the old spreadsheet, and print the designation strips at your jacks' real spacing.</p>
+      <figure class="shot">
+      <a href="img/patchbay.webp" target="_blank" rel="noreferrer"><img src="img/patchbay.webp" alt="A bay drawn like the hardware." loading="lazy" /></a>
+      <figcaption>A bay drawn like the hardware.</figcaption>
+    </figure>
+    </section>
+    <section class="feature">
+      <h3><a href="guide.html#console">The desk, channel by channel</a></h3>
+      <p>The Allen &amp; Heath GS3 as its 24 strips: what's in each mic, line, tape and insert socket, what the channel is called, where it's routed, and which socket its signal actually leaves by. An aux that comes back into a channel feeding the same aux is caught before it howls.</p>
+      <figure class="shot">
+      <a href="img/console.webp" target="_blank" rel="noreferrer"><img src="img/console.webp" alt="The GS3, with the master section underneath." loading="lazy" /></a>
+      <figcaption>The GS3, with the master section underneath.</figcaption>
+    </figure>
+    </section>
+    <section class="feature">
+      <h3><a href="guide.html#plan">The signal, followed</a></h3>
+      <p>The whole studio as one diagram, ranked by how far a signal has travelled — sources on the left, monitors on the right. It follows a signal through normalled columns, through pedals, and through the desk's own routing, and stops where the hardware stops.</p>
+      <figure class="shot">
+      <a href="img/plan.webp" target="_blank" rel="noreferrer"><img src="img/plan.webp" alt="The patch plan. Red is a loop." loading="lazy" /></a>
+      <figcaption>The patch plan. Red is a loop.</figcaption>
+    </figure>
+    </section>
+    <section class="feature">
+      <h3><a href="guide.html#bookings">Sessions and clients</a></h3>
+      <p>A week per room with clients, price and paid status. Double bookings are caught, and the whole calendar is subscribable as a feed, so the week is on your phone without opening anything.</p>
+      <figure class="shot">
+      <a href="img/bookings.webp" target="_blank" rel="noreferrer"><img src="img/bookings.webp" alt="The week, tinted by room." loading="lazy" /></a>
+      <figcaption>The week, tinted by room.</figcaption>
+    </figure>
+    </section>
+    <section class="feature">
+      <h3><a href="guide.html#activity">Who changed what</a></h3>
+      <p>Every create, change and delete is recorded as it happens, in the same transaction, so the trail can't drift from the data. Read it by person or by machine, compare any two versions field by field, and put one back. Deleted things come back under their own id.</p>
+      <figure class="shot">
+      <a href="img/activity.webp" target="_blank" rel="noreferrer"><img src="img/activity.webp" alt="The trail, filterable by person, type and kind of change." loading="lazy" /></a>
+      <figcaption>The trail, filterable by person, type and kind of change.</figcaption>
+    </figure>
+    </section>
+    <section class="feature">
+      <h3><a href="guide.html#model">Help where you are</a></h3>
+      <p>Every page carries a panel whose first sentence is always on screen and whose detail is one click away. The same text, at length and with drawings, is the guide — in the app and on this site.</p>
+      <figure class="shot">
+      <a href="img/help-panel.webp" target="_blank" rel="noreferrer"><img src="img/help-panel.webp" alt="The panel on the cables page, opened." loading="lazy" /></a>
+      <figcaption>The panel on the cables page, opened.</figcaption>
+    </figure>
+    </section>
+  </div>
+</section>
+
+<section id="quick-start">
+  <h2>Quick start</h2>
+  <p>Node.js 20.9+ and Docker. Five minutes, start to a studio you can click around.</p>
+  <pre><code>git clone https://github.com/sudo-bngz/momo-studio.git studio-manager
+cd studio-manager
+cp .env.example .env.local
+npm install
+docker compose up -d   # GoHead (API + admin) on :8080
+npm run gohead:setup   # content model, types, the studio-staff role
+npm run gohead:seed    # optional: a sample studio to click around
+npm run dev            # http://localhost:3000</code></pre>
+  <p>Run them one at a time — if <code>npm install</code> fails, everything after it fails too, for want of a
+  <code>node_modules/</code>. Sign in with <code>admin</code> / <code>gohead-local-password</code>, the defaults in
+  <code>docker-compose.yml</code>; change them before exposing anything. The sample studio holds a GS3 24/8/2, three
+  patchbays, a Eurorack case, pedals and 80 cables, so every page has something in it from the first click.
+  <a href="setup.html">The setup page</a> has the rest: your own studio, the environment, deploying, and what to do when
+  <code>npm install</code> fails behind a corporate proxy.</p>
+</section>
+
+<section>
+  <h2>On a phone, in the live room</h2>
+  <div class="split">
+    <p>Every page works at phone width, which is where you are when you're actually looking at the back of a rack.
+    The cable labels and the patchbay and scribble strips print to paper at real spacing.</p>
+    <figure class="shot">
+      <a href="img/mobile.webp" target="_blank" rel="noreferrer"><img src="img/mobile.webp" alt="The assets gallery at phone width." loading="lazy" /></a>
+      <figcaption>The assets gallery at phone width.</figcaption>
+    </figure>
+  </div>
+</section>
+</main>
+</div>
+<footer>
+  <p>A private back-office for an electronic music studio, built on <a href="https://github.com/gohead-cms/gohead">GoHead</a>.
+  This manual is generated from <code>src/lib/help.ts</code> — the same text the app shows on each page.</p>
+</footer>
+</body>
+</html>

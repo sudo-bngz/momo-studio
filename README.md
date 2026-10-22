@@ -1,6 +1,14 @@
 # Studio manager
 
-A private back-office for an electronic music studio, built on [GoHead](https://github.com/gohead-cms/gohead):
+A private back-office for an electronic music studio, built on [GoHead](https://github.com/gohead-cms/gohead).
+Every machine, every cable and every session in one place — with the patchbays and the desk modelled properly,
+so the app can tell you where a signal actually goes.
+
+**📖 [Documentation](https://sudo-bngz.github.io/momo-studio/)** · [Guide](https://sudo-bngz.github.io/momo-studio/guide.html) · [Setup & deploy](https://sudo-bngz.github.io/momo-studio/setup.html)
+
+![The Allen & Heath GS3 24/8/2 drawn as its channel strips](docs/img/console.webp)
+
+What's in it:
 
 - **Assets**: every synth, expander, drum machine, interface, patchbay and monitor, with its code, location, rack position, serial, purchase price, value, warranty and maintenance log. A gallery of **photographs** (front, rear panel, serial plate — scaled down in the browser so the server keeps small files), and for anything not photographed yet the app **draws the machine** from its category: keys for a synth, pads for a drum machine, two rows of jacks for a patchbay, faders for a console.
 - **Ports**: each device lists its sockets (name, in/out, signal, connector). Cables plug into ports by name.
@@ -23,22 +31,40 @@ Stack: Next.js 16 (App Router, Server Actions), React 19, Tailwind CSS 4, `@gohe
 
 ## Quick start
 
-You need Node.js 20.9+ and Docker.
+Node.js 20.9+ and Docker. Five minutes, from nothing to a studio you can click around.
 
 ```bash
+git clone https://github.com/sudo-bngz/momo-studio.git studio-manager
+cd studio-manager
 cp .env.example .env.local
 npm install
-docker compose up -d        # GoHead (API + admin) on http://localhost:8080
-npm run gohead:setup        # content model, TypeScript types, the studio-staff role
-npm run gohead:seed         # optional: a sample studio to try things on
-npm run dev                 # http://localhost:3000
+docker compose up -d     # GoHead (API + admin) on http://localhost:8080
+npm run gohead:setup     # content model, TypeScript types, roles, calendar secrets
+npm run gohead:seed      # optional: a sample studio to click around
+npm run dev              # http://localhost:3000
 ```
 
-Sign in with a GoHead account: `admin` / `gohead-local-password` locally (the defaults of `docker-compose.yml`, change them before exposing anything).
+Sign in with `admin` / `gohead-local-password` — the defaults in `docker-compose.yml`. Change
+them before this is reachable from anywhere but your laptop.
 
-Run the four commands one at a time: if `npm install` fails, everything after it fails too
+Run the commands one at a time: if `npm install` fails, everything after it fails too
 (`gohead-client: command not found`, `next: command not found`) because there is no
-`node_modules/`.
+`node_modules/`. If it fails with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`, see the next section.
+
+**What you get.** `gohead:seed` loads a sample studio — a GS3 24/8/2, three patchbays, a
+Eurorack case, pedals, monitors and 80 cables — so every page has something in it from the
+first click. Worth opening in this order: **Assets**, then **Studio map**, then **Consoles**.
+Every page explains itself: the panel at the top is always there, and **Guide** in the sidebar
+is the whole manual, [also on the web](https://sudo-bngz.github.io/momo-studio/guide.html).
+
+**Your own studio instead.** Skip `gohead:seed` and fill it in this order, which saves the most
+typing: rooms and locations first, then the machines (fill the ports from a template where
+there is one — the GS3 24/8/2 fills 163 of them, correctly named), then the patchbays with each
+column's mode set to match the hardware, then the cables. If the patch already lives in a
+spreadsheet, paste it a column at a time into the patchbay and console boards rather than
+typing it again.
+
+After a `git pull` that changed the content model, run `npm run gohead:setup` again.
 
 ### `npm install` fails with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`
 
@@ -136,8 +162,25 @@ needs, until it does.
 | `npm run gohead:access` | The `studio-staff` role (and a user with `-- --user <name>`) |
 | `npm run gohead:seed` | Sample studio from `gohead/seed.json`: 2 rooms, 8 places, 24 devices (a GS3 24/8/2, 3 patchbays, pedals), 80 cables, bookings |
 | `npm run gohead:setup` | `push`, `types` and `access` |
+| `npm run docs` | Rebuilds the documentation site in `docs/` from `src/lib/help.ts` |
 
 The setup scripts sign in with `GOHEAD_USERNAME` / `GOHEAD_PASSWORD` from `.env.local`.
+
+## Documentation
+
+<https://sudo-bngz.github.io/momo-studio/> — the home page, the [guide](https://sudo-bngz.github.io/momo-studio/guide.html)
+and [setup & deploy](https://sudo-bngz.github.io/momo-studio/setup.html).
+
+It's served by GitHub Pages straight out of `docs/` on `main`. To turn it on once:
+**Settings → Pages → Source: Deploy from a branch → `main` / `/docs`**.
+
+`npm run docs` regenerates `docs/*.html` from `src/lib/help.ts` — the same text the app shows in
+the panel on each page and in **Guide**, so the site, the panels and the in-app manual can't drift
+apart. Write the words once, in `help.ts`, and run `npm run docs` before committing.
+
+The rest of `docs/` is written by hand: `style.css`, and `img/` — screenshots taken from a running
+app, converted to WebP (the drawings of the channel strip and the in-line groups are lifted out of
+the app's own `/guide` as SVG, with the theme colours resolved).
 
 ## Content model
 

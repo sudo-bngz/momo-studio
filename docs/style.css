@@ -1,0 +1,521 @@
+/*
+ * The documentation site. Same control-room palette as the app: charcoal
+ * surfaces, amber for what you act on, monospace for anything printed on gear.
+ * Hand-written — scripts/build-docs.mjs writes only the HTML.
+ */
+
+:root {
+  --bg: #111214;
+  --panel: #18191c;
+  --raised: #202226;
+  --line: #2c2f34;
+  --line-strong: #3a3e45;
+  --ink: #ecebe7;
+  --dim: #9a9ca3;
+  --faint: #6b6e76;
+  --amber: #f2a541;
+  --amber-ink: #1a1305;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --prose: 44rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--amber) 40%, transparent);
+}
+
+a {
+  color: var(--amber);
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.875em;
+  background: var(--raised);
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+  color: var(--amber);
+}
+
+pre {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip:focus {
+  left: 1rem;
+  top: 0.5rem;
+  z-index: 10;
+  background: var(--amber);
+  color: var(--amber-ink);
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+}
+
+/* ---- Top bar ---- */
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  padding: 0.75rem 1.25rem;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand .mark {
+  display: block;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.top nav {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+  font-size: 0.9rem;
+}
+
+.top nav a {
+  color: var(--dim);
+  text-decoration: none;
+}
+
+.top nav a:hover {
+  color: var(--ink);
+}
+
+.top nav a.here {
+  color: var(--amber);
+}
+
+.top nav a.out {
+  margin-left: auto;
+}
+
+/* ---- Layout ---- */
+
+.shell {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+main {
+  max-width: var(--prose);
+}
+
+.shell.with-toc {
+  max-width: 78rem;
+}
+
+@media (min-width: 64rem) {
+  .shell.with-toc {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: 3rem;
+    align-items: start;
+  }
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem;
+}
+
+h2 {
+  font-size: 1.3rem;
+  margin: 3rem 0 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--line);
+}
+
+h3 {
+  font-size: 1.05rem;
+  margin: 2rem 0 0.3rem;
+}
+
+h4 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  margin: 1.5rem 0 0.4rem;
+}
+
+p,
+ol,
+ul {
+  color: var(--dim);
+}
+
+main > p,
+article > p,
+section > p {
+  max-width: var(--prose);
+}
+
+.lede {
+  font-size: 1.05rem;
+  color: var(--dim);
+}
+
+main > .lede,
+.hero .lede {
+  color: var(--ink);
+}
+
+.note {
+  border-left: 2px solid var(--amber);
+  padding-left: 1rem;
+  color: var(--dim);
+}
+
+strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---- Contents sidebar ---- */
+
+.toc {
+  font-size: 0.875rem;
+}
+
+@media (min-width: 64rem) {
+  .toc {
+    position: sticky;
+    top: 4.5rem;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+  }
+}
+
+.toc h2 {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  border: 0;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+
+.toc ol,
+.toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc > ol > li {
+  margin-bottom: 1rem;
+}
+
+.toc .part,
+.toc .part-link {
+  display: block;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 0.2rem;
+  text-decoration: none;
+}
+
+.toc ul a {
+  display: block;
+  color: var(--dim);
+  text-decoration: none;
+  padding: 0.1rem 0;
+}
+
+.toc ul a:hover {
+  color: var(--amber);
+}
+
+/* ---- Guide chapters ---- */
+
+.part > h2 .num {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--faint);
+  margin-right: 0.5rem;
+}
+
+.blurb {
+  color: var(--faint);
+  font-size: 0.9rem;
+  margin-top: 0;
+}
+
+article {
+  scroll-margin-top: 4.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.points {
+  margin: 1rem 0;
+  padding-left: 1rem;
+  border-left: 1px solid var(--line);
+}
+
+.points dt {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.925rem;
+  margin-top: 0.8rem;
+}
+
+.points dd {
+  margin: 0.15rem 0 0;
+  color: var(--dim);
+  font-size: 0.925rem;
+}
+
+.points dt code {
+  font-weight: 400;
+}
+
+.see {
+  font-size: 0.85rem;
+  color: var(--faint);
+}
+
+/* ---- Pictures ---- */
+
+figure {
+  margin: 1.5rem 0;
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.shot.wide {
+  max-width: none;
+}
+
+.drawing {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.drawing svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.drawing figcaption,
+.shot figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--faint);
+}
+
+.drawing figcaption {
+  margin-bottom: -0.25rem;
+}
+
+/* ---- Home ---- */
+
+.hero {
+  margin-bottom: 1rem;
+}
+
+.hero h1 {
+  font-size: 2.6rem;
+}
+
+.hero .lede {
+  max-width: var(--prose);
+  font-size: 1.15rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.btn:hover {
+  background: var(--raised);
+  text-decoration: none;
+}
+
+.btn.primary {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--amber-ink);
+  font-weight: 500;
+}
+
+.btn.primary:hover {
+  filter: brightness(1.1);
+  background: var(--amber);
+}
+
+.hero .shot {
+  margin-top: 2rem;
+}
+
+.features {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 52rem) {
+  .features {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Pictures line up across a row even when one blurb runs longer. */
+.feature .shot {
+  margin-top: auto;
+}
+
+.feature h3 {
+  margin-top: 0;
+}
+
+.feature h3 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.feature h3 a:hover {
+  color: var(--amber);
+}
+
+.feature p {
+  font-size: 0.925rem;
+}
+
+.feature .shot {
+  margin-bottom: 0;
+}
+
+/* The home and setup pages run the full shell; their text stays a column. */
+main.wide {
+  max-width: none;
+}
+
+main.wide > section > p,
+main.wide > section > ol,
+main.wide > section > pre,
+main.wide > h1 + .lede {
+  max-width: var(--prose);
+}
+
+.split {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 52rem) {
+  .split {
+    grid-template-columns: 1fr 22rem;
+  }
+}
+
+.split .shot {
+  margin: 0;
+}
+
+/* ---- Footer ---- */
+
+footer {
+  border-top: 1px solid var(--line);
+  margin-top: 4rem;
+  padding: 2rem 1.25rem 3rem;
+}
+
+footer p {
+  max-width: 48rem;
+  margin: 0 auto;
+  font-size: 0.85rem;
+  color: var(--faint);
+  text-align: center;
+}
