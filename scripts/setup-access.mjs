@@ -8,9 +8,16 @@
  * With --user, also creates a GoHead user of that role and prints its
  * password once. Admins can always sign in to the app as well.
  */
-import { adminSession, log, randomSecret } from "./lib.mjs";
+import { adminSession, log, randomSecret, writeEnv } from "./lib.mjs";
 
 const TYPES = ["rooms", "locations", "devices", "cables", "maintenance", "clients", "bookings"];
+/** Reads the bookings and what they point at, nothing else: for the calendar feed. */
+const FEED_ROLE = {
+  name: "calendar-feed",
+  description: "Read-only: the bookings behind the .ics calendar feed",
+  permissions: { content: { bookings: ["read"], rooms: ["read"], clients: ["read"], devices: ["read"] }, media: [] },
+};
+
 const ROLE = {
   name: "studio-staff",
   description: "Runs the studio: gear, cables, bookings and clients",
@@ -35,6 +42,34 @@ if (await api.find(`/admin/roles/${ROLE.name}`)) {
 } else {
   await api("POST", "/admin/roles", ROLE);
   log(`create role ${ROLE.name}`);
+}
+
+// ---- The calendar feed: a read-only role, its token and the URL's secret ----
+if (await api.find(`/admin/roles/${FEED_ROLE.name}`)) {
+  await api("PUT", `/admin/roles/${FEED_ROLE.name}`, { description: FEED_ROLE.description, permissions: FEED_ROLE.permissions });
+  log(`update role ${FEED_ROLE.name}`);
+} else {
+  await api("POST", "/admin/roles", FEED_ROLE);
+  log(`create role ${FEED_ROLE.name}`);
+}
+
+if (env.GOHEAD_FEED_TOKEN) {
+  log("keep GOHEAD_FEED_TOKEN (already set)");
+} else {
+  const res = await api("POST", "/admin/tokens", {
+    name: "calendar-feed",
+    role: FEED_ROLE.name,
+    description: "Reads the bookings for the .ics calendar feed",
+  });
+  writeEnv("GOHEAD_FEED_TOKEN", res.data.token);
+  log("create token calendar-feed → GOHEAD_FEED_TOKEN in .env.local");
+}
+if (env.STUDIO_ICS_SECRET) {
+  log("keep STUDIO_ICS_SECRET (already set)");
+} else {
+  const secret = randomSecret(16);
+  writeEnv("STUDIO_ICS_SECRET", secret);
+  log(`create STUDIO_ICS_SECRET in .env.local → subscribe to /bookings.ics?key=${secret}`);
 }
 
 const username = flag("user");

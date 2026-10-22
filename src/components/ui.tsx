@@ -85,6 +85,15 @@ export function ButtonLink({ href, children, primary = false }: { href: string; 
   );
 }
 
+/** Looks like ButtonLink but is a plain link: for files and other sites, which Next.js must not prefetch. */
+export function FileLink({ href, children, ...rest }: { href: string; children: ReactNode } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return (
+    <a href={href} {...rest} className="rounded-md border border-line-strong px-3 py-1.5 text-sm text-ink hover:bg-raised">
+      {children}
+    </a>
+  );
+}
+
 export function Empty({ children }: { children: ReactNode }) {
   return <p className="rounded-md border border-dashed border-line-strong px-4 py-6 text-center text-sm text-dim">{children}</p>;
 }

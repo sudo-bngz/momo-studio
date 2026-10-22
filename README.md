@@ -13,6 +13,9 @@ A private back-office for an electronic music studio, built on [GoHead](https://
 - **Patch plan**: the whole studio as a signal-flow diagram (sources on the left, what they feed on the right), filterable by signal, focusable on one device, downloadable as SVG.
 - **Cable labels**: two printable wrap-around labels per cable, one per end, each saying where both ends go.
 - **Racks & places**: rack elevations (U by U) and what sits on each desk, shelf or case.
+- **Activity**: every change to the studio's content — who, what, when — with a filter by person, type and kind of change. Each entry has its own history: compare a version against the previous one or against the content as it stands, and put it back. Deleted entries are listed under *Recently deleted* and come back under the same id. GoHead records all of this as each change happens, in the same transaction, so the trail can't drift from the data.
+- **Accounts**: add the people who help in the studio, give them a role, change it or reset a password. Everyone signs in as themselves, which is what makes the trail worth reading.
+- **Calendar feed**: `/bookings.ics`, to subscribe to from Google Calendar, Apple Calendar or a phone.
 - **Bookings**: a week calendar per room, with clients, price and paid status, and the gear a session needs. Overlapping sessions in the same room, or the same machine reserved twice, are refused unless you say otherwise.
 
 Stack: Next.js 16 (App Router, Server Actions), React 19, Tailwind CSS 4, `@gohead-cms/client`. No database of its own: everything lives in GoHead.
@@ -86,10 +89,40 @@ Starting with your own studio rather than the sample: skip `gohead:seed`, then i
 
 ## Who can sign in
 
-People sign in with their GoHead user; the app keeps GoHead's token in an httpOnly cookie and acts as that user, so GoHead's roles apply.
+People sign in with their GoHead user; the app keeps GoHead's token in an httpOnly cookie and acts as that user for every read and write, so GoHead's roles apply — and every change is recorded against the person who made it.
 
-- Admins can do everything.
-- `npm run gohead:access` creates the `studio-staff` role: full access to the studio's content and media, nothing else. Add `-- --user alex` to create a user of that role (the password is printed once). You can also create users in the GoHead admin.
+- Admins can do everything, including the **Accounts** page.
+- `npm run gohead:access` creates the `studio-staff` role: full access to the studio's content and media, nothing else. Add `-- --user alex` to create a user of that role (the password is printed once). After that, add people from **Accounts** in the app, or in GoHead's own admin.
+- Never share one account: the activity trail is only useful if a change carries a name.
+
+### Single sign-on
+
+GoHead authenticates with a username and password (plus API tokens); it has no OIDC or OAuth,
+so there is no "sign in with Google" today. The clean way to get one is to add OIDC to GoHead
+itself: the app would keep doing exactly what it does now, because it only ever holds a GoHead
+token. Doing it in this app instead would mean the app storing a GoHead credential for each
+person, which is worse, and using one shared API token would destroy the activity trail — every
+change would read as the token rather than as a person.
+
+## Calendar
+
+`/bookings.ics` serves the bookings as a calendar. `npm run gohead:access` creates a read-only
+`calendar-feed` role, its API token (`GOHEAD_FEED_TOKEN`) and a secret (`STUDIO_ICS_SECRET`),
+both written to `.env.local`. Subscribe with:
+
+```
+https://<the app>/bookings.ics?key=<STUDIO_ICS_SECRET>
+```
+
+In Google Calendar that is *Other calendars → From URL*; on a Mac, *File → New Calendar
+Subscription*. Without the secret the feed is only served to someone signed in, so it stays
+private by default — treat that URL as a password, and rotate the secret to revoke it.
+
+Calendar apps refresh an external calendar on their own schedule, and Google's can be several
+hours. The feed is right for seeing the week ahead on a phone, not for a change you made a
+minute ago; for that, open the app. A two-way Google Calendar sync would need the Calendar API,
+a Google Cloud project and a stored refresh token — more machinery than a studio of this size
+needs, until it does.
 
 ## Scripts
 
@@ -134,6 +167,8 @@ To change the model: edit `gohead/model.json`, then `npm run gohead:push && npm 
 | `GOHEAD_URL` | GoHead as the app's server reaches it (default `http://localhost:8080`) |
 | `STUDIO_TIMEZONE` | Bookings are typed and shown in this zone (default `Europe/Paris`) |
 | `STUDIO_CURRENCY` | Currency of prices and values (default `EUR`) |
+| `STUDIO_ICS_SECRET` | Unlocks `/bookings.ics` for calendar apps; unset, the feed needs a session |
+| `GOHEAD_FEED_TOKEN` | The read-only token the feed reads bookings with (both are written by `npm run gohead:access`) |
 | `GOHEAD_USERNAME`, `GOHEAD_PASSWORD` | Setup scripts only: don't set them where the app is deployed |
 
 ## Deploying
@@ -209,6 +244,8 @@ src/
   components/device-figure.tsx a drawing of a machine per category, when there is no photo
   lib/templates.ts, templates/ device templates (GS3, generic console / interface / patchbay)
   lib/studio-map.ts            the floor plan: default layout, cable bundles between places, zoom cards
+  lib/audit.ts                 the change trail: the feed, an entry's history, restoring a version
+  lib/people.ts                accounts and roles, through GoHead's admin API
   lib/session.ts               sign-in and the per-user GoHead client
   lib/time.ts                  studio time zone
   proxy.ts                     redirects visitors without a session to /login

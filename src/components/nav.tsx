@@ -14,6 +14,8 @@ const LINKS = [
   { href: "/plan", label: "Patch plan" },
   { href: "/bookings", label: "Bookings" },
   { href: "/clients", label: "Clients" },
+  { href: "/activity", label: "Activity" },
+  { href: "/people", label: "Accounts" },
 ];
 
 export function Nav() {

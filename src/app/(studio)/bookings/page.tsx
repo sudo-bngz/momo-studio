@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Badge, ButtonLink, Card, Empty, PageHeader } from "@/components/ui";
+import { Badge, ButtonLink, Card, Empty, FileLink, PageHeader } from "@/components/ui";
 import { getBookings, getRooms, refId, type BookingEntry } from "@/lib/data";
 import { addDays, formatDay, formatMoney, formatRange, fromLocal, localDate, localMinutes, mondayOf } from "@/lib/time";
 import { BOOKING_STATES, SESSION_TYPES } from "@/lib/vocab";
@@ -46,6 +46,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
             <ButtonLink href={query(addDays(week, -7))}>←</ButtonLink>
             <ButtonLink href={query(mondayOf(today))}>This week</ButtonLink>
             <ButtonLink href={query(addDays(week, 7))}>→</ButtonLink>
+            <FileLink href="/bookings.ics">Calendar feed</FileLink>
             <ButtonLink href={`/bookings/new?week=${week}`} primary>
               New booking
             </ButtonLink>

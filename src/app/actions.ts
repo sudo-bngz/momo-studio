@@ -11,7 +11,9 @@ import { redirect } from "next/navigation";
 
 import type { BookingInput, CableInput, ChannelStripInput, ClientInput, DeviceInput, LocationInput, MaintenanceInput, PatchPointInput, PortInput, RoomInput } from "@/gohead";
 import { getBookings, getCables, getDevices, refId } from "@/lib/data";
+import { restoreRevision } from "@/lib/audit";
 import { toDeviceInput, toLocationInput, toRoomInput } from "@/lib/device-input";
+import { createPerson, deletePerson, updatePerson } from "@/lib/people";
 import { compact, failure, FieldError, Fields, type FormState } from "@/lib/form";
 import { cablesByPort, portKey } from "@/lib/patch";
 import { toPlanCable } from "@/lib/plan-data";
@@ -634,4 +636,61 @@ export async function saveChannelStrips(_prev: FormState, form: FormData): Promi
   }
   revalidatePath("/", "layout");
   return { ok: true };
+}
+
+// ---- Accounts ----
+
+/** Creates a GoHead account. Admins only; GoHead enforces that too. */
+export async function savePerson(_prev: FormState, form: FormData): Promise<FormState> {
+  const f = new Fields(form);
+  const id = f.id("id");
+  try {
+    const username = f.required("username", "Username").toLowerCase();
+    if (!/^[a-z0-9._-]{2,40}$/.test(username)) throw new FieldError("A username is 2–40 letters, digits, dot, dash or underscore.");
+    const role_name = f.required("role_name", "Role");
+    const password = f.str("password");
+    if (password && password.length < 12) throw new FieldError("A password needs 12 characters or more.");
+    if (id) {
+      await updatePerson(id, compact({ email: f.str("email"), role_name, password }));
+    } else {
+      if (!password) throw new FieldError("Set a password for the new account.");
+      await createPerson({ username, email: f.required("email", "Email"), password, role_name });
+    }
+  } catch (err) {
+    if (isGoHeadError(err) && err.status === 409) return { error: "That username or email is already taken." };
+    return failure(err);
+  }
+  revalidatePath("/people");
+  redirect("/people");
+}
+
+export async function removePerson(_prev: FormState, form: FormData): Promise<FormState> {
+  const id = new Fields(form).id("id");
+  if (!id) return { error: "Missing account." };
+  try {
+    await deletePerson(id);
+  } catch (err) {
+    return failure(err);
+  }
+  revalidatePath("/people");
+  redirect("/people");
+}
+
+// ---- Putting a version back ----
+
+/** Restores a version of an entry; a deleted entry comes back under its own id. */
+export async function restoreVersion(_prev: FormState, form: FormData): Promise<FormState> {
+  const f = new Fields(form);
+  const collection = f.str("collection");
+  const id = f.id("entry");
+  const version = f.int("version");
+  if (!collection || !id || !version) return { error: "Missing what to restore." };
+  try {
+    const result = await restoreRevision(collection, id, version);
+    revalidatePath("/", "layout");
+    if (result.unchanged) return { error: "That version is already the current content." };
+    return { ok: true };
+  } catch (err) {
+    return failure(err);
+  }
 }
