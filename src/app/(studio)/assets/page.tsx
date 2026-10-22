@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { AssetImage, coverOf } from "@/components/asset-image";
 import { Help } from "@/components/help";
-import { Badge, ButtonLink, Code, Empty, PageHeader, ViewToggle } from "@/components/ui";
+import { ViewToggle } from "@/components/view-toggle";
+import { Badge, ButtonLink, Code, Empty, PageHeader } from "@/components/ui";
 import { getCables, getDevices, getLocations, refId } from "@/lib/data";
 import { getI18n } from "@/lib/i18n";
 import { cablesByPort, portKey } from "@/lib/patch";
@@ -50,6 +51,7 @@ export default async function GearPage({ searchParams }: { searchParams: Promise
         actions={
           <>
             <ViewToggle search={sp} gallery={gallery} />
+            <ButtonLink href="/assets/scan">{t("scan.cta")}</ButtonLink>
             <ButtonLink href="/assets/new" primary>
               {t("assets.add")}
             </ButtonLink>

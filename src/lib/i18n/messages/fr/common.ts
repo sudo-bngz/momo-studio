@@ -114,6 +114,8 @@ export const common: Record<keyof typeof en, string> = {
   "error.missing.console": "Console introuvable.",
   "error.missing.account": "Compte introuvable.",
   "error.ports.unreadable": "La liste des points n'a pas pu être lue.",
+  "error.scan.unreadable": "Le résultat du scan n'a pas pu être lu.",
+  "error.scan.none": "Rien de sélectionné à ajouter.",
   "error.photos.images": "Les photos doivent être des images.",
   "error.cable.bothEnds": "Un câble branché a besoin de ses deux extrémités : choisis un point de chaque côté, ou mets-le en réserve.",
   "error.cable.samePort": "Les deux extrémités sont sur le même point.",

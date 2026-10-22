@@ -14,6 +14,7 @@ import type { BookingInput, CableInput, ChannelStripInput, ClientInput, DeviceIn
 import { getBookings, getCables, getDevices, refId } from "@/lib/data";
 import { restoreRevision } from "@/lib/audit";
 import { toDeviceInput, toLocationInput, toRoomInput } from "@/lib/device-input";
+import { expandTemplate } from "@/lib/templates";
 import { createPerson, deletePerson, updatePerson } from "@/lib/people";
 import { compact, failure, FieldError, Fields, type FormState } from "@/lib/form";
 import { getI18n } from "@/lib/i18n";
@@ -23,6 +24,7 @@ import { cablesByPort, portKey } from "@/lib/patch";
 import { toPlanCable } from "@/lib/plan-data";
 import { signIn, signOut, withSession } from "@/lib/session";
 import {
+  isKey,
   BOOKING_STATES,
   CABLE_STATES,
   CATEGORIES,
@@ -72,6 +74,67 @@ export async function setLocale(formData: FormData): Promise<void> {
     sameSite: "lax",
   });
   revalidatePath("/", "layout");
+}
+
+/**
+ * Creating in one go the machines a scan found. The ports come from the
+ * template when one matched — expanded here rather than in the browser, so
+ * what is stored is what the template actually says — and otherwise from the
+ * MIDI ports the machine answered on, which are the only ones we can be sure
+ * of without reading a manual.
+ */
+export async function createScannedDevices(_prev: FormState, form: FormData): Promise<FormState> {
+  const { t } = await getI18n();
+  const f = new Fields(form);
+  try {
+    let raw: unknown;
+    try {
+      raw = JSON.parse(f.str("found") ?? "[]");
+    } catch {
+      throw new FieldError(t("error.scan.unreadable"));
+    }
+    const wanted = Array.isArray(raw) ? (raw as Array<Record<string, unknown>>) : [];
+    if (!wanted.length) throw new FieldError(t("error.scan.none"));
+
+    const made: string[] = [];
+    await withSession(async (g) => {
+      const devices = g.collection("devices");
+      for (const item of wanted.slice(0, 64)) {
+        const name = typeof item.name === "string" ? item.name.trim().slice(0, 120) : "";
+        if (!name) continue;
+        const templateId = typeof item.templateId === "string" ? item.templateId : undefined;
+        let ports: PortInput[] = [];
+        if (templateId) {
+          try {
+            ports = expandTemplate(templateId).ports;
+          } catch {
+            ports = [];
+          }
+        }
+        if (!ports.length && Array.isArray(item.ports)) {
+          ports = (item.ports as PortInput[]).filter((x) => x && typeof x.name === "string").slice(0, 256);
+        }
+        const code = typeof item.code === "string" && item.code.trim() ? item.code.trim().slice(0, 24) : "";
+        if (!code) continue;
+        const data = compact({
+          name,
+          code,
+          brand: typeof item.brand === "string" && item.brand.trim() ? item.brand.trim().slice(0, 80) : undefined,
+          category: isKey(CATEGORIES, item.category) ? item.category : ("other" as const),
+          state: "in_use" as const,
+          location: Number(item.location) > 0 ? Number(item.location) : undefined,
+          ports: ports.length ? ports : undefined,
+        });
+        await devices.create(data, { level: 0 });
+        made.push(name);
+      }
+    });
+    if (!made.length) throw new FieldError(t("error.scan.none"));
+    revalidatePath("/", "layout");
+  } catch (err) {
+    return failure(t, err);
+  }
+  redirect("/assets");
 }
 
 // ---- Gear ----

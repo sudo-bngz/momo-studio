@@ -86,6 +86,28 @@ export const en: HelpContent = {
   },
 
   // ---- Places ----
+  "asset-scan": {
+    title: "Scanning for gear",
+    lede: "Anything plugged in can tell you its own name, which saves the typing. What it cannot tell you is what sockets are on its back.",
+    points: [
+      { term: "Scan MIDI", text: "Lists every MIDI port the machine can see, and gathers the ports of one instrument back into one entry. Needs Chrome, Edge or Firefox — Safari has no Web MIDI — and the browser asks permission the first time." },
+      { term: "Scan audio devices", text: "Lists the audio interfaces and outputs the operating system knows. macOS hides their names until something has been allowed to use the microphone, so you may be asked for that; the stream is stopped at once and nothing is recorded." },
+      { term: "Ports", text: "A machine that matches a template gets that template's sockets, which is the whole point. One that doesn't gets the MIDI ports it answered on — the only ones we can be sure of — and you fill in the audio sockets yourself." },
+      { term: "As reported", text: "The raw port names, so you can see why something was gathered the way it was. “Digitakt MIDI In” and “Digitakt MIDI Out” are one machine; a MIDI interface's eight ports are one machine too." },
+      { term: "What it won't find", text: "Anything with no USB or MIDI connection to this computer: a desk, a patchbay, pedals, an analogue synth wired only with jacks. Those go in by hand, or from a template." },
+    ],
+    steps: [
+      "Switch on what you want found, and plug it in.",
+      "Scan MIDI, then the audio devices.",
+      "Untick what you don't want, fix the names, give each a code.",
+      "Add them, then fill in the ports of whatever had no template.",
+    ],
+    long: [
+      "This finds names, not wiring. No public database publishes what sockets a machine has — the specification sites carry polyphony and filter type, the marketplaces carry a price and a photo — because that information only exists in PDF manuals. So the port lists in this app are written by hand, once per model, in `src/lib/templates/devices.json`, and shared by every studio that uses it. A scan that matches a template fills 163 ports in one click; a scan that doesn't has still saved you the name, the brand and the knowledge that it talks MIDI.",
+    ],
+    see: ["assets", "asset-form"],
+  },
+
   racks: {
     title: "Racks & places",
     lede: "Every rack, desk, shelf, wall and case, with what's in it — read top to bottom the way you'd look at the rack itself.",

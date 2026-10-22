@@ -111,6 +111,8 @@ export const common = {
   "error.missing.console": "Missing console.",
   "error.missing.account": "Missing account.",
   "error.ports.unreadable": "The port list could not be read.",
+  "error.scan.unreadable": "The scan could not be read.",
+  "error.scan.none": "Nothing selected to add.",
   "error.photos.images": "Photos have to be images.",
   "error.cable.bothEnds": "A connected cable needs both ends: pick a port on each side, or mark it spare.",
   "error.cable.samePort": "Both ends are the same port.",

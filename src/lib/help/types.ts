@@ -17,6 +17,7 @@ export const GUIDE_ORDER = [
   "assets",
   "asset",
   "asset-form",
+  "asset-scan",
   "racks",
   "places",
   "map",
@@ -58,7 +59,7 @@ export interface HelpTopic {
 /** The parts of the guide, and which chapters belong to each. */
 export const PART_TOPICS = [
   { id: "idea", topics: ["model", "overview"] },
-  { id: "gear", topics: ["assets", "asset", "asset-form", "racks", "places", "map"] },
+  { id: "gear", topics: ["assets", "asset", "asset-form", "asset-scan", "racks", "places", "map"] },
   {
     id: "wiring",
     topics: ["cables", "cable-form", "cable-labels", "patchbays", "patchbay", "patchbay-strip", "consoles", "console", "console-strip", "plan"],

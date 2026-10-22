@@ -82,6 +82,28 @@ export const fr: HelpContent = {
   },
 
   // ---- Les emplacements ----
+  "asset-scan": {
+    title: "Chercher le matériel branché",
+    lede: "Ce qui est branché peut donner son nom tout seul, et ça évite de le taper. Ce qu'il ne peut pas dire, c'est ce qu'il a comme prises derrière.",
+    points: [
+      { term: "Scanner le MIDI", text: "Liste tous les ports MIDI que la machine voit, et regroupe les ports d'un même instrument en une seule entrée. Demande Chrome, Edge ou Firefox — Safari n'a pas de Web MIDI — et le navigateur demande l'autorisation la première fois." },
+      { term: "Scanner l'audio", text: "Liste les interfaces et les sorties audio que le système connaît. macOS cache leurs noms tant que rien n'a été autorisé à utiliser le micro, donc on peut te le demander ; le flux est coupé aussitôt et rien n'est enregistré." },
+      { term: "Points", text: "Une machine qui correspond à un modèle prend les points de ce modèle, et c'est tout l'intérêt. Celle qui n'en a pas prend les points MIDI sur lesquels elle a répondu — les seuls dont on soit sûr — et tu remplis les prises audio toi-même." },
+      { term: "Tel que rapporté", text: "Les noms de ports bruts, pour voir pourquoi quelque chose a été regroupé comme ça. « Digitakt MIDI In » et « Digitakt MIDI Out », c'est une machine ; les huit ports d'une interface MIDI aussi." },
+      { term: "Ce qu'il ne trouvera pas", text: "Tout ce qui n'a ni USB ni MIDI vers cet ordinateur : une console, une baie de brassage, des pédales, un synthé analogique câblé seulement en jacks. Ceux-là se saisissent à la main, ou depuis un modèle." },
+    ],
+    steps: [
+      "Allume ce que tu veux faire trouver, et branche-le.",
+      "Scanne le MIDI, puis l'audio.",
+      "Décoche ce que tu ne veux pas, corrige les noms, donne un code à chacun.",
+      "Ajoute-les, puis remplis les points de ceux qui n'avaient pas de modèle.",
+    ],
+    long: [
+      "Ça trouve des noms, pas du câblage. Aucune base publique ne publie les prises d'une machine — les sites de specs donnent la polyphonie et le type de filtre, les places de marché donnent un prix et une photo — parce que cette information n'existe que dans les manuels PDF. Les listes de points de cette app sont donc écrites à la main, une fois par modèle, dans `src/lib/templates/devices.json`, et partagées par tous ceux qui s'en servent. Un scan qui tombe sur un modèle remplit 163 points en un clic ; un scan qui n'en trouve pas t'a quand même épargné le nom, la marque, et le fait qu'elle parle MIDI.",
+    ],
+    see: ["assets", "asset-form"],
+  },
+
   racks: {
     title: "Racks & emplacements",
     lede: "Chaque rack, table, étagère, mur et flight-case, avec ce qu'il y a dedans — de haut en bas, comme tu regarderais le rack lui-même.",
