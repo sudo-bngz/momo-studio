@@ -1,0 +1,634 @@
+"use client";
+
+/**
+ * A patchbay drawn like the hardware: the label of each top point, the two
+ * rows of jacks with their front numbers, the normalling between them, and
+ * the label of each bottom point. With `editable`, a click on a column opens
+ * its editor; the table mode edits every column at once and takes rows
+ * pasted from a spreadsheet. Changes are saved together.
+ */
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { startTransition, useActionState, useEffect, useMemo, useState } from "react";
+
+import { createRearPorts, savePatchPoints } from "@/app/actions";
+import { parseMode, rearLabel, splitPasted, type ColumnView, type PatchbayView, type RearView } from "@/lib/patchbay";
+import { PATCH_MODES, SIGNALS, type PatchMode } from "@/lib/vocab";
+
+interface Editable {
+  column: number;
+  top_label: string;
+  bottom_label: string;
+  mode: PatchMode | "";
+  daw_track: string;
+  color: string;
+  note: string;
+}
+
+const FIELDS = ["top_label", "bottom_label", "mode", "daw_track", "color", "note"] as const;
+type Field = (typeof FIELDS)[number];
+
+/** Group colors, close to the ones of a typical patchbay sheet. */
+const SWATCHES = ["#e9c46a", "#f4a261", "#e76f51", "#d4a5c7", "#a78bfa", "#7aa7d9", "#5ec8d8", "#8fc79a", "#f0e68c", "#bdbdbd"];
+
+const toEditable = (r: ColumnView): Editable => ({
+  column: r.column,
+  top_label: r.top.text,
+  bottom_label: r.bottom.text,
+  mode: r.mode ?? "",
+  daw_track: r.daw_track,
+  color: r.color,
+  note: r.note,
+});
+
+const empty = (column: number): Editable => ({ column, top_label: "", bottom_label: "", mode: "", daw_track: "", color: "", note: "" });
+
+export function PatchbayBoard({ view, editable = false }: { view: PatchbayView; editable?: boolean }) {
+  const router = useRouter();
+  const initial = useMemo(() => view.rows.map(toEditable), [view]);
+  const [columns, setColumns] = useState(view.columns || 24);
+  const [points, setPoints] = useState<Editable[]>(initial);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [table, setTable] = useState(false);
+  const [state, run, pending] = useActionState(savePatchPoints, {});
+  const [portsState, runPorts, portsPending] = useActionState(createRearPorts, {});
+
+  // After a save the server sends a new view: start from it again.
+  const [shown, setShown] = useState(initial);
+  if (shown !== initial) {
+    setShown(initial);
+    setPoints(initial);
+    setColumns(view.columns || 24);
+  }
+  useEffect(() => {
+    if (state.ok || portsState.ok) router.refresh();
+  }, [state, portsState, router]);
+
+  const byColumn = new Map(points.map((p) => [p.column, p]));
+  const get = (n: number) => byColumn.get(n) ?? empty(n);
+  const set = (n: number, patch: Partial<Editable>) =>
+    setPoints((ps) => {
+      const exists = ps.some((p) => p.column === n);
+      return exists ? ps.map((p) => (p.column === n ? { ...p, ...patch } : p)) : [...ps, { ...empty(n), ...patch }];
+    });
+  const rowsByColumn = new Map(view.rows.map((r) => [r.column, r]));
+  const dirty = columns !== (view.columns || 24) || JSON.stringify(normalize(points)) !== JSON.stringify(normalize(initial));
+
+  const save = () => {
+    const data = new FormData();
+    data.set("id", String(view.id));
+    data.set("columns", String(columns));
+    data.set("points", JSON.stringify(normalize(points).filter((p) => p.column <= columns).map((p) => ({ ...p, mode: p.mode || undefined }))));
+    startTransition(() => run(data));
+  };
+
+  const list = Array.from({ length: columns }, (_, i) => i + 1);
+
+  return (
+    <div>
+      <Board
+        view={view}
+        columns={list}
+        get={get}
+        rows={rowsByColumn}
+        selected={selected}
+        onSelect={editable ? (n) => setSelected((s) => (s === n ? null : n)) : undefined}
+      />
+
+      {editable ? (
+        <>
+          {view.missingPorts > 0 ? (
+            <div className="mt-4 flex flex-wrap items-center gap-3 rounded-md border border-warn/40 bg-warn/10 px-4 py-3 text-sm text-warn">
+              <span>
+                This patchbay is missing {view.missingPorts} rear port(s) (“Top N” / “Bottom N”): cables can&apos;t plug into those points yet.
+              </span>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const data = new FormData(e.currentTarget);
+                  startTransition(() => runPorts(data));
+                }}
+              >
+                <input type="hidden" name="id" value={view.id} />
+                <input type="hidden" name="columns" value={columns} />
+                <button disabled={portsPending} className="rounded-md border border-warn/50 px-3 py-1 hover:bg-warn/10 disabled:opacity-60">
+                  {portsPending ? "Adding…" : "Add the rear ports"}
+                </button>
+              </form>
+              {portsState.error ? <span className="text-bad">{portsState.error}</span> : null}
+            </div>
+          ) : null}
+
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setTable(false)}
+              className={`rounded-md border px-3 py-1.5 text-sm ${!table ? "border-amber text-amber" : "border-line-strong text-dim hover:text-ink"}`}
+            >
+              One column
+            </button>
+            <button
+              type="button"
+              onClick={() => setTable(true)}
+              className={`rounded-md border px-3 py-1.5 text-sm ${table ? "border-amber text-amber" : "border-line-strong text-dim hover:text-ink"}`}
+            >
+              All columns · paste from a sheet
+            </button>
+          </div>
+
+          <div className="mt-4">
+            {table ? (
+              <TableEditor columns={columns} setColumns={setColumns} list={list} get={get} set={set} rows={rowsByColumn} setPoints={setPoints} />
+            ) : selected && selected <= columns ? (
+              <ColumnEditor
+                n={selected}
+                total={columns}
+                value={get(selected)}
+                row={rowsByColumn.get(selected)}
+                pbId={view.id}
+                onChange={(patch) => set(selected, patch)}
+                onMove={(n) => setSelected(n)}
+              />
+            ) : (
+              <p className="rounded-md border border-dashed border-line-strong px-4 py-6 text-center text-sm text-dim">
+                Click a column to edit its labels, mode, DAW track and color, or to patch what&apos;s behind it.
+              </p>
+            )}
+          </div>
+
+          <div
+            className={`sticky bottom-0 z-10 mt-6 flex flex-wrap items-center gap-3 border-t border-line bg-bg/95 py-3 backdrop-blur ${dirty || state.error ? "" : "hidden"}`}
+          >
+            <button type="button" onClick={save} disabled={pending} className="rounded-md bg-amber px-4 py-2 text-sm font-medium text-amber-ink hover:brightness-110 disabled:opacity-60">
+              {pending ? "Saving…" : "Save patchbay"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setPoints(initial);
+                setColumns(view.columns || 24);
+              }}
+              className="rounded-md border border-line-strong px-3 py-2 text-sm hover:bg-raised"
+            >
+              Discard changes
+            </button>
+            {state.error ? <span className="text-sm text-bad">{state.error}</span> : <span className="text-sm text-dim">Unsaved changes</span>}
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+function normalize(points: Editable[]) {
+  return [...points]
+    .filter((p) => FIELDS.some((f) => p[f] !== ""))
+    .sort((a, b) => a.column - b.column)
+    .map((p) => Object.fromEntries(Object.entries(p).map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])) as unknown as Editable);
+}
+
+// ---- The hardware view ----
+
+function Board({
+  view,
+  columns,
+  get,
+  rows,
+  selected,
+  onSelect,
+}: {
+  view: PatchbayView;
+  columns: number[];
+  get: (n: number) => Editable;
+  rows: Map<number, ColumnView>;
+  selected: number | null;
+  onSelect?: (n: number) => void;
+}) {
+  const total = columns.length;
+  const hasDaw = columns.some((n) => get(n).daw_track);
+  return (
+    <div className="overflow-x-auto rounded-lg border border-line bg-[#141517] p-3">
+      <div className="grid gap-x-[3px]" style={{ gridTemplateColumns: `64px repeat(${total}, minmax(38px, 1fr))`, minWidth: 64 + total * 41 }}>
+        {hasDaw ? (
+          <>
+            <Legend>DAW</Legend>
+            {columns.map((n) => (
+              <div key={`d${n}`} className="truncate py-1 text-center font-mono text-[10px] text-[#d4a5c7]" title={get(n).daw_track ? `DAW track ${get(n).daw_track}` : undefined}>
+                {get(n).daw_track}
+              </div>
+            ))}
+          </>
+        ) : null}
+
+        <Legend>Top</Legend>
+        {columns.map((n) => (
+          <Label key={`t${n}`} rear={rows.get(n)?.top} text={get(n).top_label} color={get(n).color} active={selected === n} onClick={onSelect && (() => onSelect(n))} />
+        ))}
+
+        <Legend>1–{total}</Legend>
+        {columns.map((n) => (
+          <Jack key={`jt${n}`} number={n} row={rows.get(n)} active={selected === n} onClick={onSelect && (() => onSelect(n))} />
+        ))}
+
+        <Legend>Mode</Legend>
+        {columns.map((n) => (
+          <Normal key={`m${n}`} mode={get(n).mode || undefined} flow={rows.get(n)?.flow} onClick={onSelect && (() => onSelect(n))} />
+        ))}
+
+        <Legend>
+          {total + 1}–{total * 2}
+        </Legend>
+        {columns.map((n) => (
+          <Jack key={`jb${n}`} number={n + total} row={rows.get(n)} active={selected === n} onClick={onSelect && (() => onSelect(n))} />
+        ))}
+
+        <Legend>Bottom</Legend>
+        {columns.map((n) => (
+          <Label key={`b${n}`} rear={rows.get(n)?.bottom} text={get(n).bottom_label} color={get(n).color} active={selected === n} onClick={onSelect && (() => onSelect(n))} />
+        ))}
+      </div>
+      {view.rows.some((r) => r.loop) ? (
+        <p className="mt-3 text-xs text-bad">Red jacks are part of a feedback loop: see the warnings above.</p>
+      ) : null}
+    </div>
+  );
+}
+
+function Legend({ children }: { children: React.ReactNode }) {
+  return <div className="flex items-center justify-end pr-2 text-right text-[10px] uppercase tracking-wider text-faint">{children}</div>;
+}
+
+function Label({ rear, text, color, active, onClick }: { rear?: RearView; text: string; color: string; active: boolean; onClick?: () => void }) {
+  const l = rear ? rearLabel({ ...rear, text }) : text ? { main: text, free: false } : { main: "FREE", free: true };
+  const end = rear?.ends[0];
+  const tint = color || (end ? SIGNALS[end.signal].color : "");
+  const title = [
+    end ? `${end.cableCode}: ${end.deviceName} · ${end.port}` : null,
+    text && end && text !== end.deviceName ? `Label: ${text}` : null,
+    rear && rear.ends.length > 1 ? `${rear.ends.length} cables on this point!` : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={!onClick}
+      title={title || undefined}
+      className={`flex h-44 items-center justify-center overflow-hidden rounded-sm border px-0.5 py-1 text-left ${active ? "border-amber" : "border-transparent"} ${onClick ? "cursor-pointer hover:border-line-strong" : "cursor-default"}`}
+      style={{ background: l.free ? "#1b1c1f" : tint ? `color-mix(in srgb, ${tint} 30%, #1b1c1f)` : "#24262a" }}
+    >
+      <span className="flex max-h-full rotate-180 gap-0.5 [writing-mode:vertical-rl]">
+        <span className={`truncate text-[10.5px] leading-none ${l.free ? "font-semibold tracking-widest text-faint" : "font-medium text-ink"}`}>{l.main}</span>
+        {l.sub ? <span className="truncate text-[10px] leading-none text-dim">{l.sub}</span> : null}
+      </span>
+      {rear && rear.ends.length > 1 ? <span className="sr-only">several cables</span> : null}
+    </button>
+  );
+}
+
+function Jack({ number, row, active, onClick }: { number: number; row?: ColumnView; active: boolean; onClick?: () => void }) {
+  const ring = row?.loop ? "#f87171" : active ? "#f2a541" : "#3a3e45";
+  return (
+    <button type="button" onClick={onClick} disabled={!onClick} className="flex flex-col items-center gap-0.5 py-1" aria-label={`Point ${number}`}>
+      <span className="font-mono text-[10px] text-dim">{number}</span>
+      <span className="grid size-5 place-items-center rounded-full border-2 bg-[#0c0d0e]" style={{ borderColor: ring }}>
+        <span className="size-1.5 rounded-full bg-[#2c2f34]" />
+      </span>
+    </button>
+  );
+}
+
+function Normal({ mode, flow, onClick }: { mode?: PatchMode; flow?: "down" | "up"; onClick?: () => void }) {
+  const m = mode ? PATCH_MODES[mode] : undefined;
+  return (
+    <button type="button" onClick={onClick} disabled={!onClick} className="relative flex h-9 items-center justify-center" title={m ? `${m.label}: ${m.help}` : "Mode not set"}>
+      {m && mode !== "thru" ? (
+        <span className="absolute inset-y-0 left-1/2 w-0 -translate-x-1/2 border-l-2" style={{ borderColor: m.color, borderStyle: mode === "half_normal" ? "dashed" : "solid" }} />
+      ) : null}
+      <span
+        className="relative z-[1] rounded px-1 font-mono text-[10px] font-bold leading-4"
+        style={m ? { background: `color-mix(in srgb, ${m.color} 25%, #141517)`, color: m.color } : { color: "#6b6e76" }}
+      >
+        {m ? m.short : "·"}
+        {flow === "down" ? "↓" : flow === "up" ? "↑" : ""}
+      </span>
+    </button>
+  );
+}
+
+// ---- Editing one column ----
+
+function RearInfo({ rear, pbId, side }: { rear?: RearView; pbId: number; side: "top" | "bottom" }) {
+  const port = `${side === "top" ? "Top" : "Bottom"} ${rear?.port.split(" ")[1] ?? ""}`;
+  if (!rear) return null;
+  if (!rear.hasPort) return <p className="text-xs text-warn">No “{rear.port}” port on this patchbay yet.</p>;
+  if (!rear.ends.length) {
+    // A cable comes into the top from a source, and leaves the bottom to a destination, usually.
+    const href = side === "top" ? `/cables/new?to=${encodeURIComponent(`${pbId}::${port}`)}` : `/cables/new?from=${encodeURIComponent(`${pbId}::${port}`)}`;
+    return (
+      <p className="text-xs text-dim">
+        Nothing plugged in the rear.{" "}
+        <Link href={href} className="text-amber hover:underline">
+          Patch the rear →
+        </Link>
+      </p>
+    );
+  }
+  return (
+    <ul className="space-y-1 text-xs">
+      {rear.ends.map((e) => (
+        <li key={e.cableId} className={rear.ends.length > 1 ? "text-warn" : "text-dim"}>
+          <Link href={`/cables/${e.cableId}`} className="font-mono text-amber hover:underline">
+            {e.cableCode}
+          </Link>{" "}
+          ↔{" "}
+          {e.deviceId ? (
+            <Link href={`/gear/${e.deviceId}`} className="text-ink hover:text-amber">
+              {e.deviceName}
+            </Link>
+          ) : (
+            e.deviceName
+          )}{" "}
+          · {e.port}
+          {e.direction ? <span className="text-faint"> ({e.direction})</span> : null}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ColumnEditor({
+  n,
+  total,
+  value,
+  row,
+  pbId,
+  onChange,
+  onMove,
+}: {
+  n: number;
+  total: number;
+  value: Editable;
+  row?: ColumnView;
+  pbId: number;
+  onChange: (patch: Partial<Editable>) => void;
+  onMove: (n: number) => void;
+}) {
+  return (
+    <div className="rounded-lg border border-line bg-panel p-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <h3 className="font-semibold">
+          Column {n} <span className="text-sm font-normal text-dim">· front points {n} and {n + total}</span>
+        </h3>
+        <div className="flex gap-1">
+          <button type="button" disabled={n <= 1} onClick={() => onMove(n - 1)} className="rounded border border-line-strong px-2 py-1 text-sm disabled:opacity-40">
+            ←
+          </button>
+          <button type="button" disabled={n >= total} onClick={() => onMove(n + 1)} className="rounded border border-line-strong px-2 py-1 text-sm disabled:opacity-40">
+            →
+          </button>
+        </div>
+      </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-2">
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-dim">Top point {n} · label</span>
+            <input className="control" value={value.top_label} onChange={(e) => onChange({ top_label: e.target.value })} placeholder={row?.top.ends[0] ? "Named by its cable; type to label it anyway" : "e.g. MPC1000 out 2"} />
+          </label>
+          <RearInfo rear={row?.top} pbId={pbId} side="top" />
+        </div>
+        <div className="space-y-2">
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-dim">Bottom point {n + total} · label</span>
+            <input className="control" value={value.bottom_label} onChange={(e) => onChange({ bottom_label: e.target.value })} placeholder={row?.bottom.ends[0] ? "Named by its cable; type to label it anyway" : "e.g. Mixer input 3"} />
+          </label>
+          <RearInfo rear={row?.bottom} pbId={pbId} side="bottom" />
+        </div>
+      </div>
+      <p className="mt-2 text-[11px] text-faint">A cable plugged in the rear names the point; the label is used when there is none (or for gear you haven&apos;t added).</p>
+
+      <div className="mt-5 grid gap-6 md:grid-cols-[auto_1fr]">
+        <div>
+          <span className="mb-1 block text-xs font-medium text-dim">Mode</span>
+          <div className="inline-flex overflow-hidden rounded-md border border-line-strong">
+            {(["", "normal", "half_normal", "thru"] as const).map((m) => (
+              <button
+                key={m || "none"}
+                type="button"
+                onClick={() => onChange({ mode: m })}
+                className={`px-3 py-1.5 text-sm ${value.mode === m ? "bg-raised text-amber" : "text-dim hover:text-ink"}`}
+                title={m ? PATCH_MODES[m].help : "Not set"}
+              >
+                {m ? PATCH_MODES[m].label : "—"}
+              </button>
+            ))}
+          </div>
+          <p className="mt-1 max-w-sm text-[11px] text-faint">{value.mode ? PATCH_MODES[value.mode].help : "Not set yet."}</p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-[8rem_1fr]">
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-dim">DAW track</span>
+            <input className="control" value={value.daw_track} onChange={(e) => onChange({ daw_track: e.target.value })} placeholder="e.g. 5/6" />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-dim">Note</span>
+            <input className="control" value={value.note} onChange={(e) => onChange({ note: e.target.value })} />
+          </label>
+        </div>
+      </div>
+
+      <div className="mt-5">
+        <span className="mb-1 block text-xs font-medium text-dim">Color</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => onChange({ color: "" })}
+            className={`h-6 rounded border px-2 text-xs ${value.color === "" ? "border-amber text-amber" : "border-line-strong text-dim"}`}
+          >
+            Auto
+          </button>
+          {SWATCHES.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => onChange({ color: c })}
+              className={`size-6 rounded border-2 ${value.color === c ? "border-white" : "border-transparent"}`}
+              style={{ background: c }}
+              aria-label={`Color ${c}`}
+            />
+          ))}
+          <input type="color" value={value.color || "#888888"} onChange={(e) => onChange({ color: e.target.value })} className="h-6 w-8 cursor-pointer rounded border border-line-strong bg-transparent" aria-label="Custom color" />
+        </div>
+        <p className="mt-1 text-[11px] text-faint">Auto colors a point by the signal of its cable. Use colors to group columns (drums, synths, FX).</p>
+      </div>
+    </div>
+  );
+}
+
+// ---- Editing every column, pasting from a spreadsheet ----
+
+function TableEditor({
+  columns,
+  setColumns,
+  list,
+  get,
+  set,
+  rows,
+  setPoints,
+}: {
+  columns: number;
+  setColumns: (n: number) => void;
+  list: number[];
+  get: (n: number) => Editable;
+  set: (n: number, patch: Partial<Editable>) => void;
+  rows: Map<number, ColumnView>;
+  setPoints: React.Dispatch<React.SetStateAction<Editable[]>>;
+}) {
+  const [field, setField] = useState<Field>("top_label");
+  const [start, setStart] = useState(1);
+  const [text, setText] = useState("");
+  const [message, setMessage] = useState("");
+
+  const fill = () => {
+    const values = splitPasted(text);
+    if (!values.length || (values.length === 1 && !values[0])) return;
+    let skipped = 0;
+    setPoints((ps) => {
+      const next = new Map(ps.map((p) => [p.column, { ...p }]));
+      values.forEach((raw, i) => {
+        const n = start + i;
+        if (n > columns) {
+          skipped++;
+          return;
+        }
+        const p = next.get(n) ?? empty(n);
+        const v = /^(free|libre|\.|-|—)$/i.test(raw) ? "" : raw;
+        if (field === "mode") p.mode = parseMode(v) ?? "";
+        else if (field === "color") p.color = /^#[0-9a-fA-F]{6}$/.test(v) ? v : "";
+        else p[field] = v;
+        next.set(n, p);
+      });
+      return [...next.values()];
+    });
+    setMessage(`${Math.min(values.length, columns - start + 1)} column(s) filled from column ${start}${skipped ? `, ${skipped} value(s) past the last column ignored` : ""}. Check, then save.`);
+    setText("");
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-lg border border-line bg-panel p-4">
+        <h3 className="mb-1 font-semibold">Paste from a sheet</h3>
+        <p className="mb-3 text-sm text-dim">
+          Select a row of cells in Google Sheets or Excel (labels, modes, Ableton tracks…), copy, paste here. “FREE” cells are left empty; modes accept N, H, T or the full names.
+        </p>
+        <div className="grid gap-3 md:grid-cols-[12rem_7rem_1fr_auto] md:items-end">
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-dim">Into</span>
+            <select className="control" value={field} onChange={(e) => setField(e.target.value as Field)}>
+              <option value="top_label">Top labels</option>
+              <option value="bottom_label">Bottom labels</option>
+              <option value="mode">Modes</option>
+              <option value="daw_track">DAW tracks</option>
+              <option value="note">Notes</option>
+            </select>
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-dim">From column</span>
+            <input className="control" type="number" min={1} max={columns} value={start} onChange={(e) => setStart(Math.max(1, Math.min(columns, Number(e.target.value) || 1)))} />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-dim">Cells</span>
+            <textarea className="control font-mono text-xs" rows={2} value={text} onChange={(e) => setText(e.target.value)} placeholder={"SPACE ECHO 1\tSPECULAR\tBIG MUFF\tFLANGER\t…"} />
+          </label>
+          <button type="button" onClick={fill} className="rounded-md border border-line-strong px-3 py-2 text-sm hover:bg-raised">
+            Fill
+          </button>
+        </div>
+        {message ? <p className="mt-2 text-sm text-ok">{message}</p> : null}
+      </div>
+
+      <div className="flex items-center gap-3 text-sm">
+        <label className="flex items-center gap-2">
+          <span className="text-dim">Columns</span>
+          <input className="control w-20" type="number" min={1} max={96} value={columns} onChange={(e) => setColumns(Math.max(1, Math.min(96, Number(e.target.value) || 1)))} />
+        </label>
+        <span className="text-xs text-faint">24 for a 48-point 1U patchbay; 16 or 32 for others.</span>
+        <span className="ml-auto flex items-center gap-1 text-xs text-dim">
+          Set every mode:
+          {(Object.keys(PATCH_MODES) as PatchMode[]).map((m) => (
+            <button key={m} type="button" onClick={() => list.forEach((n) => set(n, { mode: m }))} className="rounded border border-line-strong px-2 py-0.5 hover:bg-raised">
+              {PATCH_MODES[m].short}
+            </button>
+          ))}
+        </span>
+      </div>
+
+      <div className="overflow-x-auto rounded-lg border border-line bg-panel">
+        <table className="data">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Top label</th>
+              <th>Behind the top</th>
+              <th>Mode</th>
+              <th>Bottom label</th>
+              <th>Behind the bottom</th>
+              <th>DAW</th>
+              <th>Color</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {list.map((n) => {
+              const v = get(n);
+              const r = rows.get(n);
+              const behind = (rear?: RearView) =>
+                rear?.ends.length ? (
+                  <span className={rear.ends.length > 1 ? "text-warn" : "text-dim"}>
+                    {rear.ends.map((e) => `${e.deviceName} · ${e.port}`).join(" + ")}
+                  </span>
+                ) : (
+                  <span className="text-faint">—</span>
+                );
+              return (
+                <tr key={n}>
+                  <td className="whitespace-nowrap font-mono text-xs text-dim">
+                    {n}/{n + columns}
+                  </td>
+                  <td className="min-w-40">
+                    <input className="control" value={v.top_label} onChange={(e) => set(n, { top_label: e.target.value })} aria-label={`Top label ${n}`} />
+                  </td>
+                  <td className="text-xs">{behind(r?.top)}</td>
+                  <td>
+                    <select className="control w-24" value={v.mode} onChange={(e) => set(n, { mode: e.target.value as PatchMode | "" })} aria-label={`Mode ${n}`}>
+                      <option value="">—</option>
+                      {(Object.keys(PATCH_MODES) as PatchMode[]).map((m) => (
+                        <option key={m} value={m}>
+                          {PATCH_MODES[m].short} · {PATCH_MODES[m].label}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="min-w-40">
+                    <input className="control" value={v.bottom_label} onChange={(e) => set(n, { bottom_label: e.target.value })} aria-label={`Bottom label ${n}`} />
+                  </td>
+                  <td className="text-xs">{behind(r?.bottom)}</td>
+                  <td>
+                    <input className="control w-16" value={v.daw_track} onChange={(e) => set(n, { daw_track: e.target.value })} aria-label={`DAW track ${n}`} />
+                  </td>
+                  <td>
+                    <input type="color" value={v.color || "#24262a"} onChange={(e) => set(n, { color: e.target.value })} className="h-8 w-10 cursor-pointer rounded border border-line-strong bg-transparent" aria-label={`Color ${n}`} />
+                  </td>
+                  <td className="min-w-32">
+                    <input className="control" value={v.note} onChange={(e) => set(n, { note: e.target.value })} aria-label={`Note ${n}`} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}

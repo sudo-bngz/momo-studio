@@ -9,8 +9,9 @@ import { isGoHeadError } from "@gohead-cms/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import type { BookingInput, CableInput, ClientInput, DeviceInput, LocationInput, MaintenanceInput, PortInput, RoomInput } from "@/gohead";
+import type { BookingInput, CableInput, ClientInput, DeviceInput, LocationInput, MaintenanceInput, PatchPointInput, PortInput, RoomInput } from "@/gohead";
 import { getBookings, getCables, getDevices, refId } from "@/lib/data";
+import { toDeviceInput } from "@/lib/device-input";
 import { compact, failure, FieldError, Fields, type FormState } from "@/lib/form";
 import { cablesByPort, portKey } from "@/lib/patch";
 import { toPlanCable } from "@/lib/plan-data";
@@ -23,6 +24,7 @@ import {
   DEVICE_STATES,
   DIRECTIONS,
   LOCATION_KINDS,
+  PATCH_MODES,
   SESSION_TYPES,
   SIGNALS,
 } from "@/lib/vocab";
@@ -126,6 +128,12 @@ export async function saveDevice(_prev: FormState, form: FormData): Promise<Form
         notes: f.str("notes"),
       });
       const devices = g.collection("devices");
+      if (id) {
+        // The patchbay layout is edited on its own page: keep it.
+        const current = await devices.findOne(id, { level: 0 });
+        if (current.patch_columns) data.patch_columns = current.patch_columns;
+        if (current.patch_points?.length) data.patch_points = toDeviceInput(current).patch_points;
+      }
       const saved = id ? await devices.update(id, data, { level: 0 }) : await devices.create(data, { level: 0 });
       return saved.id;
     });
@@ -421,4 +429,86 @@ function slugify(s: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "") || "room";
+}
+
+// ---- Patchbays ----
+
+const HEX = /^#[0-9a-fA-F]{6}$/;
+
+/** Saves a patchbay's column count and every column's labels, mode, DAW track, color and note. */
+export async function savePatchPoints(_prev: FormState, form: FormData): Promise<FormState> {
+  const f = new Fields(form);
+  const id = f.id("id");
+  if (!id) return { error: "Missing patchbay." };
+  try {
+    const columns = f.int("columns");
+    if (!columns || columns < 1 || columns > 96) throw new FieldError("A patchbay has between 1 and 96 columns.");
+    let raw: unknown;
+    try {
+      raw = JSON.parse(f.str("points") ?? "[]");
+    } catch {
+      throw new FieldError("The columns could not be read.");
+    }
+    const points: PatchPointInput[] = [];
+    for (const item of Array.isArray(raw) ? (raw as Array<Record<string, unknown>>) : []) {
+      const column = Number(item.column);
+      if (!Number.isInteger(column) || column < 1 || column > columns) continue;
+      const text = (k: string) => (typeof item[k] === "string" && (item[k] as string).trim() ? (item[k] as string).trim().slice(0, 120) : undefined);
+      const mode = typeof item.mode === "string" && item.mode in PATCH_MODES ? (item.mode as PatchPointInput["mode"]) : undefined;
+      const color = typeof item.color === "string" && HEX.test(item.color) ? item.color : undefined;
+      const p = compact({ column, top_label: text("top_label"), bottom_label: text("bottom_label"), mode, daw_track: text("daw_track"), color, note: text("note") });
+      if (Object.keys(p).length > 1) points.push(p);
+    }
+    await withSession(async (g) => {
+      const devices = g.collection("devices");
+      const current = await devices.findOne(id, { level: 0 });
+      if (current.category !== "patchbay") throw new FieldError("This device isn't a patchbay.");
+      const data = toDeviceInput(current);
+      data.patch_columns = columns;
+      data.patch_points = points.sort((a, b) => a.column - b.column);
+      await devices.update(id, data, { level: 0 });
+    });
+  } catch (err) {
+    return failure(err);
+  }
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+/** Adds the rear ports "Top N" / "Bottom N" a patchbay is missing, so cables can plug into them. */
+export async function createRearPorts(_prev: FormState, form: FormData): Promise<FormState> {
+  const f = new Fields(form);
+  const id = f.id("id");
+  if (!id) return { error: "Missing patchbay." };
+  try {
+    await withSession(async (g) => {
+      const devices = g.collection("devices");
+      const current = await devices.findOne(id, { level: 0 });
+      const data = toDeviceInput(current);
+      const columns = current.patch_columns ?? f.int("columns") ?? 24;
+      const ports = [...(data.ports ?? [])];
+      const names = new Set(ports.map((p) => p.name));
+      const signal = f.oneOf("signal", SIGNALS) ?? "audio";
+      const connector = f.oneOf("connector", CONNECTORS) ?? "jack_trs";
+      for (const row of ["Top", "Bottom"]) {
+        for (let n = 1; n <= columns; n++) {
+          const name = `${row} ${n}`;
+          if (!names.has(name)) ports.push(compact({ name, direction: "io" as const, signal, connector, balanced: connector === "jack_trs" || connector === "xlr" || connector === "db25" ? true : undefined, note: "rear" }));
+        }
+      }
+      // Keep the rear points in column order after the device's other ports.
+      const rear = (p: PortInput) => /^(Top|Bottom) \d+$/.test(p.name);
+      const key = (p: PortInput) => {
+        const m = /^(Top|Bottom) (\d+)$/.exec(p.name)!;
+        return (m[1] === "Top" ? 0 : 1000) + Number(m[2]);
+      };
+      data.ports = [...ports.filter((p) => !rear(p)), ...ports.filter(rear).sort((a, b) => key(a) - key(b))];
+      data.patch_columns = columns;
+      await devices.update(id, data, { level: 0 });
+    });
+  } catch (err) {
+    return failure(err);
+  }
+  revalidatePath("/", "layout");
+  return { ok: true };
 }

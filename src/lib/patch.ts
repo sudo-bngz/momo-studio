@@ -3,7 +3,7 @@
  * free, and what looks wrong. Pure functions over plain data, used by the
  * server pages and by the plan diagram in the browser.
  */
-import type { Direction, Signal } from "@/lib/vocab";
+import { PASS_THROUGH, type Category, type Direction, type PatchMode, type Signal } from "@/lib/vocab";
 
 export interface PlanPort {
   name: string;
@@ -20,6 +20,8 @@ export interface PlanDevice {
   state: string;
   location?: string;
   ports: PlanPort[];
+  /** Patchbays: their columns and how each is normalled. */
+  patch?: { columns: number; modes: Record<number, PatchMode | undefined> };
 }
 
 export interface PlanCable {
@@ -51,7 +53,7 @@ export function cablesByPort(cables: PlanCable[]): Map<string, PlanCable[]> {
   return map;
 }
 
-export type IssueKind = "busy_port" | "unknown_port" | "missing_device" | "signal_mismatch" | "direction" | "loose_end";
+export type IssueKind = "busy_port" | "unknown_port" | "missing_device" | "signal_mismatch" | "direction" | "loose_end" | "loop";
 
 export interface Issue {
   kind: IssueKind;
@@ -113,6 +115,138 @@ export function findIssues(devices: PlanDevice[], cables: PlanCable[]): Issue[] 
       issues.push({ kind: "direction", cable: c, message: `${c.code} joins two ${a.direction === "in" ? "inputs" : "outputs"}` });
     }
   }
+  return [...findLoops(devices, cables), ...issues];
+}
+
+// ---- Signal flow, through patchbay normals ----
+
+const REAR = /^(Top|Bottom) (\d+)$/;
+
+/** Whether a port is a rear point of a patchbay column: { row, column }. */
+export function rearPoint(device: PlanDevice | undefined, port: string): { row: "top" | "bottom"; column: number } | undefined {
+  if (!device?.patch) return undefined;
+  const m = REAR.exec(port);
+  if (!m) return undefined;
+  const column = Number(m[2]);
+  return column >= 1 && column <= device.patch.columns ? { row: m[1] === "Top" ? "top" : "bottom", column } : undefined;
+}
+
+export const isNormalled = (mode: PatchMode | undefined) => mode === "normal" || mode === "half_normal";
+
+export interface Hop {
+  from: number;
+  to: number;
+  /** The cables the signal travels through. */
+  cables: PlanCable[];
+  /** A normalled patchbay column on the way. */
+  via?: { patchbay: number; column: number };
+}
+
+/**
+ * Device-to-device signal hops: a cable from an output to an input, or two
+ * cables meeting at the rear of a normalled patchbay column (the signal goes
+ * from whichever far end is an output to the other). Patching cords in the
+ * front isn't recorded, so it isn't counted.
+ */
+export function signalHops(devices: PlanDevice[], cables: PlanCable[]): Hop[] {
+  const byId = new Map(devices.map((d) => [d.id, d]));
+  const portOf = (end: { device: number; port: string }) => byId.get(end.device)?.ports.find((p) => p.name === end.port);
+  const hops: Hop[] = [];
+  const rear = new Map<string, { cable: PlanCable; far: { device: number; port: string } }>();
+
+  for (const c of cables) {
+    if (c.state !== "connected" || !c.from || !c.to) continue;
+    const fromRear = rearPoint(byId.get(c.from.device), c.from.port);
+    const toRear = rearPoint(byId.get(c.to.device), c.to.port);
+    if (fromRear || toRear) {
+      if (fromRear && !toRear) rear.set(`${c.from.device}:${fromRear.row}:${fromRear.column}`, { cable: c, far: c.to });
+      if (toRear && !fromRear) rear.set(`${c.to.device}:${toRear.row}:${toRear.column}`, { cable: c, far: c.from });
+      continue;
+    }
+    const a = portOf(c.from);
+    const b = portOf(c.to);
+    const reversed = (a?.direction === "in" && b?.direction !== "in") || (b?.direction === "out" && a?.direction !== "out");
+    hops.push(reversed ? { from: c.to.device, to: c.from.device, cables: [c] } : { from: c.from.device, to: c.to.device, cables: [c] });
+  }
+
+  for (const pb of devices) {
+    if (!pb.patch) continue;
+    for (let n = 1; n <= pb.patch.columns; n++) {
+      if (!isNormalled(pb.patch.modes[n])) continue;
+      const top = rear.get(`${pb.id}:top:${n}`);
+      const bottom = rear.get(`${pb.id}:bottom:${n}`);
+      if (!top || !bottom) continue;
+      const topOut = portOf(top.far)?.direction === "out";
+      const bottomOut = portOf(bottom.far)?.direction === "out";
+      const via = { patchbay: pb.id, column: n };
+      if (topOut && !bottomOut) hops.push({ from: top.far.device, to: bottom.far.device, cables: [top.cable, bottom.cable], via });
+      else if (bottomOut && !topOut) hops.push({ from: bottom.far.device, to: top.far.device, cables: [bottom.cable, top.cable], via });
+    }
+  }
+  return hops;
+}
+
+/**
+ * Feedback loops: a chain of effects whose last output comes back into the
+ * first one's input, directly or through normalled patchbay points. A loop
+ * through a mixer (a send and its return) is how mixers work and isn't one.
+ */
+export function findLoops(devices: PlanDevice[], cables: PlanCable[]): Issue[] {
+  const byId = new Map(devices.map((d) => [d.id, d]));
+  const passes = (id: number) => PASS_THROUGH.includes(byId.get(id)?.category as Category);
+  const hops = signalHops(devices, cables).filter((h) => passes(h.from) && passes(h.to));
+  const next = new Map<number, Hop[]>();
+  for (const h of hops) next.set(h.from, [...(next.get(h.from) ?? []), h]);
+
+  // Strongly connected groups (Tarjan); each group with a cycle is a loop.
+  let index = 0;
+  const idx = new Map<number, number>();
+  const low = new Map<number, number>();
+  const stack: number[] = [];
+  const onStack = new Set<number>();
+  const groups: number[][] = [];
+  const visit = (v: number) => {
+    idx.set(v, index);
+    low.set(v, index++);
+    stack.push(v);
+    onStack.add(v);
+    for (const h of next.get(v) ?? []) {
+      if (!idx.has(h.to)) {
+        visit(h.to);
+        low.set(v, Math.min(low.get(v)!, low.get(h.to)!));
+      } else if (onStack.has(h.to)) low.set(v, Math.min(low.get(v)!, idx.get(h.to)!));
+    }
+    if (low.get(v) === idx.get(v)) {
+      const g: number[] = [];
+      let w: number;
+      do {
+        w = stack.pop()!;
+        onStack.delete(w);
+        g.push(w);
+      } while (w !== v);
+      groups.push(g);
+    }
+  };
+  for (const v of next.keys()) if (!idx.has(v)) visit(v);
+
+  const issues: Issue[] = [];
+  for (const g of groups) {
+    const members = new Set(g);
+    const inside = hops.filter((h) => members.has(h.from) && members.has(h.to));
+    if (!inside.length) continue; // a single effect that doesn't feed itself
+    const names = g.map((id) => byId.get(id)?.name ?? `#${id}`);
+    const where = inside
+      .filter((h) => h.via)
+      .map((h) => `${byId.get(h.via!.patchbay)?.name ?? "patchbay"} column ${h.via!.column}`);
+    issues.push({
+      kind: "loop",
+      cable: inside[0]!.cables[0]!,
+      others: inside.flatMap((h) => h.cables),
+      message:
+        `Feedback loop: ${names.length === 1 ? `${names[0]} feeds itself` : [...names, names[0]].join(" → ")}` +
+        (where.length ? ` (normalled through ${[...new Set(where)].join(", ")}: switch to Thru)` : ""),
+    });
+  }
   return issues;
 }
 
@@ -135,6 +269,8 @@ export interface NodeBox {
   height: number;
   inputs: Array<{ port: PlanPort; y: number }>;
   outputs: Array<{ port: PlanPort; y: number }>;
+  /** Patchbays: normalled columns drawn inside the box, input row → output row. */
+  links: Array<{ y1: number; y2: number; column: number }>;
 }
 
 export interface Edge {
@@ -253,6 +389,7 @@ export function layoutPlan(devices: PlanDevice[], cables: PlanCable[], opts: Lay
       height: HEADER + rows * ROW + PAD,
       inputs: inputs.map((port) => ({ port, y: 0 })),
       outputs: outputs.map((port) => ({ port, y: 0 })),
+      links: [],
     });
   }
 
@@ -298,6 +435,18 @@ export function layoutPlan(devices: PlanDevice[], cables: PlanCable[], opts: Lay
     }
     height = Math.max(height, y);
   });
+  // Normalled patchbay columns: the input-side rear point joins the output side.
+  for (const b of boxes.values()) {
+    const patch = b.device.patch;
+    if (!patch) continue;
+    for (let n = 1; n <= patch.columns; n++) {
+      if (!isNormalled(patch.modes[n])) continue;
+      const names = [`Top ${n}`, `Bottom ${n}`];
+      const i = b.inputs.find((p) => names.includes(p.port.name));
+      const o = b.outputs.find((p) => names.includes(p.port.name) && p.port.name !== i?.port.name);
+      if (i && o) b.links.push({ y1: i.y, y2: o.y, column: n });
+    }
+  }
   const width = MARGIN * 2 + colIndexes.length * NODE_W + Math.max(0, colIndexes.length - 1) * COL_GAP;
 
   const edges: Edge[] = [];

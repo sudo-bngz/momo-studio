@@ -333,8 +333,521 @@
    },
    {
     "$id": "pb1",
-    "name": "Patchbay 1 (synth returns)",
+    "name": "Patchbay I · inputs",
     "code": "PB-01",
+    "brand": "Samson",
+    "model": "S-Patch Plus",
+    "category": "patchbay",
+    "state": "in_use",
+    "location": "@ref:locations/rack-a",
+    "rack_position": 2,
+    "rack_height": 1,
+    "ports": [
+     {
+      "name": "Top 1",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 2",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 3",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 4",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 5",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 6",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 7",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 8",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 9",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 10",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 11",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 12",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 13",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 14",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 15",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 16",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 17",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 18",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 19",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 20",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 21",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 22",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 23",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 24",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 1",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 2",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 3",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 4",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 5",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 6",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 7",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 8",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 9",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 10",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 11",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 12",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 13",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 14",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 15",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 16",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 17",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 18",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 19",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 20",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 21",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 22",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 23",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 24",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     }
+    ],
+    "patch_columns": 24,
+    "patch_points": [
+     {
+      "column": 1,
+      "mode": "normal",
+      "daw_track": "5",
+      "color": "#e9c46a"
+     },
+     {
+      "column": 2,
+      "mode": "normal",
+      "daw_track": "6",
+      "color": "#e9c46a"
+     },
+     {
+      "column": 3,
+      "mode": "normal",
+      "daw_track": "7",
+      "color": "#e9c46a"
+     },
+     {
+      "column": 4,
+      "mode": "normal",
+      "daw_track": "8",
+      "color": "#e9c46a"
+     },
+     {
+      "column": 5,
+      "mode": "normal",
+      "daw_track": "9",
+      "color": "#e9c46a"
+     },
+     {
+      "column": 6,
+      "mode": "normal",
+      "daw_track": "10",
+      "color": "#e9c46a"
+     },
+     {
+      "column": 7,
+      "mode": "normal",
+      "daw_track": "11",
+      "color": "#e9c46a"
+     },
+     {
+      "column": 8,
+      "mode": "normal",
+      "daw_track": "12",
+      "color": "#e9c46a"
+     },
+     {
+      "column": 9,
+      "mode": "thru"
+     },
+     {
+      "column": 10,
+      "mode": "thru"
+     },
+     {
+      "column": 11,
+      "mode": "thru"
+     },
+     {
+      "column": 12,
+      "mode": "thru"
+     },
+     {
+      "column": 13,
+      "mode": "thru"
+     },
+     {
+      "column": 14,
+      "mode": "thru"
+     },
+     {
+      "column": 15,
+      "mode": "thru"
+     },
+     {
+      "column": 16,
+      "mode": "thru"
+     },
+     {
+      "column": 17,
+      "mode": "thru"
+     },
+     {
+      "column": 18,
+      "mode": "thru"
+     },
+     {
+      "column": 19,
+      "mode": "thru"
+     },
+     {
+      "column": 20,
+      "mode": "thru"
+     },
+     {
+      "column": 21,
+      "mode": "thru"
+     },
+     {
+      "column": 22,
+      "mode": "thru"
+     },
+     {
+      "column": 23,
+      "mode": "thru"
+     },
+     {
+      "column": 24,
+      "mode": "thru"
+     }
+    ]
+   },
+   {
+    "$id": "pb2",
+    "name": "Patchbay II · drums",
+    "code": "PB-02",
     "brand": "Samson",
     "model": "S-Patch Plus",
     "category": "patchbay",
@@ -345,131 +858,1014 @@
     "ports": [
      {
       "name": "Top 1",
-      "direction": "in",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, top row"
+      "note": "rear"
      },
      {
       "name": "Top 2",
-      "direction": "in",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, top row"
+      "note": "rear"
      },
      {
       "name": "Top 3",
-      "direction": "in",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, top row"
+      "note": "rear"
      },
      {
       "name": "Top 4",
-      "direction": "in",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, top row"
+      "note": "rear"
      },
      {
       "name": "Top 5",
-      "direction": "in",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, top row"
+      "note": "rear"
      },
      {
       "name": "Top 6",
-      "direction": "in",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, top row"
+      "note": "rear"
      },
      {
       "name": "Top 7",
-      "direction": "in",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, top row"
+      "note": "rear"
      },
      {
       "name": "Top 8",
-      "direction": "in",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, top row"
+      "note": "rear"
+     },
+     {
+      "name": "Top 9",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 10",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 11",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 12",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 13",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 14",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 15",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 16",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 17",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 18",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 19",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 20",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 21",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 22",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 23",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 24",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
      },
      {
       "name": "Bottom 1",
-      "direction": "out",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, bottom row, half-normalled"
+      "note": "rear"
      },
      {
       "name": "Bottom 2",
-      "direction": "out",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, bottom row, half-normalled"
+      "note": "rear"
      },
      {
       "name": "Bottom 3",
-      "direction": "out",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, bottom row, half-normalled"
+      "note": "rear"
      },
      {
       "name": "Bottom 4",
-      "direction": "out",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, bottom row, half-normalled"
+      "note": "rear"
      },
      {
       "name": "Bottom 5",
-      "direction": "out",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, bottom row, half-normalled"
+      "note": "rear"
      },
      {
       "name": "Bottom 6",
-      "direction": "out",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, bottom row, half-normalled"
+      "note": "rear"
      },
      {
       "name": "Bottom 7",
-      "direction": "out",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, bottom row, half-normalled"
+      "note": "rear"
      },
      {
       "name": "Bottom 8",
-      "direction": "out",
+      "direction": "io",
       "signal": "audio",
       "connector": "jack_trs",
       "balanced": true,
-      "note": "rear, bottom row, half-normalled"
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 9",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 10",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 11",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 12",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 13",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 14",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 15",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 16",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 17",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 18",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 19",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 20",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 21",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 22",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 23",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 24",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     }
+    ],
+    "patch_columns": 24,
+    "patch_points": [
+     {
+      "column": 1,
+      "mode": "normal",
+      "daw_track": "1/2",
+      "color": "#f4a261"
+     },
+     {
+      "column": 2,
+      "mode": "normal",
+      "daw_track": "1/2",
+      "color": "#f4a261"
+     },
+     {
+      "column": 3,
+      "mode": "normal",
+      "daw_track": "3/4",
+      "color": "#f4a261"
+     },
+     {
+      "column": 4,
+      "mode": "normal",
+      "daw_track": "3/4",
+      "color": "#f4a261"
+     },
+     {
+      "column": 5,
+      "mode": "thru",
+      "color": "#f0e68c",
+      "note": "TR-8S assign out"
+     },
+     {
+      "column": 6,
+      "mode": "thru",
+      "color": "#f0e68c",
+      "note": "TR-8S assign out"
+     },
+     {
+      "column": 7,
+      "mode": "thru",
+      "color": "#f0e68c",
+      "note": "TR-8S assign out"
+     },
+     {
+      "column": 8,
+      "mode": "thru",
+      "color": "#f0e68c",
+      "note": "TR-8S assign out"
+     },
+     {
+      "column": 9,
+      "mode": "thru",
+      "color": "#f0e68c",
+      "note": "TR-8S assign out"
+     },
+     {
+      "column": 10,
+      "mode": "thru",
+      "color": "#f0e68c",
+      "note": "TR-8S assign out"
+     },
+     {
+      "column": 11,
+      "mode": "thru"
+     },
+     {
+      "column": 12,
+      "mode": "thru"
+     },
+     {
+      "column": 13,
+      "mode": "thru"
+     },
+     {
+      "column": 14,
+      "mode": "thru"
+     },
+     {
+      "column": 15,
+      "mode": "thru"
+     },
+     {
+      "column": 16,
+      "mode": "thru"
+     },
+     {
+      "column": 17,
+      "mode": "thru"
+     },
+     {
+      "column": 18,
+      "mode": "thru"
+     },
+     {
+      "column": 19,
+      "mode": "thru"
+     },
+     {
+      "column": 20,
+      "mode": "thru"
+     },
+     {
+      "column": 21,
+      "mode": "thru"
+     },
+     {
+      "column": 22,
+      "mode": "thru"
+     },
+     {
+      "column": 23,
+      "mode": "thru"
+     },
+     {
+      "column": 24,
+      "mode": "thru"
+     }
+    ]
+   },
+   {
+    "$id": "pb3",
+    "name": "Patchbay III · FX send/return",
+    "code": "PB-03",
+    "brand": "Samson",
+    "model": "S-Patch Plus",
+    "category": "patchbay",
+    "state": "in_use",
+    "location": "@ref:locations/rack-a",
+    "rack_position": 4,
+    "rack_height": 1,
+    "ports": [
+     {
+      "name": "Top 1",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 2",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 3",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 4",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 5",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 6",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 7",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 8",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 9",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 10",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 11",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 12",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 13",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 14",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 15",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 16",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 17",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 18",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 19",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 20",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 21",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 22",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 23",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Top 24",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 1",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 2",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 3",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 4",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 5",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 6",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 7",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 8",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 9",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 10",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 11",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 12",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 13",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 14",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 15",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 16",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 17",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 18",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 19",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 20",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 21",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 22",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 23",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     },
+     {
+      "name": "Bottom 24",
+      "direction": "io",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true,
+      "note": "rear"
+     }
+    ],
+    "patch_columns": 24,
+    "notes": "Pedals are pre-patched here. Never normal a pedal's output back into its own input: the loop can fry it.",
+    "patch_points": [
+     {
+      "column": 1,
+      "mode": "normal",
+      "color": "#a78bfa"
+     },
+     {
+      "column": 2,
+      "mode": "normal",
+      "color": "#a78bfa"
+     },
+     {
+      "column": 3,
+      "mode": "normal",
+      "color": "#d4a5c7"
+     },
+     {
+      "column": 4,
+      "mode": "normal",
+      "color": "#d4a5c7"
+     },
+     {
+      "column": 5,
+      "mode": "thru",
+      "top_label": "VOCODER OUT",
+      "bottom_label": "VOCODER IN",
+      "color": "#7aa7d9",
+      "note": "borrowed, not in the inventory"
+     },
+     {
+      "column": 6,
+      "mode": "thru",
+      "color": "#8fc79a"
+     },
+     {
+      "column": 7,
+      "mode": "thru",
+      "color": "#8fc79a"
+     },
+     {
+      "column": 8,
+      "mode": "thru"
+     },
+     {
+      "column": 9,
+      "mode": "thru"
+     },
+     {
+      "column": 10,
+      "mode": "thru"
+     },
+     {
+      "column": 11,
+      "mode": "thru"
+     },
+     {
+      "column": 12,
+      "mode": "thru"
+     },
+     {
+      "column": 13,
+      "mode": "thru"
+     },
+     {
+      "column": 14,
+      "mode": "thru"
+     },
+     {
+      "column": 15,
+      "mode": "thru"
+     },
+     {
+      "column": 16,
+      "mode": "thru"
+     },
+     {
+      "column": 17,
+      "mode": "thru"
+     },
+     {
+      "column": 18,
+      "mode": "thru"
+     },
+     {
+      "column": 19,
+      "mode": "thru"
+     },
+     {
+      "column": 20,
+      "mode": "thru"
+     },
+     {
+      "column": 21,
+      "mode": "thru"
+     },
+     {
+      "column": 22,
+      "mode": "thru"
+     },
+     {
+      "column": 23,
+      "mode": "thru"
+     },
+     {
+      "column": 24,
+      "mode": "thru"
      }
     ]
    },
@@ -1393,6 +2789,289 @@
     ]
    },
    {
+    "$id": "zed",
+    "name": "Allen & Heath ZED-22FX",
+    "code": "MIX-01",
+    "brand": "Allen & Heath",
+    "model": "ZED-22FX",
+    "category": "mixer",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "purchase_price": 850,
+    "ports": [
+     {
+      "name": "Input 1",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 2",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 3",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 4",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 5",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 6",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 7",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 8",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 9",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 10",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 11",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 12",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 13",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 14",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 15",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Input 16",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Aux Send 1",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Aux Send 2",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Return 1 L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Return 1 R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Return 2 L",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Return 2 R",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_trs",
+      "balanced": true
+     },
+     {
+      "name": "Main Out L",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Main Out R",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "xlr",
+      "balanced": true
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "iec"
+     }
+    ]
+   },
+   {
+    "$id": "muff",
+    "name": "Big Muff",
+    "code": "PED-01",
+    "brand": "Electro-Harmonix",
+    "model": "Big Muff Pi",
+    "category": "effect",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "ports": [
+     {
+      "name": "In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "dc"
+     }
+    ]
+   },
+   {
+    "$id": "flanger",
+    "name": "Flanger",
+    "code": "PED-02",
+    "brand": "Electro-Harmonix",
+    "model": "Electric Mistress",
+    "category": "effect",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "ports": [
+     {
+      "name": "In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "dc"
+     }
+    ]
+   },
+   {
+    "$id": "dd3",
+    "name": "Boss DD-3",
+    "code": "PED-03",
+    "brand": "Boss",
+    "model": "DD-3",
+    "category": "effect",
+    "state": "in_use",
+    "location": "@ref:locations/desk",
+    "ports": [
+     {
+      "name": "In",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Out A",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Out B",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "jack_ts"
+     },
+     {
+      "name": "Power",
+      "direction": "in",
+      "signal": "power",
+      "connector": "dc"
+     }
+    ]
+   },
+   {
     "$id": "re201",
     "name": "Roland RE-201 Space Echo",
     "code": "FX-02",
@@ -1645,10 +3324,10 @@
     "state": "connected",
     "from_device": "@ref:devices/digitakt",
     "from_port": "Main Out L",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Mic/Line In 1",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 1",
     "connector_a": "jack_trs",
-    "connector_b": "xlr",
+    "connector_b": "jack_trs",
     "length_m": 2,
     "color": "black"
    },
@@ -1658,10 +3337,10 @@
     "state": "connected",
     "from_device": "@ref:devices/digitakt",
     "from_port": "Main Out R",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Mic/Line In 2",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 2",
     "connector_a": "jack_trs",
-    "connector_b": "xlr",
+    "connector_b": "jack_trs",
     "length_m": 2,
     "color": "black"
    },
@@ -1671,10 +3350,10 @@
     "state": "connected",
     "from_device": "@ref:devices/tr8s",
     "from_port": "Mix Out L",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Mic/Line In 3",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 3",
     "connector_a": "jack_trs",
-    "connector_b": "xlr",
+    "connector_b": "jack_trs",
     "length_m": 2,
     "color": "black"
    },
@@ -1684,15 +3363,275 @@
     "state": "connected",
     "from_device": "@ref:devices/tr8s",
     "from_port": "Mix Out R",
-    "to_device": "@ref:devices/rme",
-    "to_port": "Mic/Line In 4",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 4",
     "connector_a": "jack_trs",
-    "connector_b": "xlr",
+    "connector_b": "jack_trs",
     "length_m": 2,
     "color": "black"
    },
    {
     "code": "C-021",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/tr8s",
+    "from_port": "Assign Out 1",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 5",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-022",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/tr8s",
+    "from_port": "Assign Out 2",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 6",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-023",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/tr8s",
+    "from_port": "Assign Out 3",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 7",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-024",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/tr8s",
+    "from_port": "Assign Out 4",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 8",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-025",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/tr8s",
+    "from_port": "Assign Out 5",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 9",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-026",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/tr8s",
+    "from_port": "Assign Out 6",
+    "to_device": "@ref:devices/pb2",
+    "to_port": "Top 10",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 2,
+    "color": "black"
+   },
+   {
+    "code": "C-027",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 1",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 1",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-028",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 2",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 2",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-029",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 3",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 3",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-030",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb2",
+    "from_port": "Bottom 4",
+    "to_device": "@ref:devices/rme",
+    "to_port": "Mic/Line In 4",
+    "connector_a": "jack_trs",
+    "connector_b": "xlr",
+    "length_m": 0.5,
+    "color": "grey"
+   },
+   {
+    "code": "C-031",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/zed",
+    "from_port": "Aux Send 1",
+    "to_device": "@ref:devices/pb3",
+    "to_port": "Top 1",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "purple"
+   },
+   {
+    "code": "C-032",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb3",
+    "from_port": "Bottom 1",
+    "to_device": "@ref:devices/muff",
+    "to_port": "In",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 3,
+    "color": "purple"
+   },
+   {
+    "code": "C-033",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/muff",
+    "from_port": "Out",
+    "to_device": "@ref:devices/pb3",
+    "to_port": "Top 2",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "purple"
+   },
+   {
+    "code": "C-034",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb3",
+    "from_port": "Bottom 2",
+    "to_device": "@ref:devices/zed",
+    "to_port": "Return 1 L",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "purple"
+   },
+   {
+    "code": "C-035",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/zed",
+    "from_port": "Aux Send 2",
+    "to_device": "@ref:devices/pb3",
+    "to_port": "Top 3",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "pink"
+   },
+   {
+    "code": "C-036",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb3",
+    "from_port": "Bottom 3",
+    "to_device": "@ref:devices/flanger",
+    "to_port": "In",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 3,
+    "color": "pink"
+   },
+   {
+    "code": "C-037",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/flanger",
+    "from_port": "Out",
+    "to_device": "@ref:devices/pb3",
+    "to_port": "Top 4",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "pink"
+   },
+   {
+    "code": "C-038",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb3",
+    "from_port": "Bottom 4",
+    "to_device": "@ref:devices/zed",
+    "to_port": "Return 2 L",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "pink"
+   },
+   {
+    "code": "C-039",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/dd3",
+    "from_port": "Out A",
+    "to_device": "@ref:devices/pb3",
+    "to_port": "Top 6",
+    "connector_a": "jack_ts",
+    "connector_b": "jack_trs",
+    "length_m": 3,
+    "color": "green"
+   },
+   {
+    "code": "C-040",
+    "signal": "audio",
+    "state": "connected",
+    "from_device": "@ref:devices/pb3",
+    "from_port": "Bottom 6",
+    "to_device": "@ref:devices/dd3",
+    "to_port": "In",
+    "connector_a": "jack_trs",
+    "connector_b": "jack_ts",
+    "length_m": 3,
+    "color": "green"
+   },
+   {
+    "code": "C-041",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/rme",
@@ -1705,7 +3644,7 @@
     "color": "white"
    },
    {
-    "code": "C-022",
+    "code": "C-042",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/rme",
@@ -1718,7 +3657,7 @@
     "color": "white"
    },
    {
-    "code": "C-023",
+    "code": "C-043",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/rme",
@@ -1731,7 +3670,7 @@
     "color": "orange"
    },
    {
-    "code": "C-024",
+    "code": "C-044",
     "signal": "audio",
     "state": "connected",
     "from_device": "@ref:devices/rme",
@@ -1744,7 +3683,7 @@
     "color": "orange"
    },
    {
-    "code": "C-025",
+    "code": "C-045",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1757,7 +3696,7 @@
     "color": "purple"
    },
    {
-    "code": "C-026",
+    "code": "C-046",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1770,7 +3709,7 @@
     "color": "purple"
    },
    {
-    "code": "C-027",
+    "code": "C-047",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1783,7 +3722,7 @@
     "color": "purple"
    },
    {
-    "code": "C-028",
+    "code": "C-048",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1796,7 +3735,7 @@
     "color": "purple"
    },
    {
-    "code": "C-029",
+    "code": "C-049",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1809,7 +3748,7 @@
     "color": "purple"
    },
    {
-    "code": "C-030",
+    "code": "C-050",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1822,7 +3761,7 @@
     "color": "purple"
    },
    {
-    "code": "C-031",
+    "code": "C-051",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1835,7 +3774,7 @@
     "color": "purple"
    },
    {
-    "code": "C-032",
+    "code": "C-052",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1848,7 +3787,7 @@
     "color": "purple"
    },
    {
-    "code": "C-033",
+    "code": "C-053",
     "signal": "midi",
     "state": "connected",
     "from_device": "@ref:devices/keystep",
@@ -1861,7 +3800,7 @@
     "color": "purple"
    },
    {
-    "code": "C-034",
+    "code": "C-054",
     "signal": "cv",
     "state": "connected",
     "from_device": "@ref:devices/keystep",
@@ -1874,7 +3813,7 @@
     "color": "yellow"
    },
    {
-    "code": "C-035",
+    "code": "C-055",
     "signal": "gate",
     "state": "connected",
     "from_device": "@ref:devices/keystep",
@@ -1887,7 +3826,7 @@
     "color": "yellow"
    },
    {
-    "code": "C-036",
+    "code": "C-056",
     "signal": "clock",
     "state": "connected",
     "from_device": "@ref:devices/keystep",
@@ -1900,7 +3839,7 @@
     "color": "yellow"
    },
    {
-    "code": "C-037",
+    "code": "C-057",
     "signal": "usb",
     "state": "connected",
     "from_device": "@ref:devices/rme",
@@ -1912,7 +3851,7 @@
     "length_m": 2
    },
    {
-    "code": "C-038",
+    "code": "C-058",
     "signal": "usb",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1924,7 +3863,7 @@
     "length_m": 2
    },
    {
-    "code": "C-039",
+    "code": "C-059",
     "signal": "network",
     "state": "connected",
     "from_device": "@ref:devices/mio",
@@ -1937,7 +3876,7 @@
     "notes": "RTP-MIDI to the laptop rig"
    },
    {
-    "code": "C-040",
+    "code": "C-060",
     "signal": "audio",
     "state": "spare",
     "from_device": "@ref:devices/re201",

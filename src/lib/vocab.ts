@@ -3,7 +3,7 @@
  * options of gohead/model.json; keep them in sync when the model changes
  * (`npm run typecheck` tells you which are missing).
  */
-import type { Booking, Cable, Device, Location, Port } from "@/gohead";
+import type { Booking, Cable, Device, Location, PatchPoint, Port } from "@/gohead";
 
 export type Signal = Port["signal"];
 export type Connector = NonNullable<Port["connector"]>;
@@ -128,3 +128,33 @@ export const options = <K extends string>(record: Record<K, string | { label: st
 export function isKey<K extends string>(record: Record<K, unknown>, value: unknown): value is K {
   return typeof value === "string" && Object.prototype.hasOwnProperty.call(record, value);
 }
+
+export type PatchMode = NonNullable<PatchPoint["mode"]>;
+
+/**
+ * How a patchbay column joins its two rear points when nothing is plugged in
+ * the front. Short names are what's printed on most patchbays' mode switches.
+ */
+export const PATCH_MODES: Record<PatchMode, { label: string; short: string; color: string; help: string }> = {
+  normal: {
+    label: "Normal",
+    short: "N",
+    color: "#4ade80",
+    help: "Top and bottom are connected. Plugging into either front jack breaks the link.",
+  },
+  half_normal: {
+    label: "Half-normal",
+    short: "H",
+    color: "#facc15",
+    help: "Top and bottom are connected. The top front jack takes a copy; only the bottom front jack breaks the link.",
+  },
+  thru: {
+    label: "Thru",
+    short: "T",
+    color: "#22d3ee",
+    help: "Not connected: each rear point only reaches its own front jack. Patch with a cord.",
+  },
+};
+
+/** Effects that pass their input to their output: a loop through them feeds back. */
+export const PASS_THROUGH: Category[] = ["effect", "dynamics_eq", "preamp"];

@@ -79,11 +79,11 @@ export function CableForm({
   // A new cable from a port takes that port's signal and connector.
   let signal = cable?.signal;
   let connectorA = cable?.connector_a ?? undefined;
-  if (!cable && from) {
-    const [deviceId, ...rest] = from.split("::");
+  if (!cable && (from || to)) {
+    const [deviceId, ...rest] = (from ?? to)!.split("::");
     const port = devices.find((d) => d.id === Number(deviceId))?.ports?.find((p) => p.name === rest.join("::"));
     signal = port?.signal;
-    connectorA = port?.connector ?? undefined;
+    if (from) connectorA = port?.connector ?? undefined;
   }
 
   return (

@@ -1,26 +1,111 @@
 {
   "$schema": "https://gohead-cms.github.io/gohead/schemas/model.json",
-  "locales": [{ "code": "en", "name": "English", "default": true }],
+  "locales": [
+    {
+      "code": "en",
+      "name": "English",
+      "default": true
+    }
+  ],
   "components": {
     "port": {
       "description": "A socket on a device: an input, an output or both",
       "attributes": {
-        "name": { "type": "string", "required": true },
-        "direction": { "type": "enum", "required": true, "options": ["in", "out", "io"] },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "direction": {
+          "type": "enum",
+          "required": true,
+          "options": [
+            "in",
+            "out",
+            "io"
+          ]
+        },
         "signal": {
           "type": "enum",
           "required": true,
-          "options": ["audio", "midi", "cv", "gate", "clock", "digital_audio", "usb", "network", "power", "control", "other"]
+          "options": [
+            "audio",
+            "midi",
+            "cv",
+            "gate",
+            "clock",
+            "digital_audio",
+            "usb",
+            "network",
+            "power",
+            "control",
+            "other"
+          ]
         },
         "connector": {
           "type": "enum",
           "options": [
-            "jack_ts", "jack_trs", "minijack", "xlr", "rca", "din5", "usb_a", "usb_b", "usb_c",
-            "adat", "spdif_coax", "bnc", "ethernet", "iec", "dc", "banana", "speakon", "db25", "other"
+            "jack_ts",
+            "jack_trs",
+            "minijack",
+            "xlr",
+            "rca",
+            "din5",
+            "usb_a",
+            "usb_b",
+            "usb_c",
+            "adat",
+            "spdif_coax",
+            "bnc",
+            "ethernet",
+            "iec",
+            "dc",
+            "banana",
+            "speakon",
+            "db25",
+            "other"
           ]
         },
-        "balanced": { "type": "bool" },
-        "note": { "type": "string" }
+        "balanced": {
+          "type": "bool"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "patch_point": {
+      "description": "One column of a patchbay: the two rear points (top and bottom), how they are normalled, and what to call them",
+      "attributes": {
+        "column": {
+          "type": "int",
+          "required": true,
+          "min": 1,
+          "max": 96
+        },
+        "top_label": {
+          "type": "string"
+        },
+        "bottom_label": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "enum",
+          "options": [
+            "normal",
+            "half_normal",
+            "thru"
+          ]
+        },
+        "daw_track": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "note": {
+          "type": "string"
+        }
       }
     }
   },
@@ -28,128 +113,428 @@
     "rooms": {
       "description": "Rooms of the studio: control room, live room, booth",
       "attributes": {
-        "name": { "type": "string", "required": true },
-        "slug": { "type": "uid", "required": true, "unique": true },
-        "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
-        "description": { "type": "text" },
-        "hourly_rate": { "type": "float" },
-        "daily_rate": { "type": "float" },
-        "bookable": { "type": "bool" },
-        "photo": { "type": "media", "allowed_types": ["image/*"] }
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "slug": {
+          "type": "uid",
+          "required": true,
+          "unique": true
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "description": {
+          "type": "text"
+        },
+        "hourly_rate": {
+          "type": "float"
+        },
+        "daily_rate": {
+          "type": "float"
+        },
+        "bookable": {
+          "type": "bool"
+        },
+        "photo": {
+          "type": "media",
+          "allowed_types": [
+            "image/*"
+          ]
+        }
       }
     },
     "locations": {
       "description": "Where gear lives: a rack, a desk, a shelf, a flight case",
       "attributes": {
-        "name": { "type": "string", "required": true },
-        "kind": { "type": "enum", "required": true, "options": ["rack", "desk", "shelf", "wall", "case", "storage"] },
-        "room": { "type": "relation", "relation": "oneToOne", "target": "rooms" },
-        "rack_units": { "type": "int", "min": 1, "max": 60 },
-        "notes": { "type": "text" }
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "kind": {
+          "type": "enum",
+          "required": true,
+          "options": [
+            "rack",
+            "desk",
+            "shelf",
+            "wall",
+            "case",
+            "storage"
+          ]
+        },
+        "room": {
+          "type": "relation",
+          "relation": "oneToOne",
+          "target": "rooms"
+        },
+        "rack_units": {
+          "type": "int",
+          "min": 1,
+          "max": 60
+        },
+        "notes": {
+          "type": "text"
+        }
       }
     },
     "devices": {
       "description": "Every piece of gear: synths, expanders, drum machines, audio interfaces, outboard, monitors",
       "attributes": {
-        "name": { "type": "string", "required": true },
-        "code": { "type": "uid", "required": true, "unique": true },
-        "brand": { "type": "string" },
-        "model": { "type": "string" },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "code": {
+          "type": "uid",
+          "required": true,
+          "unique": true
+        },
+        "brand": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
         "category": {
           "type": "enum",
           "required": true,
           "options": [
-            "synth", "expander", "drum_machine", "sampler", "sequencer", "eurorack", "effect", "dynamics_eq",
-            "preamp", "audio_interface", "mixer", "patchbay", "monitor", "headphones", "microphone",
-            "controller", "computer", "midi_interface", "power", "other"
+            "synth",
+            "expander",
+            "drum_machine",
+            "sampler",
+            "sequencer",
+            "eurorack",
+            "effect",
+            "dynamics_eq",
+            "preamp",
+            "audio_interface",
+            "mixer",
+            "patchbay",
+            "monitor",
+            "headphones",
+            "microphone",
+            "controller",
+            "computer",
+            "midi_interface",
+            "power",
+            "other"
           ]
         },
-        "state": { "type": "enum", "required": true, "options": ["in_use", "spare", "in_repair", "loaned", "for_sale", "sold"] },
-        "location": { "type": "relation", "relation": "oneToOne", "target": "locations" },
-        "rack_position": { "type": "int", "min": 1, "max": 60 },
-        "rack_height": { "type": "int", "min": 1, "max": 12 },
-        "midi_channel": { "type": "int", "min": 1, "max": 16 },
-        "ports": { "type": "component", "component": "port", "repeatable": true, "max": 128 },
-        "serial_number": { "type": "string" },
-        "purchase_date": { "type": "date" },
-        "purchase_price": { "type": "float" },
-        "current_value": { "type": "float" },
-        "supplier": { "type": "string" },
-        "warranty_until": { "type": "date" },
-        "manual_url": { "type": "string" },
-        "photo": { "type": "media", "allowed_types": ["image/*"] },
-        "notes": { "type": "text" }
+        "state": {
+          "type": "enum",
+          "required": true,
+          "options": [
+            "in_use",
+            "spare",
+            "in_repair",
+            "loaned",
+            "for_sale",
+            "sold"
+          ]
+        },
+        "location": {
+          "type": "relation",
+          "relation": "oneToOne",
+          "target": "locations"
+        },
+        "rack_position": {
+          "type": "int",
+          "min": 1,
+          "max": 60
+        },
+        "rack_height": {
+          "type": "int",
+          "min": 1,
+          "max": 12
+        },
+        "midi_channel": {
+          "type": "int",
+          "min": 1,
+          "max": 16
+        },
+        "ports": {
+          "type": "component",
+          "component": "port",
+          "repeatable": true,
+          "max": 128
+        },
+        "patch_columns": {
+          "type": "int",
+          "min": 1,
+          "max": 96
+        },
+        "patch_points": {
+          "type": "component",
+          "component": "patch_point",
+          "repeatable": true,
+          "max": 96
+        },
+        "serial_number": {
+          "type": "string"
+        },
+        "purchase_date": {
+          "type": "date"
+        },
+        "purchase_price": {
+          "type": "float"
+        },
+        "current_value": {
+          "type": "float"
+        },
+        "supplier": {
+          "type": "string"
+        },
+        "warranty_until": {
+          "type": "date"
+        },
+        "manual_url": {
+          "type": "string"
+        },
+        "photo": {
+          "type": "media",
+          "allowed_types": [
+            "image/*"
+          ]
+        },
+        "notes": {
+          "type": "text"
+        }
       }
     },
     "cables": {
       "description": "Every cable, labelled, and the two ports it joins",
       "attributes": {
-        "code": { "type": "uid", "required": true, "unique": true },
+        "code": {
+          "type": "uid",
+          "required": true,
+          "unique": true
+        },
         "signal": {
           "type": "enum",
           "required": true,
-          "options": ["audio", "midi", "cv", "gate", "clock", "digital_audio", "usb", "network", "power", "control", "other"]
+          "options": [
+            "audio",
+            "midi",
+            "cv",
+            "gate",
+            "clock",
+            "digital_audio",
+            "usb",
+            "network",
+            "power",
+            "control",
+            "other"
+          ]
         },
-        "state": { "type": "enum", "required": true, "options": ["connected", "spare", "broken"] },
-        "from_device": { "type": "relation", "relation": "oneToOne", "target": "devices" },
-        "from_port": { "type": "string" },
-        "to_device": { "type": "relation", "relation": "oneToOne", "target": "devices" },
-        "to_port": { "type": "string" },
+        "state": {
+          "type": "enum",
+          "required": true,
+          "options": [
+            "connected",
+            "spare",
+            "broken"
+          ]
+        },
+        "from_device": {
+          "type": "relation",
+          "relation": "oneToOne",
+          "target": "devices"
+        },
+        "from_port": {
+          "type": "string"
+        },
+        "to_device": {
+          "type": "relation",
+          "relation": "oneToOne",
+          "target": "devices"
+        },
+        "to_port": {
+          "type": "string"
+        },
         "connector_a": {
           "type": "enum",
           "options": [
-            "jack_ts", "jack_trs", "minijack", "xlr", "rca", "din5", "usb_a", "usb_b", "usb_c",
-            "adat", "spdif_coax", "bnc", "ethernet", "iec", "dc", "banana", "speakon", "db25", "other"
+            "jack_ts",
+            "jack_trs",
+            "minijack",
+            "xlr",
+            "rca",
+            "din5",
+            "usb_a",
+            "usb_b",
+            "usb_c",
+            "adat",
+            "spdif_coax",
+            "bnc",
+            "ethernet",
+            "iec",
+            "dc",
+            "banana",
+            "speakon",
+            "db25",
+            "other"
           ]
         },
         "connector_b": {
           "type": "enum",
           "options": [
-            "jack_ts", "jack_trs", "minijack", "xlr", "rca", "din5", "usb_a", "usb_b", "usb_c",
-            "adat", "spdif_coax", "bnc", "ethernet", "iec", "dc", "banana", "speakon", "db25", "other"
+            "jack_ts",
+            "jack_trs",
+            "minijack",
+            "xlr",
+            "rca",
+            "din5",
+            "usb_a",
+            "usb_b",
+            "usb_c",
+            "adat",
+            "spdif_coax",
+            "bnc",
+            "ethernet",
+            "iec",
+            "dc",
+            "banana",
+            "speakon",
+            "db25",
+            "other"
           ]
         },
-        "length_m": { "type": "float" },
-        "color": { "type": "string" },
-        "notes": { "type": "text" }
+        "length_m": {
+          "type": "float"
+        },
+        "color": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "text"
+        }
       }
     },
     "maintenance": {
       "description": "Repairs, services and calibrations of the gear",
       "attributes": {
-        "device": { "type": "relation", "relation": "oneToOne", "target": "devices", "required": true },
-        "date": { "type": "date", "required": true },
-        "kind": { "type": "enum", "required": true, "options": ["repair", "service", "calibration", "cleaning", "upgrade", "inspection"] },
-        "description": { "type": "text" },
-        "cost": { "type": "float" },
-        "done_by": { "type": "string" }
+        "device": {
+          "type": "relation",
+          "relation": "oneToOne",
+          "target": "devices",
+          "required": true
+        },
+        "date": {
+          "type": "date",
+          "required": true
+        },
+        "kind": {
+          "type": "enum",
+          "required": true,
+          "options": [
+            "repair",
+            "service",
+            "calibration",
+            "cleaning",
+            "upgrade",
+            "inspection"
+          ]
+        },
+        "description": {
+          "type": "text"
+        },
+        "cost": {
+          "type": "float"
+        },
+        "done_by": {
+          "type": "string"
+        }
       }
     },
     "clients": {
       "description": "Artists and people who book the studio",
       "attributes": {
-        "name": { "type": "string", "required": true },
-        "artist_name": { "type": "string" },
-        "email": { "type": "email" },
-        "phone": { "type": "string" },
-        "notes": { "type": "text" }
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "artist_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "email"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "text"
+        }
       }
     },
     "bookings": {
       "description": "Studio sessions: who, which room, when, and the gear they need",
       "attributes": {
-        "title": { "type": "string", "required": true },
-        "client": { "type": "relation", "relation": "oneToOne", "target": "clients" },
-        "room": { "type": "relation", "relation": "oneToOne", "target": "rooms" },
-        "starts_at": { "type": "datetime", "required": true },
-        "ends_at": { "type": "datetime", "required": true },
-        "state": { "type": "enum", "required": true, "options": ["tentative", "confirmed", "completed", "cancelled"] },
-        "session_type": { "type": "enum", "options": ["recording", "production", "mixing", "mastering", "rehearsal", "rental", "other"] },
-        "engineer": { "type": "string" },
-        "devices": { "type": "relation", "relation": "manyToMany", "target": "devices" },
-        "price": { "type": "float" },
-        "paid": { "type": "bool" },
-        "notes": { "type": "text" }
+        "title": {
+          "type": "string",
+          "required": true
+        },
+        "client": {
+          "type": "relation",
+          "relation": "oneToOne",
+          "target": "clients"
+        },
+        "room": {
+          "type": "relation",
+          "relation": "oneToOne",
+          "target": "rooms"
+        },
+        "starts_at": {
+          "type": "datetime",
+          "required": true
+        },
+        "ends_at": {
+          "type": "datetime",
+          "required": true
+        },
+        "state": {
+          "type": "enum",
+          "required": true,
+          "options": [
+            "tentative",
+            "confirmed",
+            "completed",
+            "cancelled"
+          ]
+        },
+        "session_type": {
+          "type": "enum",
+          "options": [
+            "recording",
+            "production",
+            "mixing",
+            "mastering",
+            "rehearsal",
+            "rental",
+            "other"
+          ]
+        },
+        "engineer": {
+          "type": "string"
+        },
+        "devices": {
+          "type": "relation",
+          "relation": "manyToMany",
+          "target": "devices"
+        },
+        "price": {
+          "type": "float"
+        },
+        "paid": {
+          "type": "bool"
+        },
+        "notes": {
+          "type": "text"
+        }
       }
     }
   }

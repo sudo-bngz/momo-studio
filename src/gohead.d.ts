@@ -25,6 +25,28 @@ export interface PortInput {
   note?: string | null;
 }
 
+/** Component "patch_point": One column of a patchbay: the two rear points (top and bottom), how they are normalled, and what to call them */
+export interface PatchPoint {
+  column: number;
+  top_label?: string | null;
+  bottom_label?: string | null;
+  mode?: "normal" | "half_normal" | "thru" | null;
+  daw_track?: string | null;
+  color?: string | null;
+  note?: string | null;
+}
+
+/** Values written to component "patch_point" */
+export interface PatchPointInput {
+  column: number;
+  top_label?: string | null;
+  bottom_label?: string | null;
+  mode?: "normal" | "half_normal" | "thru" | null;
+  daw_track?: string | null;
+  color?: string | null;
+  note?: string | null;
+}
+
 // ---- Collections ----
 
 /** An entry of the "rooms" collection: Rooms of the studio: control room, live room, booth */
@@ -87,6 +109,8 @@ export interface Device {
   rack_height?: number | null;
   midi_channel?: number | null;
   ports?: Port[];
+  patch_columns?: number | null;
+  patch_points?: PatchPoint[];
   serial_number?: string | null;
   /** date */
   purchase_date?: string | null;
@@ -114,6 +138,8 @@ export interface DeviceInput {
   rack_height?: number | null;
   midi_channel?: number | null;
   ports?: PortInput[];
+  patch_columns?: number | null;
+  patch_points?: PatchPointInput[];
   serial_number?: string | null;
   /** date */
   purchase_date?: string | null;

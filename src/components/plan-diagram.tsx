@@ -170,6 +170,18 @@ export function PlanDiagram({ devices, cables, focus: initialFocus }: { devices:
                     </text>
                   ) : null}
                   <line x1={n.x} x2={n.x + n.width} y1={n.y + 38} y2={n.y + 38} stroke="#2c2f34" />
+                  {n.links.map((l) => (
+                    <path
+                      key={`n${l.column}`}
+                      d={`M${n.x + 62},${l.y1} C${n.x + n.width / 2},${l.y1} ${n.x + n.width / 2},${l.y2} ${n.x + n.width - 66},${l.y2}`}
+                      stroke="#4ade80"
+                      strokeOpacity={0.45}
+                      strokeDasharray="2 3"
+                      fill="none"
+                    >
+                      <title>{`Column ${l.column} normalled`}</title>
+                    </path>
+                  ))}
                   {n.inputs.map((p) => (
                     <g key={`i${p.port.name}`}>
                       <circle cx={n.x} cy={p.y} r={3.5} fill={SIGNALS[p.port.signal].color} />
@@ -209,7 +221,7 @@ export function PlanDiagram({ devices, cables, focus: initialFocus }: { devices:
         ) : null}
       </div>
       <p className="no-print mt-3 text-xs text-faint">
-        Click a device to open it. Dashed lines are MIDI, USB and network. Columns follow the signal: a device sits right of everything that feeds it. Need the
+        Click a device to open it. Dashed lines are MIDI, USB and network; dotted green lines inside a patchbay are normalled columns. Columns follow the signal: a device sits right of everything that feeds it. Need the
         list instead? <Link href="/cables" className="underline">Cables</Link>.
       </p>
     </div>

@@ -12,6 +12,13 @@ export function toPlanDevice(d: DeviceEntry): PlanDevice {
     state: d.state,
     location,
     ports: (d.ports ?? []).map((p) => ({ name: p.name, direction: p.direction, signal: p.signal, connector: p.connector ?? null })),
+    patch:
+      d.category === "patchbay"
+        ? {
+            columns: patchColumns(d),
+            modes: Object.fromEntries((d.patch_points ?? []).map((p) => [p.column, p.mode ?? undefined])),
+          }
+        : undefined,
   };
 }
 
@@ -28,4 +35,15 @@ export function toPlanCable(c: CableEntry): PlanCable {
     color: c.color ?? null,
     length_m: c.length_m ?? null,
   };
+}
+
+/** A patchbay's column count: as set, or from its "Top N" rear ports. */
+export function patchColumns(d: DeviceEntry): number {
+  if (d.patch_columns) return d.patch_columns;
+  let max = 0;
+  for (const p of d.ports ?? []) {
+    const m = /^(?:Top|Bottom) (\d+)$/.exec(p.name);
+    if (m) max = Math.max(max, Number(m[1]));
+  }
+  return max;
 }

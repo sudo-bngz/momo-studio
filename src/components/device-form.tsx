@@ -5,9 +5,9 @@ import { ButtonLink, Card, Checkbox, Field, Input, Select, Textarea } from "@/co
 import type { DeviceEntry, LocationEntry } from "@/lib/data";
 import { refId } from "@/lib/data";
 import { mediaSrc } from "@/lib/media";
-import { CATEGORIES, DEVICE_STATES, options } from "@/lib/vocab";
+import { CATEGORIES, DEVICE_STATES, options, type Category } from "@/lib/vocab";
 
-export function DeviceForm({ device, locations }: { device?: DeviceEntry; locations: LocationEntry[] }) {
+export function DeviceForm({ device, locations, category }: { device?: DeviceEntry; locations: LocationEntry[]; category?: Category }) {
   const photo = mediaSrc(device?.photo);
   const photoId = device?.photo && typeof device.photo === "object" ? device.photo.id : typeof device?.photo === "number" ? device.photo : undefined;
   return (
@@ -35,7 +35,7 @@ export function DeviceForm({ device, locations }: { device?: DeviceEntry; locati
               <Input name="model" defaultValue={device?.model ?? ""} />
             </Field>
             <Field label="Category">
-              <Select name="category" options={options(CATEGORIES)} defaultValue={device?.category ?? "synth"} />
+              <Select name="category" options={options(CATEGORIES)} defaultValue={device?.category ?? category ?? "synth"} />
             </Field>
             <Field label="State">
               <Select name="state" options={options(DEVICE_STATES)} defaultValue={device?.state ?? "in_use"} />

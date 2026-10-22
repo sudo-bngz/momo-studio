@@ -11,7 +11,10 @@ export const metadata: Metadata = { title: "Add cable" };
 export default async function NewCablePage({ searchParams }: { searchParams: Promise<{ from?: string; to?: string }> }) {
   const { from, to } = await searchParams;
   const [devices, cables] = await Promise.all([getDevices(), getCables()]);
-  const returnTo = from?.includes("::") ? `/gear/${from.split("::")[0]}` : undefined;
+  // Back to where the patching started: the patchbay, or the device.
+  const start = [from, to].find((v) => v?.includes("::"));
+  const startDevice = start ? devices.find((d) => d.id === Number(start.split("::")[0])) : undefined;
+  const returnTo = startDevice ? (startDevice.category === "patchbay" ? `/patchbays/${startDevice.id}` : `/gear/${startDevice.id}`) : undefined;
   return (
     <>
       <PageHeader title="Add cable" subtitle="Give it a code, write it on both ends, and say which two ports it joins." />

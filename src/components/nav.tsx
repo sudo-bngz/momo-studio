@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/gear", label: "Gear" },
   { href: "/racks", label: "Racks & places" },
   { href: "/cables", label: "Cables" },
+  { href: "/patchbays", label: "Patchbays" },
   { href: "/plan", label: "Patch plan" },
   { href: "/bookings", label: "Bookings" },
   { href: "/clients", label: "Clients" },
