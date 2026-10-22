@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { deleteMaintenance, saveMaintenance } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
+import { Help } from "@/components/help";
 import { Badge, ButtonLink, Card, Code, Empty, Field, Input, PageHeader, Select, SignalDot } from "@/components/ui";
 import { getCables, getDevice, getDevices, getMaintenance, refId } from "@/lib/data";
 import { coverOf, figureOf } from "@/components/asset-image";
@@ -103,6 +104,7 @@ export default async function DevicePage({ params }: { params: Promise<{ id: str
           </>
         }
       />
+      <Help topic="asset" />
 
       <div className="grid gap-6 xl:grid-cols-3">
         <div className="space-y-6">

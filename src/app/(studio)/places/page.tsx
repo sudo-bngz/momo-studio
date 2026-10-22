@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { deletePlaceOrClient, saveLocation, saveRoom } from "@/app/actions";
 import { ActionForm, DeleteForm } from "@/components/action-form";
+import { Help } from "@/components/help";
 import { ButtonLink, Card, Checkbox, Empty, Field, Input, PageHeader, Select, Textarea } from "@/components/ui";
 import { getDevices, getLocations, getRooms, refId } from "@/lib/data";
 import { formatMoney } from "@/lib/time";
@@ -21,6 +22,7 @@ export default async function PlacesPage({ searchParams }: { searchParams: Promi
   return (
     <>
       <PageHeader title="Rooms & locations" subtitle="Rooms are what you book; locations are where the machines sit (racks, desks, shelves, cases)." actions={<ButtonLink href="/racks">Back to racks</ButtonLink>} />
+      <Help topic="places" />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Rooms" actions={<Link href="/places?room=new" className="text-xs text-dim hover:text-ink">+ Room</Link>}>

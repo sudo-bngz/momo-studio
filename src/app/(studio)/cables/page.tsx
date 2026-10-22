@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Help } from "@/components/help";
 import { Badge, ButtonLink, Card, Code, Empty, PageHeader, SignalDot } from "@/components/ui";
 import { getCables, getDevices, refId } from "@/lib/data";
 import { findIssues } from "@/lib/patch";
@@ -60,6 +61,7 @@ export default async function CablesPage({ searchParams }: { searchParams: Promi
           </>
         }
       />
+      <Help topic="cables" />
 
       <form className="mb-4 grid gap-2 sm:grid-cols-[1fr_auto_auto_auto_auto]" method="get">
         <input name="q" defaultValue={sp.q} placeholder="Search code, device, port, color…" className="control" />

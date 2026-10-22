@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Help } from "@/components/help";
 import { StudioMap } from "@/components/studio-map";
 import { ButtonLink, PageHeader } from "@/components/ui";
 import { getStudioMap } from "@/lib/studio-map-data";
@@ -17,6 +18,7 @@ export default async function MapPage({ searchParams }: { searchParams: Promise<
         subtitle="Where everything stands, and the cable runs between racks, desks and stands. Click a place to look inside."
         actions={<ButtonLink href="/places">Rooms & locations</ButtonLink>}
       />
+      <Help topic="map" />
       <StudioMap {...map} focus={map.places.some((p) => p.id === focus) ? focus : undefined} />
     </>
   );

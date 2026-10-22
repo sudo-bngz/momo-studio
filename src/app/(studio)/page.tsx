@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Help } from "@/components/help";
 import { Badge, ButtonLink, Card, Code, Empty, PageHeader, Stat } from "@/components/ui";
 import { getBookings, getCables, getDevices, getMaintenance, refId } from "@/lib/data";
 import { findIssues } from "@/lib/patch";
@@ -43,6 +44,7 @@ export default async function OverviewPage() {
           </>
         }
       />
+      <Help topic="overview" />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="Assets" value={owned.length} hint={`${owned.filter((d) => d.state === "in_use").length} in use`} />

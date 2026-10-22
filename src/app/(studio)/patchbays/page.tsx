@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Help } from "@/components/help";
 import { PatchbayBoard } from "@/components/patchbay-board";
 import { LoopWarnings, ModeLegend } from "@/components/patchbay-bits";
 import { ButtonLink, Empty, PageHeader } from "@/components/ui";
@@ -17,6 +18,7 @@ export default async function PatchbaysPage() {
         subtitle="What's behind every point, how it's normalled, and where it goes in the DAW."
         actions={<ButtonLink href="/assets/new?category=patchbay">Add a patchbay</ButtonLink>}
       />
+      <Help topic="patchbays" />
       <ModeLegend />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
       {views.length ? (

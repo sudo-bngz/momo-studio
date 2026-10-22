@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { Help } from "@/components/help";
 import { PrintButton } from "@/components/print-button";
 import { ButtonLink, PageHeader } from "@/components/ui";
 import { getPatchbays } from "@/lib/patchbay-data";
@@ -66,6 +67,7 @@ export default async function StripPage({ params, searchParams }: { params: Prom
             </>
           }
         />
+        <Help topic="patchbay-strip" />
         <form method="get" className="mb-6 flex flex-wrap items-end gap-3 text-sm">
           <label>
             <span className="mb-1 block text-xs text-dim">Jack spacing (mm)</span>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Help } from "@/components/help";
 import { Badge, ButtonLink, Card, Code, Empty, PageHeader } from "@/components/ui";
 import { getDevices, getLocations, refId, type DeviceEntry, type LocationEntry } from "@/lib/data";
 import { CATEGORIES, DEVICE_STATES, LOCATION_KINDS } from "@/lib/vocab";
@@ -111,6 +112,7 @@ export default async function RacksPage() {
           </>
         }
       />
+      <Help topic="racks" />
       {locations.length === 0 ? <Empty>No locations yet: add your racks, desks and shelves under Rooms & locations.</Empty> : null}
       {[...rooms.entries()].map(([room, locs]) => (
         <section key={room} className="mb-10">

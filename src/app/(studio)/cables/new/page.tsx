@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { CableForm, nextCableCode } from "@/components/cable-form";
+import { Help } from "@/components/help";
 import { PageHeader } from "@/components/ui";
 import { getCables, getDevices } from "@/lib/data";
 import { cablesByPort } from "@/lib/patch";
@@ -18,6 +19,7 @@ export default async function NewCablePage({ searchParams }: { searchParams: Pro
   return (
     <>
       <PageHeader title="Add cable" subtitle="Give it a code, write it on both ends, and say which two ports it joins." />
+      <Help topic="cable-form" />
       <CableForm
         devices={devices}
         usage={cablesByPort(cables.map(toPlanCable))}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AssetImage, coverOf } from "@/components/asset-image";
+import { Help } from "@/components/help";
 import { Badge, ButtonLink, Code, Empty, PageHeader, ViewToggle } from "@/components/ui";
 import { getCables, getDevices, getLocations, refId } from "@/lib/data";
 import { cablesByPort, portKey } from "@/lib/patch";
@@ -46,6 +47,7 @@ export default async function GearPage({ searchParams }: { searchParams: Promise
           </>
         }
       />
+      <Help topic="assets" />
 
       <form className="mb-4 grid gap-2 sm:grid-cols-[1fr_auto_auto_auto_auto]" method="get">
         {gallery ? <input type="hidden" name="view" value="gallery" /> : null}

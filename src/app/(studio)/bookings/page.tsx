@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Help } from "@/components/help";
 import { Badge, ButtonLink, Card, Empty, FileLink, PageHeader } from "@/components/ui";
 import { getBookings, getRooms, refId, type BookingEntry } from "@/lib/data";
 import { addDays, formatDay, formatMoney, formatRange, fromLocal, localDate, localMinutes, mondayOf } from "@/lib/time";
@@ -53,6 +54,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
           </>
         }
       />
+      <Help topic="bookings" />
 
       {rooms.length > 1 ? (
         <div className="mb-4 flex flex-wrap gap-2 text-sm">

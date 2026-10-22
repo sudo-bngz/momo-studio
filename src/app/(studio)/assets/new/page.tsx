@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { DeviceForm } from "@/components/device-form";
+import { Help } from "@/components/help";
 import { PageHeader } from "@/components/ui";
 import { getLocations } from "@/lib/data";
 import { CATEGORIES, isKey } from "@/lib/vocab";
@@ -13,6 +14,7 @@ export default async function NewDevicePage({ searchParams }: { searchParams: Pr
   return (
     <>
       <PageHeader title="Add an asset" subtitle="A synth, an expander, an interface, a patchbay, a mic: anything you own or patch." />
+      <Help topic="asset-form" />
       <DeviceForm locations={locations} category={isKey(CATEGORIES, category) ? category : undefined} />
     </>
   );

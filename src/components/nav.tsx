@@ -16,6 +16,7 @@ const LINKS = [
   { href: "/clients", label: "Clients" },
   { href: "/activity", label: "Activity" },
   { href: "/people", label: "Accounts" },
+  { href: "/guide", label: "Guide" },
 ];
 
 export function Nav() {

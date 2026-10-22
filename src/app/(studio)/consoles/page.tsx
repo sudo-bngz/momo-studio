@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ConsoleBoard } from "@/components/console-board";
+import { Help } from "@/components/help";
 import { LoopWarnings } from "@/components/patchbay-bits";
 import { ButtonLink, Empty, PageHeader } from "@/components/ui";
 import { getConsoles } from "@/lib/console-data";
@@ -18,6 +19,7 @@ export default async function ConsolesPage() {
         subtitle="Every channel of the desk: what's plugged in, what it's called, where it goes."
         actions={<ButtonLink href="/assets/new?category=mixer">Add a console</ButtonLink>}
       />
+      <Help topic="consoles" />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
       {views.length ? (
         <div className="space-y-8">

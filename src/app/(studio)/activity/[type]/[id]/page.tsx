@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Help } from "@/components/help";
 import { RestoreButton } from "@/components/restore-button";
 import { Badge, ButtonLink, Card, Empty, PageHeader } from "@/components/ui";
 import { ACTION_LABEL, AUDITED, TYPE_LABEL, describeData, entryHref, getHistory, getRevision } from "@/lib/audit";
@@ -57,6 +58,7 @@ export default async function HistoryPage({
           </>
         }
       />
+      <Help topic="history" />
 
       {forbidden ? (
         <Card className="border-warn/40">

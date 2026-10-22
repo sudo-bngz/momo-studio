@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ConsoleBoard } from "@/components/console-board";
+import { Help } from "@/components/help";
 import { LoopWarnings } from "@/components/patchbay-bits";
 import { Badge, ButtonLink, PageHeader } from "@/components/ui";
 import { getConsoles } from "@/lib/console-data";
@@ -40,6 +41,7 @@ export default async function ConsolePage({ params }: { params: Promise<{ id: st
           </>
         }
       />
+      <Help topic="console" />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
       {others.length ? (
         <ul className="mb-6 space-y-1 rounded-md border border-warn/40 bg-warn/10 px-4 py-3 text-sm text-warn">

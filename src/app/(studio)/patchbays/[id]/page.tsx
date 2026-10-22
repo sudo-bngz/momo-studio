@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { Help } from "@/components/help";
 import { LoopWarnings, ModeLegend } from "@/components/patchbay-bits";
 import { PatchbayBoard } from "@/components/patchbay-board";
 import { Badge, ButtonLink, PageHeader } from "@/components/ui";
@@ -45,6 +46,7 @@ export default async function PatchbayPage({ params }: { params: Promise<{ id: s
           </>
         }
       />
+      <Help topic="patchbay" />
       <ModeLegend />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
       {others.length ? (

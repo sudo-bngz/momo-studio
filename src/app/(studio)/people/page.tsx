@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { removePerson, savePerson } from "@/app/actions";
 import { ActionForm, DeleteForm } from "@/components/action-form";
+import { Help } from "@/components/help";
 import { ButtonLink, Card, Empty, Field, Input, PageHeader, Select } from "@/components/ui";
 import { getMe, getPeople, suggestPassword, ROLE_NOTE } from "@/lib/people";
 
@@ -42,6 +43,7 @@ export default async function PeoplePage({ searchParams }: { searchParams: Promi
         subtitle="Everyone signs in with their own account, so the activity trail says who did what."
         actions={<ButtonLink href="/people?new=1" primary>Add someone</ButtonLink>}
       />
+      <Help topic="people" />
 
       {showForm ? (
         <Card title={editing ? `Edit ${editing.username}` : "New account"} className="mb-6">

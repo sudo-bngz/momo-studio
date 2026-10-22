@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { deleteCable } from "@/app/actions";
 import { DeleteForm } from "@/components/action-form";
 import { CableForm } from "@/components/cable-form";
+import { Help } from "@/components/help";
 import { Card, PageHeader } from "@/components/ui";
 import { getCable, getCables, getDevices } from "@/lib/data";
 import { cablesByPort, findIssues } from "@/lib/patch";
@@ -22,6 +23,7 @@ export default async function CablePage({ params }: { params: Promise<{ id: stri
   return (
     <>
       <PageHeader title={`Cable ${cable.code}`} />
+      <Help topic="cable-form" />
       {issues.length ? (
         <ul className="mb-6 space-y-1 rounded-md border border-warn/40 bg-warn/10 px-4 py-3 text-sm text-warn">
           {issues.map((i, k) => (

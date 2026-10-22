@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { Help } from "@/components/help";
 import { PrintButton } from "@/components/print-button";
 import { ButtonLink, PageHeader } from "@/components/ui";
 import { getConsoles } from "@/lib/console-data";
@@ -35,6 +36,7 @@ export default async function ScribbleStripPage({ params, searchParams }: { para
             </>
           }
         />
+        <Help topic="console-strip" />
         <form method="get" className="mb-6 flex flex-wrap items-end gap-3 text-sm">
           <label>
             <span className="mb-1 block text-xs text-dim">Channel spacing (mm)</span>

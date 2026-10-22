@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Help } from "@/components/help";
 import { PlanDiagram } from "@/components/plan-diagram";
 import { ButtonLink, PageHeader } from "@/components/ui";
 import { getCables, getDevices } from "@/lib/data";
@@ -29,6 +30,7 @@ export default async function PlanPage({ searchParams }: { searchParams: Promise
           </>
         }
       />
+      <Help topic="plan" />
       <PlanDiagram key={focusId ?? "all"} devices={planDevices} cables={planCables} focus={planDevices.some((d) => d.id === focusId) ? focusId : undefined} />
     </>
   );

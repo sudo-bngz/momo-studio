@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Help } from "@/components/help";
 import { PrintButton } from "@/components/print-button";
 import { ButtonLink, PageHeader } from "@/components/ui";
 import { getCables, getDevices, refId } from "@/lib/data";
@@ -43,6 +44,7 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
             </>
           }
         />
+        <Help topic="cable-labels" />
       </div>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(62mm,1fr))] gap-[3mm] print:text-black">
         {list.flatMap((c) => {

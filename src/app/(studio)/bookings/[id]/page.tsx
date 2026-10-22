@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { deleteBooking } from "@/app/actions";
 import { DeleteForm } from "@/components/action-form";
 import { BookingForm } from "@/components/booking-form";
+import { Help } from "@/components/help";
 import { Card, PageHeader } from "@/components/ui";
 import { getBooking, getClients, getDevices, getRooms } from "@/lib/data";
 import { formatRange, localDate, mondayOf } from "@/lib/time";
@@ -19,6 +20,7 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
   return (
     <>
       <PageHeader title={booking.title} subtitle={formatRange(booking.starts_at, booking.ends_at)} />
+      <Help topic="booking-form" />
       <BookingForm booking={booking} rooms={rooms} clients={clients} devices={devices} week={week} />
       <Card title="Delete" className="mt-10 border-bad/30">
         <p className="mb-3 text-sm text-dim">Called off? Set it to Cancelled to keep a trace.</p>

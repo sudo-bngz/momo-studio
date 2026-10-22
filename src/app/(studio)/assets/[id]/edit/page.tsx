@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { deleteDevice } from "@/app/actions";
 import { DeleteForm } from "@/components/action-form";
 import { DeviceForm } from "@/components/device-form";
+import { Help } from "@/components/help";
 import { Card, PageHeader } from "@/components/ui";
 import { getDevice, getLocations } from "@/lib/data";
 
@@ -17,6 +18,7 @@ export default async function EditDevicePage({ params }: { params: Promise<{ id:
   return (
     <>
       <PageHeader title={`Edit ${device.name}`} />
+      <Help topic="asset-form" />
       <DeviceForm device={device} locations={locations} />
       <Card title="Delete" className="mt-10 border-bad/30">
         <p className="mb-3 text-sm text-dim">

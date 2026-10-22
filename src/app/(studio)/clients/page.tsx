@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { deletePlaceOrClient, saveClient } from "@/app/actions";
 import { ActionForm, DeleteForm } from "@/components/action-form";
+import { Help } from "@/components/help";
 import { ButtonLink, Card, Empty, Field, Input, PageHeader, Textarea } from "@/components/ui";
 import { getBookings, getClients, refId } from "@/lib/data";
 import { formatMoney } from "@/lib/time";
@@ -24,6 +25,7 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
   return (
     <>
       <PageHeader title="Clients" subtitle="Artists and people who book the studio." actions={<ButtonLink href="/clients?new=1" primary>Add client</ButtonLink>} />
+      <Help topic="clients" />
 
       {showForm ? (
         <Card title={editing ? `Edit ${editing.name}` : "New client"} className="mb-6">

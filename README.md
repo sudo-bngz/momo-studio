@@ -17,6 +17,7 @@ A private back-office for an electronic music studio, built on [GoHead](https://
 - **Accounts**: add the people who help in the studio, give them a role, change it or reset a password. Everyone signs in as themselves, which is what makes the trail worth reading.
 - **Calendar feed**: `/bookings.ics`, to subscribe to from Google Calendar, Apple Calendar or a phone.
 - **Bookings**: a week calendar per room, with clients, price and paid status, and the gear a session needs. Overlapping sessions in the same room, or the same machine reserved twice, are refused unless you say otherwise.
+- **Help**: every page carries a panel whose first sentence is always on screen and whose detail is one click away — what each column, badge and field means, and the common task in order. `/guide` is the same text at length, with drawings: one channel of an in-line desk from socket to socket, how its group buses land on the channels' track outs, and what a patchbay column's three modes do. All of it lives in `src/lib/help.ts`, so the page and the manual can't drift apart.
 
 Stack: Next.js 16 (App Router, Server Actions), React 19, Tailwind CSS 4, `@gohead-cms/client`. No database of its own: everything lives in GoHead.
 
@@ -246,6 +247,9 @@ src/
   lib/studio-map.ts            the floor plan: default layout, cable bundles between places, zoom cards
   lib/audit.ts                 the change trail: the feed, an entry's history, restoring a version
   lib/people.ts                accounts and roles, through GoHead's admin API
+  lib/help.ts                  every word of help: a topic per page, plus the glossary
+  components/help.tsx          the panel on each page, and inline terms
+  components/signal-flow.tsx   the guide's drawings: a channel strip, in-line groups, normalling
   lib/session.ts               sign-in and the per-user GoHead client
   lib/time.ts                  studio time zone
   proxy.ts                     redirects visitors without a session to /login

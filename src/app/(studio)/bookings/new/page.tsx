@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { BookingForm } from "@/components/booking-form";
+import { Help } from "@/components/help";
 import { PageHeader } from "@/components/ui";
 import { getClients, getDevices, getRooms } from "@/lib/data";
 import { localDate, mondayOf } from "@/lib/time";
@@ -16,6 +17,7 @@ export default async function NewBookingPage({ searchParams }: { searchParams: P
   return (
     <>
       <PageHeader title="New booking" />
+      <Help topic="booking-form" />
       <BookingForm rooms={rooms} clients={clients} devices={devices} week={week} defaults={{ start: `${day}T10:00`, end: `${day}T18:00` }} />
     </>
   );

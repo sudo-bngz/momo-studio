@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Help } from "@/components/help";
 import { RestoreButton } from "@/components/restore-button";
 import { Badge, ButtonLink, Card, Empty, PageHeader } from "@/components/ui";
 import { ACTION_LABEL, AUDITED, TYPE_LABEL, describeData, entryHref, getFeed, type ActorKind, type RevisionAction } from "@/lib/audit";
@@ -40,6 +41,7 @@ export default async function ActivityPage({ searchParams }: { searchParams: Pro
         subtitle="Every change to the studio's content: who, what and when. Recorded by GoHead as each change is made."
         actions={<ButtonLink href="/activity?action=delete">Recently deleted</ButtonLink>}
       />
+      <Help topic="activity" />
 
       {forbidden ? (
         <Card className="border-warn/40">

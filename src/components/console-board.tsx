@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useMemo, useState } from "react";
 
 import { saveChannelStrips } from "@/app/actions";
+import { Tip } from "@/components/help";
 import { splitPasted } from "@/lib/patchbay";
 import type { ConsoleView, Socket, StripView } from "@/lib/console";
 
@@ -79,7 +80,8 @@ export function ConsoleBoard({ view, editable = false }: { view: ConsoleView; ed
     startTransition(() => run(data));
   };
 
-  const groupNote = view.groupsOnTrackOuts && view.groups ? `Groups come out of the track outs of channels g, g+${view.groups}, g+${view.groups * 2}…` : null;
+  const groupNote =
+    view.groupsOnTrackOuts && view.groups ? `In-line desk: groups come out of the track outs of channels g, g+${view.groups}, g+${view.groups * 2}…` : null;
 
   return (
     <div>
@@ -101,13 +103,31 @@ export function ConsoleBoard({ view, editable = false }: { view: ConsoleView; ed
             <button type="button" onClick={() => setTable(true)} className={`rounded-md border px-3 py-1.5 text-sm ${table ? "border-amber text-amber" : "border-line-strong text-dim hover:text-ink"}`}>
               All channels · paste from a sheet
             </button>
-            {groupNote ? <span className="ml-auto text-xs text-faint">{groupNote}</span> : null}
+            {groupNote ? (
+              <span className="ml-auto text-xs text-faint">
+                {groupNote}{" "}
+                <Link href="/guide#console" className="text-dim hover:text-amber">
+                  why →
+                </Link>
+              </span>
+            ) : null}
           </div>
           <div className="mt-4">
             {table ? (
               <TableEditor channels={channels} setChannels={setChannels} list={list} get={get} set={set} views={views} setStrips={setStrips} groups={view.groups} auxes={view.auxes} />
             ) : selected && selected <= channels ? (
-              <StripEditor n={selected} total={channels} value={get(selected)} view={views.get(selected)} consoleId={view.id} groups={view.groups} auxes={view.auxes} onChange={(p) => set(selected, p)} onMove={setSelected} />
+              <StripEditor
+                n={selected}
+                total={channels}
+                value={get(selected)}
+                view={views.get(selected)}
+                consoleId={view.id}
+                groups={view.groups}
+                auxes={view.auxes}
+                inline={view.groupsOnTrackOuts}
+                onChange={(p) => set(selected, p)}
+                onMove={setSelected}
+              />
             ) : (
               <p className="rounded-md border border-dashed border-line-strong px-4 py-6 text-center text-sm text-dim">
                 Click a channel to name it, choose its source, route it and see what&apos;s plugged into it.
@@ -159,6 +179,7 @@ function Strip({ n, value, view, active, onClick }: { n: number; value: Editable
       type="button"
       onClick={onClick}
       disabled={!onClick}
+      data-strip={n}
       className={`flex w-[71px] shrink-0 flex-col rounded-sm border text-left ${view?.loop ? "border-bad" : active ? "border-amber" : "border-line"} ${onClick ? "hover:border-line-strong" : "cursor-default"}`}
       style={{ background: tint ? `color-mix(in srgb, ${tint} 16%, #1b1c1f)` : "#1b1c1f" }}
     >
@@ -248,6 +269,7 @@ function StripEditor({
   consoleId,
   groups,
   auxes,
+  inline,
   onChange,
   onMove,
 }: {
@@ -258,6 +280,8 @@ function StripEditor({
   consoleId: number;
   groups: number;
   auxes: number;
+  /** An in-line desk: groups leave by the channels' track outs, not their own sockets. */
+  inline: boolean;
   onChange: (p: Partial<Editable>) => void;
   onMove: (n: number) => void;
 }) {
@@ -291,6 +315,10 @@ function StripEditor({
                 </button>
               ))}
             </div>
+            <p className="mt-1 text-[11px] text-faint">
+              Which of the three is live, when more than one is wired. Tape is the channel&apos;s{" "}
+              <Tip term="in-line" label="monitor path" />.
+            </p>
           </div>
           <div>
             <span className="mb-1 block text-xs font-medium text-dim">Routing</span>
@@ -320,6 +348,20 @@ function StripEditor({
               })}
             </div>
             <input className="control mt-2" value={value.route} onChange={(e) => onChange({ route: e.target.value })} placeholder="e.g. 1-2 + mix, or a note on the routing" />
+            <p className="mt-1 text-[11px] text-faint">
+              {inline ? (
+                <>
+                  <Tip term="direct-out" label="Direct out" /> and the groups share this channel&apos;s{" "}
+                  <Tip term="track-out" label="track-out socket" />, so a group leaves by the track outs of the channels it is
+                  paralleled on.
+                </>
+              ) : (
+                <>
+                  <Tip term="direct-out" label="Direct out" /> is this channel on its own; a <Tip term="group" /> leaves by its own
+                  output socket.
+                </>
+              )}
+            </p>
           </div>
           {auxes ? (
             <div>
@@ -372,6 +414,12 @@ function StripEditor({
           {view?.outputs.length ? (
             <p className="mt-4 text-xs text-dim">
               With this routing the signal leaves by <span className="text-ink">{view.outputs.join(", ")}</span>.
+              {inline && view.outputs.length > 1 ? (
+                <span className="mt-1 block text-faint">
+                  More than one socket because the group is paralleled across those channels&apos; track outs — whichever one you
+                  have wired is where the signal is.
+                </span>
+              ) : null}
             </p>
           ) : null}
         </div>
