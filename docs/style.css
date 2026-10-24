@@ -519,3 +519,107 @@ footer p {
   color: var(--faint);
   text-align: center;
 }
+
+/* ---- Walkthrough steps ---- */
+
+.needs {
+  margin: 1.25rem 0 2rem;
+  padding: 1rem 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+}
+
+.needs h4,
+.do h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.needs ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--dim);
+  font-size: 0.925rem;
+}
+
+.needs li,
+.do li {
+  margin-top: 0.35rem;
+}
+
+.step {
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.step .stepnum {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--faint);
+}
+
+.step h3 {
+  margin-top: 0.25rem;
+}
+
+.do {
+  margin: 1.25rem 0;
+  padding: 1rem 1.25rem;
+  background: color-mix(in srgb, var(--raised) 60%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+}
+
+.do ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--dim);
+  font-size: 0.925rem;
+}
+
+aside.why,
+aside.watch,
+aside.wrap {
+  margin: 1.25rem 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--line);
+  color: var(--dim);
+  font-size: 0.925rem;
+  line-height: 1.65;
+}
+
+aside.watch {
+  border-left-color: #f87171;
+}
+
+aside.wrap {
+  border-left-color: var(--amber);
+  margin-top: 2.5rem;
+}
+
+aside.why > strong,
+aside.watch > strong,
+aside.wrap > strong {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 0.2rem;
+}
+
+aside.watch > strong {
+  color: #f87171;
+}
+
+aside.wrap > strong {
+  color: var(--amber);
+}

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Walkthroughs · Studio manager</title>
+<meta name="description" content="Doing one whole job, start to finish: tracking a session on the Allen &amp; Heath GS3, and wiring three patchbays so the patch plan can trace end to end." />
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <a class="brand" href="index.html"><img class="mark" src="img/favicon.svg" alt="" width="24" height="24" /> Studio manager</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="guide.html">Guide</a>
+    <a href="walkthroughs.html" class="here" aria-current="page">Walkthroughs</a>
+    <a href="setup.html">Setup &amp; deploy</a>
+    <a href="https://github.com/sudo-bngz/momo-studio" class="out">GitHub</a>
+  </nav>
+</header>
+<div class="shell with-toc">
+<nav class="toc" aria-label="Contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><span class="part">Tracking a session on the GS3</span>
+      <ul><li><a href="#gs3-1">Decide the channel list before you touch the desk</a></li><li><a href="#gs3-2">Say which socket is actually live</a></li><li><a href="#gs3-3">Set the gain with PFL, not with the fader</a></li><li><a href="#gs3-4">Route the channel, and meet the track outs</a></li><li><a href="#gs3-5">Write down the EQ, including the two sweeps</a></li><li><a href="#gs3-6">Put the compressor in an insert, not in line</a></li><li><a href="#gs3-7">Send to the Space Echo, and watch for the loop</a></li><li><a href="#gs3-8">Save the sheet, print the strip, and come back to it</a></li></ul>
+    </li>
+    <li><span class="part">Wiring the three patchbays</span>
+      <ul><li><a href="#patchbay-1">Give each bay a job</a></li><li><a href="#patchbay-2">Top row sources, bottom row destinations — everywhere, no exceptions</a></li><li><a href="#patchbay-3">Patch the backs in, as cables</a></li><li><a href="#patchbay-4">Choose each column's mode, and mean it</a></li><li><a href="#patchbay-5">Fill the names from the spreadsheet instead of typing them</a></li><li><a href="#patchbay-6">Print the strips and get them on the bay</a></li><li><a href="#patchbay-7">Prove it with the patch plan</a></li></ul>
+    </li>
+  </ol>
+</nav>
+<main id="main">
+<h1>Walkthroughs</h1>
+<p class="lede">The <a href="guide.html">guide</a> says what each thing is. These take you through doing one whole job, in
+order, with real gear in the example — the desk, and the patchbays.</p>
+
+<section class="part" id="gs3">
+  <h2><span class="num">1</span> Tracking a session on the GS3</h2>
+  <p class="blurb">From an empty desk to a recall sheet you can set the console back from in ten minutes — and why the in-line routing surprises everyone once.</p>
+  <p class="note">About half an hour the first time, ten minutes after that.</p>
+  <div class="needs">
+    <h4>Before you start</h4>
+    <ul><li>The desk entered as an asset, category <strong>Mixer</strong>, with its ports filled from the <strong>Allen &amp; Heath GS3 24/8/2</strong> template. That gives you 163 correctly named sockets; without them the console page has nothing to draw.</li><li>The Fireface and the instruments entered too, even roughly. A channel whose source isn't in the app can still be labelled, but nothing can be traced through it.</li><li>The desk open at <strong>Consoles → Allen &amp; Heath GS3</strong>.</li></ul>
+  </div>
+  <article id="gs3-1" class="step">
+      <p class="stepnum">Step 1 of 8</p>
+      <h3>Decide the channel list before you touch the desk</h3>
+      <p>Twenty-four channels sounds like plenty until the Virus and the two drum machines have taken six of them in stereo pairs. Work out the list first, on paper or straight into the scribble strips here, and keep it stable between sessions — the whole point of a recall sheet is that channel 6 is the same thing next month.</p>
+      <p>A list that works for this room: <strong>1</strong> Juno-106, <strong>2</strong> Juno-6, <strong>3</strong> Minitaur, <strong>4</strong> DX7, <strong>5</strong> Solina, <strong>6</strong> MB33, <strong>7–8</strong> Virus TI2 L/R, <strong>9–10</strong> RD-9 L/R, <strong>11–12</strong> RD-8 L/R, <strong>13</strong> TD-8 mix, <strong>14</strong> MPC, <strong>15–16</strong> Eurorack L/R, <strong>17–20</strong> spare for the Push 2 session and anything hired in, <strong>21–22</strong> Space Echo return, <strong>23–24</strong> 2-track return.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li>Click a channel's scribble strip and type the name. Tab moves to the next one.</li><li>Or copy the whole column out of your old spreadsheet and use <strong>Paste from a sheet</strong> → <em>Labels</em>, starting at channel 1.</li><li>Give the drum channels a colour so the pairs read at a glance.</li></ol></div>
+      <aside class="why"><strong>Why</strong> The label is a strip, not a port. Renaming channel 6 changes what this session calls it; it does not move a cable. That separation is what lets the recall sheet change every week while the back panel stays put.</aside>
+    </article>
+  <article id="gs3-2" class="step">
+      <p class="stepnum">Step 2 of 8</p>
+      <h3>Say which socket is actually live</h3>
+      <p>Every GS3 channel has a Mic in, a Line in and a Tape in, and in a studio like this two or three of them are wired permanently. The app cannot guess which one is carrying signal today, and if it guesses wrong every trace through that channel is wrong.</p>
+      <p>So each strip has a <strong>source in use</strong>: Mic, Line or Tape. Set it per channel. The amber dot on the strip is the app telling you more than one socket is wired and it is going with what you said.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li>On each strip, pick Mic / Line / Tape under the scribble strip.</li><li>Everything in this room on a Line in — so set the whole bank to Line and only change the channels you actually mic.</li></ol></div>
+      <aside class="why"><strong>Why</strong> This is the in-line desk showing itself. The channel path (Mic or Line → preamp → insert → EQ → fader) and the monitor path (Tape in, its own level) are two signals in one strip. When you are tracking you record down the channel path and listen on the monitor path, which is why the Tape in exists on every channel and why the question has to be asked.</aside>
+    </article>
+  <article id="gs3-3" class="step">
+      <p class="stepnum">Step 3 of 8</p>
+      <h3>Set the gain with PFL, not with the fader</h3>
+      <p>Pre-fade listen is the control you reach for first and the one that is easiest to forget is there. Press PFL on a channel and that channel goes to the control room and the headphones, tapped before the fader and before the mute. Nothing downstream changes: the groups, the mix and the auxes never see it.</p>
+      <p>That is why it is the right tool for setting a gain. Put PFL up, play the loudest thing the Juno is going to do, bring the gain up until the meter sits where you want it, drop PFL. The fader has not moved and the mix has not moved.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li>Turn the <strong>Gain</strong> knob on the strip to match what you set on the desk.</li><li>Click <strong>PFL</strong> on the strip while you are listening to it, and click it off again when you are done.</li><li>Set the <strong>Fader</strong> last, and only for the mix.</li></ol></div>
+      <aside class="watch"><strong>Watch out</strong> The board lists which channels have PFL up, because a PFL left on is the usual reason the control room sounds like one instrument while the mix is perfectly fine. Check that list before you blame a cable.</aside>
+    </article>
+  <article id="gs3-4" class="step">
+      <p class="stepnum">Step 4 of 8</p>
+      <h3>Route the channel, and meet the track outs</h3>
+      <p>This is the part of the GS3 that catches everyone exactly once. The desk is 24/8/2 — twenty-four channels, eight groups, a two-track mix — and it has <strong>no group output sockets</strong>. The eight group buses are paralleled onto the channels' Track Outs: group <em>g</em> appears on the Track Out of channels <em>g</em>, <em>g</em>+8 and <em>g</em>+16. Group 1 comes out of the Track Out of channel 1, or 9, or 17. Group 8 out of channel 8, 16 or 24.</p>
+      <p>So when you route channel 13 to <strong>Grp 1-2</strong> and the app says the signal leaves by “Ch 1 Track Out, Ch 9 Track Out, Ch 17 Track Out”, it is not confused — those are the three jacks group 1 physically lands on, and the signal is at whichever of them you have patched to the Fireface. Pick one per group and stick to it: track outs 1–8 to the first eight Fireface inputs is the obvious choice, and it leaves channels 9–24's track outs free as direct outs.</p>
+      <p>For a straightforward multitrack session you do not need the groups at all. Route every channel to <strong>Direct out</strong> and each channel's own signal leaves by its own Track Out, one channel per interface input. Use the groups when you want eight stems instead of twenty-four tracks, or when you want one fader over the whole drum machine.</p>
+      <figure class="shot">
+      <a href="img/console-channel.webp" target="_blank" rel="noreferrer"><img src="img/console-channel.webp" alt="Channel 5 routed to groups 3-4, and the six track outs the group lands on." loading="lazy" /></a>
+      <figcaption>Channel 5 routed to groups 3-4, and the six track outs the group lands on.</figcaption>
+    </figure>
+      <div class="do"><h4>In the app</h4><ol><li>On each strip, set <strong>Routing</strong>: <em>Direct out</em> for a track per channel, <em>Grp 1-2</em> … <em>Grp 7-8</em> for stems, <em>Mix L/R</em> for anything going only to the monitors.</li><li>Read the little diagram beside the strip: it lights the path the signal actually takes with the settings you have given it, and names the sockets it leaves by.</li><li>Patch the track outs you decided on as cables, under the desk's ports, so the plan can follow them.</li></ol></div>
+      <aside class="why"><strong>Why</strong> The app works this out from the ports rather than from a rule about the GS3: a desk that has “Group n” sockets but none of them an output is treated as in-line, and the group is followed onto the track outs. Enter a split desk and it behaves like a split desk.</aside>
+    </article>
+  <article id="gs3-5" class="step">
+      <p class="stepnum">Step 5 of 8</p>
+      <h3>Write down the EQ, including the two sweeps</h3>
+      <p>Three bands. HF is a shelf fixed at 12 kHz. The mid is swept, 300 Hz to 12 kHz. LF is swept too, 20 Hz to 600 Hz. All three cut and boost by up to 14 dB. There is no pad and no phase switch on this desk, so you will not find one here either.</p>
+      <p>The two swept bands are the ones worth being fussy about. “Mid up 4” means nothing in a month if you did not also write down that the sweep was at 2.5 kHz. Both knobs are on the strip; set the frequency first, then the amount, same order as on the desk.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li>Drag a knob, or roll the wheel over it. Hold <strong>Shift</strong> while dragging for fine control.</li><li>Or click a knob and use the arrow keys; <strong>Home</strong> and <strong>End</strong> go to the extremes.</li><li>Leave a band at centre if you did not touch it — a knob at centre reads as “not used” on the sheet.</li></ol></div>
+      
+    </article>
+  <article id="gs3-6" class="step">
+      <p class="stepnum">Step 6 of 8</p>
+      <h3>Put the compressor in an insert, not in line</h3>
+      <p>The xpressor on channel 9 belongs in that channel's insert: one TRS jack, tip send, ring return, <strong>pre-EQ</strong> on this desk. Patch it that way and the compressor is inside channel 9's chain. Follow the signal in the patch plan and it goes Juno → channel 9 → xpressor → back into channel 9 → EQ → fader → track out, which is what is really happening.</p>
+      <p>Patch it as a separate box in the signal path instead and the plan draws it as an island, because that is all it can see. The insert is the only way to tell the app that a piece of outboard is <em>inside</em> a channel.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li>Add a cable from <strong>Ch 9 Insert</strong> to the compressor's input, and one back from its output to the same insert.</li><li>On the strip, the insert shows as wired once both cables are in.</li></ol></div>
+      <aside class="watch"><strong>Watch out</strong> Pre-EQ means the compressor hears the signal before your EQ, so a big low-end boost will not drive it harder. If you want the opposite, the EQ has to happen before the desk.</aside>
+    </article>
+  <article id="gs3-7" class="step">
+      <p class="stepnum">Step 7 of 8</p>
+      <h3>Send to the Space Echo, and watch for the loop</h3>
+      <p>Auxes 1 to 4 are post-fade, on two dual-concentric spindles — 1 over 2, 3 over 4. Auxes 3 and 4 can be switched to follow the monitor path instead; the app does not model the switch, it models what the switch causes.</p>
+      <p>Send channel 11 to Aux 2, patch <strong>Aux 2 Out</strong> to the RE-201's input, and bring the Space Echo back into a spare channel's line in — 21 and 22 in the list above. Now the important bit: <strong>if the channel the echo returns on also sends to Aux 2, you have built an oscillator.</strong> The app finds this. The returning channel turns red, the warning above the board names the aux and the channels in the ring, and it tells you which send to pull down.</p>
+      <p>This is worth setting up deliberately once, just to see the warning fire, because the real version of this happens at two in the morning with a client in the room.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li>Open the aux knobs on the strip for the channels you want in the echo.</li><li>Patch <strong>Aux 2 Out</strong> → RE-201 input, and RE-201 output → the return channel's line in, as cables under the desk's ports.</li><li>Leave the return channel's Aux 2 at zero.</li></ol></div>
+      <aside class="watch"><strong>Watch out</strong> The RE-201 has one output jack, carrying the wet and the dry together, so there is no wet-only return to be had: the dry you send it comes back with the echo. Either accept it and pull the original channel down, or keep the Space Echo as an insert on one channel instead of an aux send for the room. (Worth a look at your own unit before you trust this — the template says one output.)</aside>
+    </article>
+  <article id="gs3-8" class="step">
+      <p class="stepnum">Step 8 of 8</p>
+      <h3>Save the sheet, print the strip, and come back to it</h3>
+      <p>This is the whole reason the strip here has knobs on it. The GS3 is analogue: when the session ends, the settings are gone unless somebody wrote them down. What you have set — gain, three bands and two sweeps, four auxes, cue, pan, PFL, mute, fader, routing and label — is stored with the channel and is there next time you open the desk.</p>
+      <p>Print the scribble strip and tape it over the faders. It carries the channel number, the label and the routing, at the desk's own spacing. A4 landscape, margins off, 100 % — any scaling and the names stop lining up.</p>
+      <figure class="shot">
+      <a href="img/console.webp" target="_blank" rel="noreferrer"><img src="img/console.webp" alt="The whole desk, with the master section underneath." loading="lazy" /></a>
+      <figcaption>The whole desk, with the master section underneath.</figcaption>
+    </figure>
+      <div class="do"><h4>In the app</h4><ol><li><strong>Print strip</strong> at the top of the console page.</li><li>Next session: open the desk, read the sheet, set the knobs back on the hardware to match.</li><li>When something has moved for good, change it here too — every save is a revision, so you can see what the desk looked like last Tuesday.</li></ol></div>
+      
+    </article>
+  <aside class="wrap"><strong>Where that leaves you</strong> You now have a desk that documents itself: who is on which channel, which socket is live, where every channel leaves by, and every knob position. The next step is making the patchbays carry all of it, which is the other walkthrough.</aside>
+  <p class="see">Read next <a href="guide.html#console">The console, and the Allen &amp; Heath GS3</a> · <a href="guide.html#consoles">Consoles</a> · <a href="guide.html#console-strip">Printing a scribble strip</a> · <a href="guide.html#plan">Patch plan</a></p>
+</section>
+<section class="part" id="patchbay">
+  <h2><span class="num">2</span> Wiring the three patchbays</h2>
+  <p class="blurb">144 jacks, a convention that survives contact with a session, and a patch plan that can trace from the Juno to the monitors without a gap.</p>
+  <p class="note">An afternoon with a soldering iron; an hour in the app.</p>
+  <div class="needs">
+    <h4>Before you start</h4>
+    <ul><li>The three bays entered as assets, category <strong>Patchbay</strong>, ports filled from the <strong>48-point patchbay</strong> template. That gives each one 24 columns — 48 jacks, a Top <em>n</em> and a Bottom <em>n</em> rear point per column.</li><li>The desk and the Fireface entered, with their ports — the bays mostly exist to reach those two.</li><li>A decision about which bay does what, which is step one.</li></ul>
+  </div>
+  <article id="patchbay-1" class="step">
+      <p class="stepnum">Step 1 of 7</p>
+      <h3>Give each bay a job</h3>
+      <p>Three 48-point bays is 144 jacks in 72 columns, and the difference between a bay you can use at speed and one you squint at is whether each bay has one job. Mixed-up bays are the reason people stop using patchbays and go back to crawling behind the rack.</p>
+      <p>The split that fits this room: <strong>Patchbay I</strong> is the desk — track outs on top, tape ins and line ins on the bottom. <strong>Patchbay II</strong> is the Fireface — its outputs on top, its inputs on the bottom. <strong>Patchbay III</strong> is everything else: the instruments' outputs on top, the outboard and the Eurorack on the bottom. Bays I and II live in Rack A so the desk and the interface meet in one place; III is in Rack B with the synths and the modules.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li>Rename the three assets to say what they are — “Desk bay”, “Interface bay”, “Instrument bay” beats “Patchbay I”.</li><li>Put each in its rack on the <strong>Racks</strong> page so the map is right.</li></ol></div>
+      
+    </article>
+  <article id="patchbay-2" class="step">
+      <p class="stepnum">Step 2 of 7</p>
+      <h3>Top row sources, bottom row destinations — everywhere, no exceptions</h3>
+      <p>This is a convention, not a rule the hardware knows, and the app does not enforce it. Adopt it anyway and keep it across all three bays: <strong>the top row is always something coming out of a machine, the bottom row is always something going into one.</strong> Then a patch cord always runs top to bottom, and you can read the bay without thinking.</p>
+      <p>The moment one bay has it the other way round is the moment you start plugging outputs into outputs at the end of a long night.</p>
+      
+      
+      <aside class="why"><strong>Why</strong> It also makes the normalling make sense. A normalled column with a source on top and a destination underneath is a tie-line that is connected until you interrupt it — which is exactly what you want a patchbay to be most of the time.</aside>
+    </article>
+  <article id="patchbay-3" class="step">
+      <p class="stepnum">Step 3 of 7</p>
+      <h3>Patch the backs in, as cables</h3>
+      <p>The rear points are ports like any other: <strong>Top 12</strong> and <strong>Bottom 12</strong> on the bay, and a cable from each to whatever it is soldered to. This is the long boring part and it is the part that makes everything else work, because the patch plan can only follow what it knows about.</p>
+      <p>Work a column at a time, down the list. Track Out 1 → Top 1. Track Out 2 → Top 2. Tape In 1 → Bottom 1. It is repetitive by design: a bay where Top 7 is the seventh thing in the list is a bay you can use in the dark.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li><strong>Cables → New</strong>, or add them from the bay's own page.</li><li>Name the column as you go — the column name is what the board and the printed strip show.</li><li>Use words, not numbers: “Juno 106”, “Comp in”, “Echo send”. “Top 23” tells you nothing at the moment you need it.</li></ol></div>
+      <aside class="watch"><strong>Watch out</strong> These are 1/4" TRS bays, so a column can carry a balanced line or an unbalanced one, and nothing physical stops you plugging an insert send into a mic line. The app will tell you when a cable's signal does not match the port's — that warning exists because the hardware will not.</aside>
+    </article>
+  <article id="patchbay-4" class="step">
+      <p class="stepnum">Step 4 of 7</p>
+      <h3>Choose each column's mode, and mean it</h3>
+      <p>Three modes, and the choice changes what the bay does when nothing is plugged into the front.</p>
+      <p><strong>Normal</strong> — top and bottom are joined behind the panel. The signal flows without a cord. Plugging into either front jack breaks the link and takes over. This is the default for a tie-line: Track Out 1 reaches Tape In 1 by itself, and when you want it somewhere else you plug in and it stops going to Tape In 1.</p>
+      <p><strong>Half-normal</strong> — joined as well, but the <strong>top</strong> front jack only takes a copy; the link stays. Only the bottom jack breaks it. This is the one you want for taking a feed somewhere without killing where it already goes: plug into the top of the RD-9's column and the drum machine still reaches the desk <em>and</em> now also feeds the Space Echo.</p>
+      <p><strong>Thru</strong> — not joined at all. Each rear point reaches only its own front jack, and nothing moves until you put a cord in. Use it for things that must never be connected by accident: a power amp input, a CV destination, the insert returns.</p>
+      <figure class="shot wide">
+      <a href="img/normalling.webp" target="_blank" rel="noreferrer"><img src="img/normalling.webp" alt="The three modes, and what each does when nothing is plugged into the front." loading="lazy" /></a>
+      <figcaption>The three modes, and what each does when nothing is plugged into the front.</figcaption>
+    </figure>
+      <div class="do"><h4>In the app</h4><ol><li>Set the mode per column on the bay's page — the badge reads <strong>N</strong>, <strong>H</strong> or <strong>T</strong>.</li><li>Make the desk-to-interface tie-lines <strong>normal</strong>, the instrument outputs <strong>half-normal</strong>, and anything that bites <strong>thru</strong>.</li><li>Match whatever the actual bay is wired or switched to. The app believes you.</li></ol></div>
+      <aside class="why"><strong>Why</strong> The patch plan follows a signal through a normalled or half-normalled column as if the two points were one wire, and stops dead at a thru column — because in real life it does too. A trace that stops at a thru column is the app being right, not a missing cable.</aside>
+    </article>
+  <article id="patchbay-5" class="step">
+      <p class="stepnum">Step 5 of 7</p>
+      <h3>Fill the names from the spreadsheet instead of typing them</h3>
+      <p>If the bays are already labelled somewhere — a spreadsheet, a text file, the photo of the old strip — you do not have to retype seventy-two column names. Copy a column of cells and drop them in.</p>
+      <p>You can paste names, modes, or both, starting at whichever column you choose, so a bay that is half done can be finished from a partial list.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li><strong>Paste from a sheet</strong> on the bay's page.</li><li>Pick which column the first value lands on, and whether you are pasting names or modes.</li><li>Check the preview before you commit — it shows you what is about to change.</li></ol></div>
+      
+    </article>
+  <article id="patchbay-6" class="step">
+      <p class="stepnum">Step 6 of 7</p>
+      <h3>Print the strips and get them on the bay</h3>
+      <p>A bay with no labels is a bay nobody uses. Print one strip for the top row and one for the bottom, at the bay's own jack spacing, and slide them in.</p>
+      <p>A 24-column bay is wider than a sheet of paper, so the strip comes out in pieces you tape end to end — the subtitle on the print page tells you how many. Print at 100 % with margins off. Any scaling at all and the names drift away from the jacks they belong to, which is worse than no strip.</p>
+      
+      <div class="do"><h4>In the app</h4><ol><li><strong>Print strip</strong> on the bay's page, once for each row.</li><li>Cut along the line, tape the pieces, slide them above and below the jacks.</li></ol></div>
+      
+    </article>
+  <article id="patchbay-7" class="step">
+      <p class="stepnum">Step 7 of 7</p>
+      <h3>Prove it with the patch plan</h3>
+      <p>Now the check that tells you whether the wiring you entered is the wiring you have. Open <strong>Plan</strong>. Everything connected is drawn left to right in the direction the sound moves: sources on the left, the monitors on the right.</p>
+      <p>Find the Juno-106 and follow it. It should run Juno → instrument bay → desk bay → a GS3 channel → that channel's track out → interface bay → Fireface, and come back out through the desk to the ADAM A7s. If the line stops somewhere, the gap is real: either a cable you have not entered, a column you called thru that is actually normalled, or a channel whose source in use is set to the wrong socket.</p>
+      <p>Click into an asset first and the plan draws only that machine and what it reaches, in both directions, which is the fastest way to chase one signal through three bays.</p>
+      <figure class="shot">
+      <a href="img/plan.webp" target="_blank" rel="noreferrer"><img src="img/plan.webp" alt="The patch plan. Red is a loop." loading="lazy" /></a>
+      <figcaption>The patch plan. Red is a loop.</figcaption>
+    </figure>
+      <div class="do"><h4>In the app</h4><ol><li><strong>Plan</strong>, then hover a cable to see how many machines the signal has already been through.</li><li>Red lines are loops. Through a pedal that is sometimes what you want; through an aux it almost never is.</li><li>Fix what the gaps show you, then run it again.</li></ol></div>
+      <aside class="watch"><strong>Watch out</strong> The trace stops at anything that does not pass a signal on — an interface, a monitor, a recorder — and at a socket it has already been through. That last one is why a signal can cross the same bay three times without the plan spinning forever.</aside>
+    </article>
+  <aside class="wrap"><strong>Where that leaves you</strong> Three bays with one job each, a convention that holds, modes that match the solder, printed strips, and a plan that traces end to end. From here, repatching is editing a cable in the app and moving one cord in the rack — and next week you will still know what Top 23 is.</aside>
+  <p class="see">Read next <a href="guide.html#patchbays">Patchbays</a> · <a href="guide.html#patchbay">One patchbay</a> · <a href="guide.html#patchbay-strip">Printing a patchbay strip</a> · <a href="guide.html#cables">Cables</a> · <a href="guide.html#plan">Patch plan</a></p>
+</section>
+</main>
+</div>
+<footer>
+  <p>A private back-office for an electronic music studio, built on <a href="https://github.com/gohead-cms/gohead">GoHead</a>.
+  This manual is generated from <code>src/lib/help/en.ts</code> — the same text the app shows on each page.</p>
+</footer>
+</body>
+</html>

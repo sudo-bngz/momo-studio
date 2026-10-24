@@ -15,11 +15,14 @@ import { fileURLToPath } from "node:url";
 
 import { en } from "../src/lib/help/en.ts";
 import { PART_TOPICS } from "../src/lib/help/types.ts";
+import { en as TUTORIALS_EN } from "../src/lib/tutorials/en.ts";
+import { TUTORIAL_ORDER } from "../src/lib/tutorials/types.ts";
 
 // The site is in English: it is the source the French is translated from.
 const TOPICS = en.topics;
 const GLOSSARY = en.glossary;
 const GUIDE_PARTS = PART_TOPICS.map((part) => ({ ...en.parts[part.id], topics: part.topics }));
+const TUTORIALS = TUTORIAL_ORDER.map((id) => ({ id, ...TUTORIALS_EN[id] }));
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DOCS = resolve(ROOT, "docs");
@@ -109,6 +112,7 @@ function chapter(id) {
 const NAV = [
   ["index.html", "Home"],
   ["guide.html", "Guide"],
+  ["walkthroughs.html", "Walkthroughs"],
   ["setup.html", "Setup &amp; deploy"],
 ];
 
@@ -278,7 +282,9 @@ const guide = page(
   `<h1>Guide</h1>
 <p class="lede">How the app is put together, and how the studio it describes is put together. This is the same text the app
 shows on each page, at length and with the drawings. The <a href="#console">console chapter</a> is the one worth reading
-properly: an in-line desk like the Allen &amp; Heath GS3 behaves in a way that looks like a bug until you know it isn't.</p>
+properly: an in-line desk like the Allen &amp; Heath GS3 behaves in a way that looks like a bug until you know it isn't.
+If you would rather be told what to do than what things are, start with the
+<a href="walkthroughs.html">walkthroughs</a>.</p>
 
 ${GUIDE_PARTS.map(
   (part, i) => `<section class="part">
@@ -295,6 +301,70 @@ ${GUIDE_PARTS.map(
   </dl>
 </section>`,
   { toc: guideToc },
+);
+
+// ---- Walkthroughs ----
+
+/** What each walkthrough step shows, if anything. */
+const STEP_ART = {
+  "gs3:4": () => figure("console-channel.webp", "Channel 5 routed to groups 3-4, and the six track outs the group lands on."),
+  "gs3:8": () => figure("console.webp", "The whole desk, with the master section underneath."),
+  "patchbay:4": () => figure("normalling.webp", "The three modes, and what each does when nothing is plugged into the front.", { wide: true }),
+  "patchbay:7": () => figure("plan.webp", "The patch plan. Red is a loop."),
+};
+
+const step = (tutorialId, s, i, total) => {
+  const art = STEP_ART[`${tutorialId}:${i + 1}`]?.() ?? "";
+  const doThis = s.doThis?.length
+    ? `<div class="do"><h4>In the app</h4><ol>${s.doThis.map((d) => `<li>${rich(d)}</li>`).join("")}</ol></div>`
+    : "";
+  const aside = s.aside
+    ? `<aside class="${s.aside.kind}"><strong>${s.aside.kind === "watch" ? "Watch out" : "Why"}</strong> ${rich(s.aside.text)}</aside>`
+    : "";
+  return `<article id="${tutorialId}-${i + 1}" class="step">
+      <p class="stepnum">Step ${i + 1} of ${total}</p>
+      <h3>${esc(s.title)}</h3>
+      ${s.body.map((p) => `<p>${rich(p)}</p>`).join("\n      ")}
+      ${art}
+      ${doThis}
+      ${aside}
+    </article>`;
+};
+
+const walkthroughsToc = `<nav class="toc" aria-label="Contents">
+  <h2>Contents</h2>
+  <ol>
+    ${TUTORIALS.map(
+      (w) => `<li><span class="part">${esc(w.title)}</span>
+      <ul>${w.steps.map((s, i) => `<li><a href="#${w.id}-${i + 1}">${esc(s.title)}</a></li>`).join("")}</ul>
+    </li>`,
+    ).join("\n    ")}
+  </ol>
+</nav>`;
+
+const walkthroughs = page(
+  "walkthroughs.html",
+  "Walkthroughs",
+  "Doing one whole job, start to finish: tracking a session on the Allen & Heath GS3, and wiring three patchbays so the patch plan can trace end to end.",
+  `<h1>Walkthroughs</h1>
+<p class="lede">The <a href="guide.html">guide</a> says what each thing is. These take you through doing one whole job, in
+order, with real gear in the example — the desk, and the patchbays.</p>
+
+${TUTORIALS.map(
+  (w, n) => `<section class="part" id="${w.id}">
+  <h2><span class="num">${n + 1}</span> ${esc(w.title)}</h2>
+  <p class="blurb">${esc(w.blurb)}</p>
+  <p class="note">${esc(w.time)}</p>
+  <div class="needs">
+    <h4>Before you start</h4>
+    <ul>${w.needs.map((need) => `<li>${rich(need)}</li>`).join("")}</ul>
+  </div>
+  ${w.steps.map((s, i) => step(w.id, s, i, w.steps.length)).join("\n  ")}
+  <aside class="wrap"><strong>Where that leaves you</strong> ${rich(w.wrap)}</aside>
+  ${w.see?.length ? `<p class="see">Read next ${w.see.map((s) => `<a href="guide.html#${s}">${esc(TOPICS[s].title)}</a>`).join(" · ")}</p>` : ""}
+</section>`,
+).join("\n")}`,
+  { toc: walkthroughsToc },
 );
 
 // ---- Setup ----
@@ -332,6 +402,20 @@ defaults in <code>docker-compose.yml</code>. Change them before this is reachabl
   boards rather than typing it again.</li>
 </ol>
 
+<h3 id="bootstrap">Steps 1 and 2, from a file</h3>
+<p>Typing twenty-odd machines into a form is the worst hour of this. <code>gohead/inventory.json</code> is your studio as
+an editable list — rooms, the places in them, and one line per machine — and one command creates whatever is in it:</p>
+<pre><code>npm run studio:bootstrap -- --dry-run   # what it would create
+npm run studio:bootstrap                # create it</code></pre>
+<p>A line names a <code>template</code> and the machine arrives with every socket already on it, from the same expander
+the app's <em>Fill the ports</em> button uses — so a template fix reaches both at once. Matching is by the device
+<code>code</code>, so adding a line and running it again creates only what is missing; it never edits or deletes what is
+already there. <code>--dry-run</code> checks the file against <code>gohead/model.json</code> first, so a misspelt field is
+a message about the file rather than a half-created studio, and <code>-- --file other.json</code> runs a different one.</p>
+<p class="note">Mark anything you are unsure of with <code>"check": true</code> and the run lists it at the end, under
+<em>worth a look at the back panel before you trust the ports</em>. Cables are deliberately not in the file: the patch is
+what changes weekly, and it belongs in the app where the plan can check it.</p>
+
 <h2 id="scripts">Scripts</h2>
 <dl class="points">
   <dt><code>npm run dev</code></dt><dd>The app, in development, on :3000.</dd>
@@ -344,6 +428,8 @@ defaults in <code>docker-compose.yml</code>. Change them before this is reachabl
   <dt><code>npm run gohead:types</code></dt><dd>Regenerates <code>src/gohead.d.ts</code> from the model, so the app stops
   compiling when the two disagree.</dd>
   <dt><code>npm run gohead:seed</code></dt><dd>Loads <code>gohead/seed.json</code>: the sample studio.</dd>
+  <dt><code>npm run studio:bootstrap</code></dt><dd>Creates the studio in <code>gohead/inventory.json</code> — rooms, places and
+  machines with their ports filled from the templates. Idempotent by device code; <code>-- --dry-run</code> first.</dd>
   <dt><code>npm run gohead:access</code></dt><dd>Creates the <code>studio-staff</code> role, the read-only
   <code>calendar-feed</code> role, its token and the calendar URL's secret. With <code>-- --user alex</code> it also creates a
   person and prints their password once.</dd>
@@ -426,9 +512,13 @@ writeFileSync(resolve(DOCS, ".nojekyll"), "");
 for (const [file, html] of [
   ["index.html", home],
   ["guide.html", guide],
+  ["walkthroughs.html", walkthroughs],
   ["setup.html", setup],
 ]) {
   writeFileSync(resolve(DOCS, file), html);
   console.log(`docs/${file}  ${(html.length / 1024).toFixed(1)} kB`);
 }
-console.log(`${Object.keys(TOPICS).length} chapters, ${Object.keys(GLOSSARY).length} glossary entries.`);
+console.log(
+  `${Object.keys(TOPICS).length} chapters, ${Object.keys(GLOSSARY).length} glossary entries, ` +
+    `${TUTORIALS.length} walkthroughs in ${TUTORIALS.reduce((a, w) => a + w.steps.length, 0)} steps.`,
+);

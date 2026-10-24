@@ -23,7 +23,7 @@ export default async function PatchbaysPage() {
         subtitle={t("patchbay.subtitle")}
         actions={<ButtonLink href="/assets/new?category=patchbay">{t("patchbay.add")}</ButtonLink>}
       />
-      <Help topic="patchbays" />
+      <Help topic="patchbays" walkthrough="patchbay" />
       <ModeLegend />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
       {views.length ? (

@@ -4,7 +4,7 @@ A private back-office for an electronic music studio, built on [GoHead](https://
 Every machine, every cable and every session in one place — with the patchbays and the desk modelled properly,
 so the app can tell you where a signal actually goes.
 
-**📖 [Documentation](https://sudo-bngz.github.io/momo-studio/)** · [Guide](https://sudo-bngz.github.io/momo-studio/guide.html) · [Setup & deploy](https://sudo-bngz.github.io/momo-studio/setup.html)
+**📖 [Documentation](https://sudo-bngz.github.io/momo-studio/)** · [Guide](https://sudo-bngz.github.io/momo-studio/guide.html) · [Walkthroughs](https://sudo-bngz.github.io/momo-studio/walkthroughs.html) · [Setup & deploy](https://sudo-bngz.github.io/momo-studio/setup.html)
 
 ![The Allen & Heath GS3 24/8/2 drawn as its channel strips](docs/img/console.webp)
 
@@ -27,7 +27,7 @@ What's in it:
 - **Calendar feed**: `/bookings.ics`, to subscribe to from Google Calendar, Apple Calendar or a phone.
 - **Bookings**: a week calendar per room, with clients, price and paid status, and the gear a session needs. Overlapping sessions in the same room, or the same machine reserved twice, are refused unless you say otherwise.
 - **English and French**: the whole interface, the help panels and the guide, switchable from EN | FR at the bottom of the sidebar. The language is remembered in a cookie and, on a first visit, taken from the browser — a French browser gets French without choosing. Dates, times and money follow it (`lun. 26 oct.`, `1 200 €`), and the words are studio French: a patchbay is a *baie de brassage*, a normalled column is *normalisée*, a tentative booking is an *option*. English stays the source: every French file is typed against its English counterpart, so a missing key is a compile error rather than a word that silently stays in English.
-- **Help**: every page carries a panel whose first sentence is always on screen and whose detail is one click away — what each column, badge and field means, and the common task in order. `/guide` is the same text at length, with drawings: one channel of an in-line desk from socket to socket, how its group buses land on the channels' track outs, and what a patchbay column's three modes do. All of it lives in `src/lib/help/`, one file per language, so the page and the manual can't drift apart.
+- **Help**: every page carries a panel whose first sentence is always on screen and whose detail is one click away — what each column, badge and field means, and the common task in order. `/guide` is the same text at length, with drawings: one channel of an in-line desk from socket to socket, how its group buses land on the channels' track outs, and what a patchbay column's three modes do. All of it lives in `src/lib/help/`, one file per language, so the page and the manual can't drift apart. And two **walkthroughs** for the parts that are a job rather than a screen — tracking a session on the GS3, and wiring the three patchbays — each one step by step with this studio's own gear in the example, linked from the desk and patchbay pages themselves (`src/lib/tutorials/`).
 
 Stack: Next.js 16 (App Router, Server Actions), React 19, Tailwind CSS 4, `@gohead-cms/client`. No database of its own: everything lives in GoHead.
 
@@ -60,12 +60,23 @@ first click. Worth opening in this order: **Assets**, then **Studio map**, then 
 Every page explains itself: the panel at the top is always there, and **Guide** in the sidebar
 is the whole manual, [also on the web](https://sudo-bngz.github.io/momo-studio/guide.html).
 
-**Your own studio instead.** Skip `gohead:seed` and fill it in this order, which saves the most
-typing: rooms and locations first, then the machines (fill the ports from a template where
-there is one — the GS3 24/8/2 fills 163 of them, correctly named), then the patchbays with each
-column's mode set to match the hardware, then the cables. If the patch already lives in a
-spreadsheet, paste it a column at a time into the patchbay and console boards rather than
-typing it again.
+**Your own studio instead.** Skip `gohead:seed` and describe it in a file instead of a form.
+`gohead/inventory.json` is your studio as an editable list — rooms, the places in them, and one
+line per machine — and one command creates it:
+
+```bash
+npm run studio:bootstrap -- --dry-run   # what it would create
+npm run studio:bootstrap                # create it
+```
+
+A line that names a `template` arrives with every socket already on it, from the same expander
+the app's *Fill the ports* button uses. Matching is by the device `code`, so adding a line and
+running it again creates only what is missing — it never edits or deletes what is already
+there. `--dry-run` checks the file against `gohead/model.json` first, so a misspelt field is a
+message about the file rather than a half-created studio. Then the patchbay modes and the
+cables, in the app: the patch is what changes weekly, and it belongs where the plan can check
+it. If it already lives in a spreadsheet, paste it a column at a time into the patchbay and
+console boards rather than typing it again.
 
 After a `git pull` that changed the content model, run `npm run gohead:setup` again.
 
@@ -132,7 +143,9 @@ but you are then downloading code over a connection nobody is checking, so turn 
 The `npm warn ERESOLVE overriding peer dependency` lines are unrelated and expected: ESLint 10
 is newer than what `eslint-plugin-import` declares. The install works.
 
-Starting with your own studio rather than the sample: skip `gohead:seed`, then in this order
+Starting with your own studio rather than the sample: skip `gohead:seed`. Steps 1 and 2 are a
+file and one command — see [Your own studio instead](#quick-start) and
+`npm run studio:bootstrap`. By hand, in this order
 
 1. **Racks & places → Rooms & locations**: your rooms, then your racks (with their height in U), desks, shelves, cases. Then **Studio map → Edit layout**: set each room's size, and drag every place where it stands.
 2. **Assets → Add an asset**: each machine with its ports. The port editor has presets (stereo out, MIDI in/out/thru…) and numbered batches (“Line In × 8”).
@@ -193,21 +206,24 @@ needs, until it does.
 | `npm run gohead:access` | The `studio-staff` role (and a user with `-- --user <name>`) |
 | `npm run gohead:seed` | Sample studio from `gohead/seed.json`: 2 rooms, 8 places, 24 devices (a GS3 24/8/2, 3 patchbays, pedals), 80 cables, bookings |
 | `npm run gohead:setup` | `push`, `types` and `access` |
-| `npm run docs` | Rebuilds the documentation site in `docs/` from `src/lib/help.ts` |
+| `npm run studio:bootstrap` | Creates the studio in `gohead/inventory.json` — rooms, places, machines with their ports from the templates. Idempotent by device code; `-- --dry-run` first |
+| `npm run docs` | Rebuilds the documentation site in `docs/` from `src/lib/help/en.ts` and `src/lib/tutorials/en.ts` |
 
 The setup scripts sign in with `GOHEAD_USERNAME` / `GOHEAD_PASSWORD` from `.env.local`.
 
 ## Documentation
 
-<https://sudo-bngz.github.io/momo-studio/> — the home page, the [guide](https://sudo-bngz.github.io/momo-studio/guide.html)
-and [setup & deploy](https://sudo-bngz.github.io/momo-studio/setup.html).
+<https://sudo-bngz.github.io/momo-studio/> — the home page, the [guide](https://sudo-bngz.github.io/momo-studio/guide.html),
+the [walkthroughs](https://sudo-bngz.github.io/momo-studio/walkthroughs.html) and
+[setup & deploy](https://sudo-bngz.github.io/momo-studio/setup.html).
 
 It's served by GitHub Pages straight out of `docs/` on `main`. To turn it on once:
 **Settings → Pages → Source: Deploy from a branch → `main` / `/docs`**.
 
-`npm run docs` regenerates `docs/*.html` from `src/lib/help.ts` — the same text the app shows in
-the panel on each page and in **Guide**, so the site, the panels and the in-app manual can't drift
-apart. Write the words once, in `help.ts`, and run `npm run docs` before committing.
+`npm run docs` regenerates `docs/*.html` from `src/lib/help/en.ts` and `src/lib/tutorials/en.ts` —
+the same text the app shows in the panel on each page, in **Guide** and in the walkthroughs, so the
+site, the panels and the in-app manual can't drift apart. Write the words once, in `src/lib/help/`
+or `src/lib/tutorials/`, and run `npm run docs` before committing.
 
 The rest of `docs/` is written by hand: `style.css`, and `img/` — screenshots taken from a running
 app, converted to WebP (the drawings of the channel strip and the in-line groups are lifted out of
@@ -305,6 +321,7 @@ on a Raspberry Pi or a small VPS:
 
 ```
 gohead/model.json, seed.json   content model and sample studio
+gohead/inventory.json          your own studio, as a list npm run studio:bootstrap creates
 scripts/                       role and user setup
 src/
   app/(studio)/                pages: overview, assets, racks, places, cables, patchbays, consoles, plan, map, bookings, clients
@@ -317,12 +334,14 @@ src/
   lib/patchbay.ts              a patchbay as columns, labels from rear cables, pasting from a sheet
   lib/console.ts               a console as strips, routing, following a signal through the desk, aux loops
   components/device-figure.tsx a drawing of a machine per category, when there is no photo
-  lib/templates.ts, templates/ device templates (GS3, generic console / interface / patchbay)
+  lib/templates.ts, templates/ device templates: the GS3, 48-point bays, the Fireface, Junos, DX7, RDs, the Virus,
+                               the Minitaur, the Minilogue, the Space Echo and the generic shapes — ports and all
   lib/studio-map.ts            the floor plan: default layout, cable bundles between places, zoom cards
   lib/audit.ts                 the change trail: the feed, an entry's history, restoring a version
   lib/people.ts                accounts and roles, through GoHead's admin API
   lib/i18n/                    the languages: the locale, the formatters, one message file per area
   lib/help/                    every word of help: a topic per page, plus the glossary, per language
+  lib/tutorials/               the walkthroughs: the GS3 and the patchbays, step by step, per language
   components/help.tsx          the panel on each page, and inline terms
   components/signal-flow.tsx   the guide's drawings: a channel strip, in-line groups, normalling
   lib/session.ts               sign-in and the per-user GoHead client

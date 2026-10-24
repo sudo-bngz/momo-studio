@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/ui";
 import { getHelp, PART_TOPICS, type HelpContent, type TopicId } from "@/lib/help";
 import { getI18n } from "@/lib/i18n";
 import type { T } from "@/lib/i18n/translate";
+import { getTutorials, TUTORIAL_ORDER } from "@/lib/tutorials";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getI18n();
@@ -17,6 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function GuidePage() {
   const { t, locale } = await getI18n();
   const help = getHelp(locale);
+  const tutorials = getTutorials(locale);
 
   /** The drawing that belongs to a chapter, and the caption under it. */
   const figures: Partial<Record<TopicId, ReactNode>> = {
@@ -73,8 +75,22 @@ export default async function GuidePage() {
               </li>
             ))}
             <li>
-              <Link href="#glossary" className="text-sm font-medium hover:text-amber">
+              <Link href="#walkthroughs" className="text-sm font-medium hover:text-amber">
                 <span className="mr-2 font-mono text-xs text-faint">{PART_TOPICS.length + 1}</span>
+                {t("guide.walkthroughs")}
+              </Link>
+              <span className="ml-6 block text-xs text-faint">{t("guide.walkthroughs.blurb")}</span>
+              <span className="ml-6 mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs">
+                {TUTORIAL_ORDER.map((id) => (
+                  <Link key={id} href={`/guide/${id}`} className="text-dim hover:text-amber">
+                    {tutorials[id].title}
+                  </Link>
+                ))}
+              </span>
+            </li>
+            <li>
+              <Link href="#glossary" className="text-sm font-medium hover:text-amber">
+                <span className="mr-2 font-mono text-xs text-faint">{PART_TOPICS.length + 2}</span>
                 {t("guide.glossary")}
               </Link>
             </li>
@@ -94,10 +110,32 @@ export default async function GuidePage() {
           </section>
         ))}
 
+        {/* Walkthroughs */}
+        <section id="walkthroughs" className="mt-12 scroll-mt-6">
+          <h2 className="flex items-baseline gap-3 border-b border-line pb-2 text-lg font-semibold">
+            <span className="font-mono text-sm text-faint">{PART_TOPICS.length + 1}</span>
+            {t("guide.walkthroughs")}
+          </h2>
+          <p className="mt-3 text-[15px] leading-relaxed text-dim">{t("guide.walkthroughs.blurb")}</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {TUTORIAL_ORDER.map((id) => (
+              <Link
+                key={id}
+                href={`/guide/${id}`}
+                className="rounded-lg border border-line bg-panel p-4 transition-colors hover:border-amber/50"
+              >
+                <h3 className="text-sm font-semibold text-ink">{tutorials[id].title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-dim">{tutorials[id].blurb}</p>
+                <p className="mt-2 text-xs text-faint">{tutorials[id].time}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
         {/* Glossary */}
         <section id="glossary" className="mt-12 scroll-mt-6">
           <h2 className="flex items-baseline gap-3 border-b border-line pb-2 text-lg font-semibold">
-            <span className="font-mono text-sm text-faint">{PART_TOPICS.length + 1}</span>
+            <span className="font-mono text-sm text-faint">{PART_TOPICS.length + 2}</span>
             {t("guide.glossary")}
           </h2>
           <dl className="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2">

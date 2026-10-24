@@ -25,7 +25,7 @@ export default async function ConsolesPage() {
         subtitle={t("console.list.subtitle")}
         actions={<ButtonLink href="/assets/new?category=mixer">{t("console.list.add")}</ButtonLink>}
       />
-      <Help topic="consoles" />
+      <Help topic="consoles" walkthrough="gs3" />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
       {views.length ? (
         <div className="space-y-8">

@@ -47,7 +47,7 @@ export default async function ConsolePage({ params }: { params: Promise<{ id: st
           </>
         }
       />
-      <Help topic="console" />
+      <Help topic="console" walkthrough="gs3" />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
       {others.length ? (
         <ul className="mb-6 space-y-1 rounded-md border border-warn/40 bg-warn/10 px-4 py-3 text-sm text-warn">

@@ -47,6 +47,20 @@ export const common: Record<keyof typeof en, string> = {
   "guide.intro.link": "chapitre sur la console",
   "guide.contents": "Sommaire",
   "guide.glossary": "Glossaire",
+  "guide.walkthroughs": "Pas-à-pas",
+  "guide.walkthroughs.blurb":
+    "Les chapitres ci-dessus disent ce que chaque chose est. Ceux-ci te font faire un travail entier, dans l'ordre, avec le matériel de ce studio-là en exemple.",
+
+  // Les pages de pas-à-pas ; les pas-à-pas eux-mêmes sont dans src/lib/tutorials.
+  "tutorial.backToGuide": "← Guide",
+  "tutorial.before": "Avant de commencer",
+  "tutorial.doThis": "Dans l'app",
+  "tutorial.why": "Pourquoi",
+  "tutorial.watch": "Attention",
+  "tutorial.step": "Étape {n} sur {total}",
+  "tutorial.wrap": "Où ça te mène",
+  "tutorial.readNext": "À lire ensuite",
+  "tutorial.other": "L'autre pas-à-pas",
   "guide.source": "Quelque chose de faux ou de manquant ici ? Le texte vit à un seul endroit, {file}, et alimente à la fois cette page et les volets d'aide sur les pages elles-mêmes.",
   "guide.fig.normalling":
     "Les trois modes d'une paire. L'app suit le signal à travers les deux premiers comme si les points n'étaient qu'un fil, et s'arrête au troisième — parce que c'est ce que fait le matériel.",

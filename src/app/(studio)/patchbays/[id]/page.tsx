@@ -52,7 +52,7 @@ export default async function PatchbayPage({ params }: { params: Promise<{ id: s
           </>
         }
       />
-      <Help topic="patchbay" />
+      <Help topic="patchbay" walkthrough="patchbay" />
       <ModeLegend />
       {loops.length ? <LoopWarnings loops={loops} /> : null}
       {others.length ? (

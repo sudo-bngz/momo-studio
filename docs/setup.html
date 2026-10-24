@@ -15,6 +15,7 @@
   <nav>
     <a href="index.html">Home</a>
     <a href="guide.html">Guide</a>
+    <a href="walkthroughs.html">Walkthroughs</a>
     <a href="setup.html" class="here" aria-current="page">Setup &amp; deploy</a>
     <a href="https://github.com/sudo-bngz/momo-studio" class="out">GitHub</a>
   </nav>
@@ -51,6 +52,20 @@ defaults in <code>docker-compose.yml</code>. Change them before this is reachabl
   boards rather than typing it again.</li>
 </ol>
 
+<h3 id="bootstrap">Steps 1 and 2, from a file</h3>
+<p>Typing twenty-odd machines into a form is the worst hour of this. <code>gohead/inventory.json</code> is your studio as
+an editable list — rooms, the places in them, and one line per machine — and one command creates whatever is in it:</p>
+<pre><code>npm run studio:bootstrap -- --dry-run   # what it would create
+npm run studio:bootstrap                # create it</code></pre>
+<p>A line names a <code>template</code> and the machine arrives with every socket already on it, from the same expander
+the app's <em>Fill the ports</em> button uses — so a template fix reaches both at once. Matching is by the device
+<code>code</code>, so adding a line and running it again creates only what is missing; it never edits or deletes what is
+already there. <code>--dry-run</code> checks the file against <code>gohead/model.json</code> first, so a misspelt field is
+a message about the file rather than a half-created studio, and <code>-- --file other.json</code> runs a different one.</p>
+<p class="note">Mark anything you are unsure of with <code>"check": true</code> and the run lists it at the end, under
+<em>worth a look at the back panel before you trust the ports</em>. Cables are deliberately not in the file: the patch is
+what changes weekly, and it belongs in the app where the plan can check it.</p>
+
 <h2 id="scripts">Scripts</h2>
 <dl class="points">
   <dt><code>npm run dev</code></dt><dd>The app, in development, on :3000.</dd>
@@ -63,6 +78,8 @@ defaults in <code>docker-compose.yml</code>. Change them before this is reachabl
   <dt><code>npm run gohead:types</code></dt><dd>Regenerates <code>src/gohead.d.ts</code> from the model, so the app stops
   compiling when the two disagree.</dd>
   <dt><code>npm run gohead:seed</code></dt><dd>Loads <code>gohead/seed.json</code>: the sample studio.</dd>
+  <dt><code>npm run studio:bootstrap</code></dt><dd>Creates the studio in <code>gohead/inventory.json</code> — rooms, places and
+  machines with their ports filled from the templates. Idempotent by device code; <code>-- --dry-run</code> first.</dd>
   <dt><code>npm run gohead:access</code></dt><dd>Creates the <code>studio-staff</code> role, the read-only
   <code>calendar-feed</code> role, its token and the calendar URL's secret. With <code>-- --user alex</code> it also creates a
   person and prints their password once.</dd>

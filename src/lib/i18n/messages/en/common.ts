@@ -46,6 +46,20 @@ export const common = {
   "guide.intro.link": "console chapter",
   "guide.contents": "Contents",
   "guide.glossary": "Glossary",
+  "guide.walkthroughs": "Walkthroughs",
+  "guide.walkthroughs.blurb":
+    "The chapters above say what each thing is. These take you through doing one whole job, in order, with this studio's own gear in the example.",
+
+  // The walkthrough pages; the walkthroughs themselves are in src/lib/tutorials.
+  "tutorial.backToGuide": "← Guide",
+  "tutorial.before": "Before you start",
+  "tutorial.doThis": "In the app",
+  "tutorial.why": "Why",
+  "tutorial.watch": "Watch out",
+  "tutorial.step": "Step {n} of {total}",
+  "tutorial.wrap": "Where that leaves you",
+  "tutorial.readNext": "Read next",
+  "tutorial.other": "The other walkthrough",
   "guide.source": "Something here wrong or missing? The text lives in one place, {file}, and feeds both this page and the panels on the pages themselves.",
   "guide.fig.normalling":
     "The three modes of a column. The app follows a signal through the first two as if the points were one wire, and stops at the third — because that is what the hardware does.",

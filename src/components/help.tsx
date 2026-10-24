@@ -17,8 +17,10 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { RichText } from "@/components/rich-text";
 import { getHelp, type GlossaryId, type TopicId } from "@/lib/help";
 import { useI18n, useLocale } from "@/lib/i18n/client";
+import { getTutorials, type TutorialId } from "@/lib/tutorials";
 
-export function Help({ topic, children }: { topic: TopicId; children?: ReactNode }) {
+/** `walkthrough` adds a link to the step-by-step for this page's job. */
+export function Help({ topic, walkthrough, children }: { topic: TopicId; walkthrough?: TutorialId; children?: ReactNode }) {
   const { t } = useI18n();
   const locale = useLocale();
   const help = getHelp(locale);
@@ -102,7 +104,12 @@ export function Help({ topic, children }: { topic: TopicId; children?: ReactNode
           {children}
 
           <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line pt-3 text-xs">
-            <Link href={`/guide#${topic}`} className="text-amber hover:underline">
+            {walkthrough ? (
+              <Link href={`/guide/${walkthrough}`} className="font-medium text-amber hover:underline">
+                {getTutorials(locale)[walkthrough].title} →
+              </Link>
+            ) : null}
+            <Link href={`/guide#${topic}`} className={walkthrough ? "text-dim hover:text-amber" : "text-amber hover:underline"}>
               {t("help.inTheGuide", { title: current.title })}
             </Link>
             {current.see?.map((s) => (
