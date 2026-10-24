@@ -1,0 +1,87 @@
+{
+  "$comment": [
+    "Your studio, as a list you can edit. `npm run studio:bootstrap` creates whatever is",
+    "here and is not there yet, matching on the device code — so you can add a line and run",
+    "it again without making duplicates.",
+    "",
+    "`template` names an entry of src/lib/templates/devices.json and fills in every socket.",
+    "Leave it out and the machine is created with no ports, for you to add by hand.",
+    "`check: true` marks something I could not confirm: open it and look at the back panel.",
+    "",
+    "Field names are the ones in gohead/model.json — --dry-run checks them before anything",
+    "is created, so a typo is a message about this file rather than half a studio.",
+    "Cables are deliberately not here: the patch changes weekly and belongs in the app,",
+    "where the plan can check it."
+  ],
+
+  "rooms": [
+    {
+      "name": "Studio",
+      "color": "#f2a541",
+      "width_cm": 500,
+      "depth_cm": 400,
+      "description": "Measure it and correct the size: the map draws to scale."
+    }
+  ],
+
+  "locations": [
+    { "name": "Rack A", "kind": "rack", "room": "Studio", "rack_units": 12, "map_x": 40, "map_y": 40, "width_cm": 60, "depth_cm": 60 },
+    { "name": "Rack B", "kind": "rack", "room": "Studio", "rack_units": 12, "map_x": 120, "map_y": 40, "width_cm": 60, "depth_cm": 60 },
+    { "name": "Desk", "kind": "desk", "room": "Studio", "map_x": 40, "map_y": 160, "width_cm": 180, "depth_cm": 80 },
+    { "name": "Keyboards", "kind": "shelf", "room": "Studio", "map_x": 260, "map_y": 160, "width_cm": 160, "depth_cm": 60 },
+    { "name": "Monitor stands", "kind": "shelf", "room": "Studio", "map_x": 40, "map_y": 280, "width_cm": 180, "depth_cm": 40 }
+  ],
+
+  "devices": [
+    { "code": "MIX-01", "name": "Allen & Heath GS3", "template": "allen-heath-gs3-24", "location": "Desk" },
+
+    { "code": "PB-01", "name": "Patchbay I", "template": "patchbay-48", "location": "Rack A" },
+    { "code": "PB-02", "name": "Patchbay II", "template": "patchbay-48", "location": "Rack A" },
+    { "code": "PB-03", "name": "Patchbay III", "template": "patchbay-48", "location": "Rack B" },
+
+    { "code": "INT-01", "name": "RME Fireface UFX II", "template": "rme-fireface-ufx-ii", "location": "Rack A" },
+    { "code": "CPU-01", "name": "Mac mini M2 Pro", "template": "apple-mac-mini-m2-pro", "location": "Desk" },
+    { "code": "CTL-01", "name": "Ableton Push 2", "template": "ableton-push-2", "location": "Desk" },
+
+    { "code": "SYN-01", "name": "Roland Juno-106", "template": "roland-juno-106", "location": "Keyboards" },
+    { "code": "SYN-02", "name": "Roland Juno-6", "template": "roland-juno-6", "location": "Keyboards" },
+    { "code": "SYN-03", "name": "Yamaha DX7", "template": "yamaha-dx7", "location": "Keyboards" },
+    { "code": "SYN-04", "name": "ARP Solina String Ensemble", "template": "arp-solina-string-ensemble", "location": "Keyboards", "check": true },
+    { "code": "SYN-05", "name": "Access Virus TI2 Desktop", "template": "access-virus-ti2-desktop", "location": "Rack B" },
+    { "code": "SYN-06", "name": "Korg Minilogue", "template": "korg-minilogue", "location": "Keyboards" },
+    { "code": "SYN-07", "name": "Moog Minitaur", "template": "moog-minitaur", "location": "Rack B" },
+    { "code": "SYN-08", "name": "Behringer MS-1", "template": "behringer-ms-1", "location": "Keyboards", "check": true },
+
+    { "code": "EXP-01", "name": "MAM MB33 Retro", "template": "mam-mb33-retro", "location": "Rack B", "check": true },
+
+    { "code": "DRM-01", "name": "Behringer RD-9", "template": "behringer-rd-9", "location": "Desk" },
+    { "code": "DRM-02", "name": "Behringer RD-8", "template": "behringer-rd-8", "location": "Desk" },
+    { "code": "DRM-03", "name": "Roland TD-8", "template": "roland-td-8", "location": "Rack B", "check": true },
+
+    {
+      "code": "SMP-01",
+      "name": "Akai MPC",
+      "category": "sampler",
+      "location": "Desk",
+      "notes": "Tell me which MPC and I'll fill in its sockets.",
+      "check": true
+    },
+
+    { "code": "FX-01", "name": "Roland RE-201 Space Echo", "template": "roland-re-201", "location": "Rack A" },
+    { "code": "FX-02", "name": "Delay pedal", "template": "pedal-mono", "location": "Desk", "notes": "Which pedal? The ports are a generic mono pedal for now.", "check": true },
+    { "code": "DYN-01", "name": "elysia xpressor", "template": "elysia-xpressor-500", "location": "Rack A", "check": true },
+
+    {
+      "code": "EUR-01",
+      "name": "Eurorack",
+      "category": "eurorack",
+      "location": "Rack B",
+      "notes": "Add a port per module jack you actually patch — there is no useful template for a case.",
+      "check": true
+    },
+
+    { "code": "MON-01", "name": "ADAM A7 (L)", "template": "adam-audio-a7x", "location": "Monitor stands" },
+    { "code": "MON-02", "name": "ADAM A7 (R)", "template": "adam-audio-a7x", "location": "Monitor stands" },
+    { "code": "MON-03", "name": "ADAM A7 (spare)", "template": "adam-audio-a7x", "location": "Monitor stands", "state": "spare" }
+  ]
+}

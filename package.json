@@ -17,7 +17,8 @@
     "gohead:types": "gohead-client types --model gohead/model.json --out src/gohead.d.ts",
     "gohead:access": "node scripts/setup-access.mjs",
     "gohead:setup": "npm run gohead:push && npm run gohead:types && npm run gohead:access",
-    "docs": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning scripts/build-docs.mjs"
+    "docs": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning scripts/build-docs.mjs",
+    "studio:bootstrap": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning scripts/bootstrap-studio.mjs"
   },
   "dependencies": {
     "@gohead-cms/client": "^0.7.0",

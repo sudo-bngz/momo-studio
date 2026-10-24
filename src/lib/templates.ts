@@ -4,7 +4,9 @@
  * templates/devices.json (the sample studio is generated from the same file).
  */
 import type { PortInput } from "@/gohead";
-import raw from "@/lib/templates/devices.json";
+// A relative path with an import attribute, so this module can also be read
+// by plain node (scripts/bootstrap-studio.mjs) without the bundler's alias.
+import raw from "./templates/devices.json" with { type: "json" };
 import type { Category } from "@/lib/vocab";
 
 export interface ConsoleSpec {

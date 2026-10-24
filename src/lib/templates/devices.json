@@ -2,46 +2,1028 @@
   "$comment": "Device templates: every socket of a known piece of gear. A port with `each` is repeated for n = from…to, with {n} in its name and, for groups paralleled on track outs, {g}. `params` are asked for before expanding a generic template.",
   "templates": [
     {
-      "id": "allen-heath-gs3-24",
-      "name": "Allen & Heath GS3 24/8/2",
-      "brand": "Allen & Heath",
-      "model": "GS3 24/8/2",
-      "category": "mixer",
-      "console": { "channels": 24, "groups": 8, "auxes": 4, "fx_returns": 4, "groups_on_track_outs": true },
-      "notes": "In-line 24:8:2. Each channel's Track Out carries its direct out, or its group: groups are paralleled on channels 1/9/17, 2/10/18… Aux 1–4 post-fade; Aux 3/4 can follow the monitor path. Mute processor on MIDI channel 16.",
+      "id": "generic-interface",
+      "name": "Audio interface (choose ins and outs)",
+      "category": "audio_interface",
+      "params": {
+        "mic_ins": 4,
+        "line_ins": 8,
+        "line_outs": 8,
+        "adat": 1
+      },
       "ports": [
-        { "each": [1, 24], "name": "Ch {n} Mic", "direction": "in", "signal": "audio", "connector": "xlr", "balanced": true },
-        { "each": [1, 24], "name": "Ch {n} Line", "direction": "in", "signal": "audio", "connector": "jack_ts" },
-        { "each": [1, 24], "name": "Ch {n} Tape In", "direction": "in", "signal": "audio", "connector": "jack_ts", "note": "monitor path / track return" },
-        { "each": [1, 24], "name": "Ch {n} Insert", "direction": "io", "signal": "audio", "connector": "jack_trs", "note": "tip send, ring return, pre-EQ" },
-        { "each": [1, 24], "name": "Ch {n} Track Out", "direction": "out", "signal": "audio", "connector": "jack_ts", "note": "direct out, or group {g}" },
-        { "each": [1, 8], "name": "Group {n} Insert", "direction": "io", "signal": "audio", "connector": "jack_trs" },
-        { "each": [1, 4], "name": "Aux {n} Out", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Cue Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Cue Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Mix Insert L", "direction": "io", "signal": "audio", "connector": "jack_trs" },
-        { "name": "Mix Insert R", "direction": "io", "signal": "audio", "connector": "jack_trs" },
-        { "name": "Mix Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Mix Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "each": [1, 4], "name": "FX Return {n} L", "direction": "in", "signal": "audio", "connector": "jack_ts" },
-        { "each": [1, 4], "name": "FX Return {n} R", "direction": "in", "signal": "audio", "connector": "jack_ts" },
-        { "name": "2-Track A In L", "direction": "in", "signal": "audio", "connector": "jack_ts" },
-        { "name": "2-Track A In R", "direction": "in", "signal": "audio", "connector": "jack_ts" },
-        { "name": "2-Track A Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "2-Track A Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "2-Track B In L", "direction": "in", "signal": "audio", "connector": "jack_ts" },
-        { "name": "2-Track B In R", "direction": "in", "signal": "audio", "connector": "jack_ts" },
-        { "name": "2-Track B Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "2-Track B Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Monitor Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Monitor Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Alt Monitor Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Alt Monitor Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Headphones", "direction": "out", "signal": "audio", "connector": "jack_trs" },
-        { "name": "MIDI In", "direction": "in", "signal": "midi", "connector": "din5", "note": "mute processor" },
-        { "name": "MIDI Out", "direction": "out", "signal": "midi", "connector": "din5" },
-        { "name": "MIDI Thru", "direction": "out", "signal": "midi", "connector": "din5" },
-        { "name": "PSU", "direction": "in", "signal": "power", "connector": "other", "note": "external power supply" }
+        {
+          "each": [
+            1,
+            "{mic_ins}"
+          ],
+          "name": "Mic/Line In {n}",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "xlr",
+          "balanced": true
+        },
+        {
+          "each": [
+            "{mic_ins}+1",
+            "{mic_ins}+{line_ins}"
+          ],
+          "name": "Line In {n}",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true
+        },
+        {
+          "each": [
+            1,
+            "{line_outs}"
+          ],
+          "name": "Line Out {n}",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true
+        },
+        {
+          "each": [
+            1,
+            "{adat}"
+          ],
+          "name": "ADAT In {n}",
+          "direction": "in",
+          "signal": "digital_audio",
+          "connector": "adat"
+        },
+        {
+          "each": [
+            1,
+            "{adat}"
+          ],
+          "name": "ADAT Out {n}",
+          "direction": "out",
+          "signal": "digital_audio",
+          "connector": "adat"
+        },
+        {
+          "name": "Word Clock In",
+          "direction": "in",
+          "signal": "clock",
+          "connector": "bnc"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_c"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "iec"
+        }
+      ]
+    },
+    {
+      "id": "rme-fireface-ufx-ii",
+      "name": "RME Fireface UFX II",
+      "brand": "RME",
+      "model": "Fireface UFX II",
+      "category": "audio_interface",
+      "notes": "Two MIDI pairs, one of them on the front; ADAT2 doubles as optical S/PDIF; there is no coaxial S/PDIF socket at all, so S/PDIF arrives on the AES/EBU XLRs or on ADAT2 optical. Front inputs are channels 9-12 on combo sockets, rear line inputs are 1-8, and only outputs 1/2 are XLR.",
+      "ports": [
+        {
+          "each": [
+            9,
+            12
+          ],
+          "name": "Mic/Line/Inst In {n}",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "xlr",
+          "balanced": true,
+          "note": "front panel Neutrik combo: XLR for mic/line, 1/4\" jack for Hi-Z instrument — one physical socket per channel"
+        },
+        {
+          "name": "Phones 1",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "front, 1/4\" stereo, unbalanced; carries analog out 9/10"
+        },
+        {
+          "name": "Phones 2",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "front, 1/4\" stereo, unbalanced; carries analog out 11/12"
+        },
+        {
+          "name": "MIDI 2 In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "front panel"
+        },
+        {
+          "name": "MIDI 2 Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "front panel"
+        },
+        {
+          "name": "Memory",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_a",
+          "note": "front USB host port for DURec direct recording to a stick or drive"
+        },
+        {
+          "each": [
+            1,
+            8
+          ],
+          "name": "Line In {n}",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "rear, 1/4\" TRS, electronically balanced"
+        },
+        {
+          "each": [
+            1,
+            2
+          ],
+          "name": "Line Out {n}",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "xlr",
+          "balanced": true,
+          "note": "the only XLR outputs; the usual monitor pair, up to +24 dBu"
+        },
+        {
+          "each": [
+            3,
+            8
+          ],
+          "name": "Line Out {n}",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "1/4\" TRS, servo-balanced"
+        },
+        {
+          "name": "AES/EBU In",
+          "direction": "in",
+          "signal": "digital_audio",
+          "connector": "xlr",
+          "note": "transformer-balanced; accepts AES/EBU or S/PDIF"
+        },
+        {
+          "name": "AES/EBU Out",
+          "direction": "out",
+          "signal": "digital_audio",
+          "connector": "xlr",
+          "note": "transformer-balanced; AES/EBU or S/PDIF"
+        },
+        {
+          "name": "Word Clock In",
+          "direction": "in",
+          "signal": "clock",
+          "connector": "bnc",
+          "note": "75 ohm termination switchable in the Settings dialog"
+        },
+        {
+          "name": "Word Clock Out",
+          "direction": "out",
+          "signal": "clock",
+          "connector": "bnc",
+          "note": "always active, at the current sample rate"
+        },
+        {
+          "name": "ADAT1 In",
+          "direction": "in",
+          "signal": "digital_audio",
+          "connector": "adat",
+          "note": "TOSLINK, 8 channels"
+        },
+        {
+          "name": "ADAT1 Out",
+          "direction": "out",
+          "signal": "digital_audio",
+          "connector": "adat",
+          "note": "TOSLINK, 8 channels"
+        },
+        {
+          "name": "ADAT2 In",
+          "direction": "in",
+          "signal": "digital_audio",
+          "connector": "adat",
+          "note": "TOSLINK, 8 channels; switchable to optical S/PDIF in"
+        },
+        {
+          "name": "ADAT2 Out",
+          "direction": "out",
+          "signal": "digital_audio",
+          "connector": "adat",
+          "note": "TOSLINK, 8 channels; switchable to optical S/PDIF out"
+        },
+        {
+          "name": "Remote",
+          "direction": "in",
+          "signal": "control",
+          "connector": "usb_a",
+          "note": "USB host port for the optional ARC USB remote; RME's manual names the port but not the connector type"
+        },
+        {
+          "name": "USB 2.0",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "to the computer; USB 2.0, works on a USB 3 host port"
+        },
+        {
+          "name": "MIDI 1 In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "rear panel"
+        },
+        {
+          "name": "MIDI 1 Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "rear panel"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "iec",
+          "note": "internal switching PSU, 100-240 V AC"
+        }
+      ]
+    },
+    {
+      "id": "apple-mac-mini-m2-pro",
+      "name": "Apple Mac mini (M2 Pro, 2023)",
+      "brand": "Apple",
+      "model": "Mac mini M2 Pro (2023)",
+      "category": "computer",
+      "notes": "The M2 Pro has four Thunderbolt 4 ports where the base M2 has only two, and HDMI 2.1 instead of 2.0. The 3.5 mm jack drives high-impedance headphones directly, which is unusual on a desktop.",
+      "ports": [
+        {
+          "each": [
+            1,
+            4
+          ],
+          "name": "Thunderbolt 4 Port {n}",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_c",
+          "note": "Thunderbolt 4 / USB-C, DisplayPort 1.4; the base M2 has only two of these"
+        },
+        {
+          "each": [
+            1,
+            2
+          ],
+          "name": "USB-A Port {n}",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_a",
+          "note": "USB 3, up to 5 Gb/s"
+        },
+        {
+          "name": "HDMI",
+          "direction": "out",
+          "signal": "other",
+          "connector": "other",
+          "note": "HDMI 2.1 on M2 Pro (HDMI 2.0 on the base M2); carries video and audio"
+        },
+        {
+          "name": "Ethernet",
+          "direction": "io",
+          "signal": "network",
+          "connector": "ethernet",
+          "note": "Gigabit RJ-45; 10Gb Ethernet was a build-to-order option"
+        },
+        {
+          "name": "Headphone Jack",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "minijack",
+          "note": "3.5 mm, with high-impedance headphone support"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "iec",
+          "note": "rear AC inlet, 100-240 V, 185 W supply; takes the standard 3-pin mains lead — Apple does not publish the connector standard"
+        }
+      ]
+    },
+    {
+      "id": "ableton-push-2",
+      "name": "Ableton Push 2",
+      "brand": "Ableton",
+      "model": "Push 2",
+      "category": "controller",
+      "notes": "Not standalone and not an audio device: no audio sockets and no MIDI DIN at all. One USB port to the computer, the 12 V inlet (bus power alone leaves the display very dim), and two footswitch jacks labelled 1 and 2.",
+      "ports": [
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "USB 2.0 Type B to the computer; carries all MIDI and display data"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "12 V DC, 1.25 A, centre-positive, from the included universal PSU"
+        },
+        {
+          "each": [
+            1,
+            2
+          ],
+          "name": "Pedal {n}",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_trs",
+          "note": "1/4\" footswitch input; port 1 is sustain by default"
+        }
+      ]
+    },
+    {
+      "id": "behringer-rd-8",
+      "name": "Behringer RD-8",
+      "brand": "Behringer",
+      "model": "RD-8",
+      "category": "drum_machine",
+      "notes": "Eleven individual outs, but five of them are shared by a pair of voices (CP/MA, RS/CL, HT/HC, MT/MC, LT/LC) — whichever of the pair is selected appears at that jack. The main mix is mono (one jack). Trigger Out 1 and 2 are assignable to any voice, Trigger Out 3 is hard-wired to Accent. The RD-8 MkII has this exact socket set.",
+      "ports": [
+        {
+          "name": "Mono",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "main output, 1/4\" TRS; the RD-8 mix is mono, there is no L/R pair"
+        },
+        {
+          "name": "Phones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "Return",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "sums external audio into the mix after the filter bus. The manual's panel section calls it unbalanced, its spec table calls it balanced TRS"
+        },
+        {
+          "name": "BD Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Bass Drum"
+        },
+        {
+          "name": "SD Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Snare Drum"
+        },
+        {
+          "name": "LT/LC Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Low Tom or Low Conga, whichever is selected"
+        },
+        {
+          "name": "MT/MC Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Mid Tom or Mid Conga, whichever is selected"
+        },
+        {
+          "name": "HT/HC Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "High Tom or High Conga, whichever is selected"
+        },
+        {
+          "name": "RS/CL Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Rim Shot or Claves, whichever is selected"
+        },
+        {
+          "name": "CP/MA Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Hand Clap or Maracas, whichever is selected"
+        },
+        {
+          "name": "CB Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Cow Bell"
+        },
+        {
+          "name": "CY Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Cymbal"
+        },
+        {
+          "name": "OH Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Open Hat"
+        },
+        {
+          "name": "CH Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "Closed Hat"
+        },
+        {
+          "name": "Trigger Out 1",
+          "direction": "out",
+          "signal": "gate",
+          "connector": "jack_ts",
+          "note": "+5 V, 1 ms pulse; assignable to any voice"
+        },
+        {
+          "name": "Trigger Out 2",
+          "direction": "out",
+          "signal": "gate",
+          "connector": "jack_ts",
+          "note": "+5 V, 1 ms pulse; assignable to any voice"
+        },
+        {
+          "name": "Trigger Out 3",
+          "direction": "out",
+          "signal": "gate",
+          "connector": "jack_ts",
+          "note": "+5 V, 1 ms pulse; fixed to Accent"
+        },
+        {
+          "name": "Sync In",
+          "direction": "in",
+          "signal": "clock",
+          "connector": "minijack",
+          "note": "1/8\" TRS: clock on tip, start/stop on ring. Called Clock In in section 4.1 of the manual"
+        },
+        {
+          "name": "Sync Out",
+          "direction": "out",
+          "signal": "clock",
+          "connector": "minijack",
+          "note": "1/8\", described as unbalanced in the manual's panel section"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "USB 2.0 Type B, class compliant, MIDI only"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "supplied external PSU, 18 V DC / 1000 mA"
+        }
+      ]
+    },
+    {
+      "id": "behringer-rd-9",
+      "name": "Behringer RD-9",
+      "brand": "Behringer",
+      "model": "RD-9",
+      "category": "drum_machine",
+      "notes": "Ten individual outs, one per voice, but a single Hi Hat jack for open and closed hats. The main mix is mono (one jack). Three 1/4\" trigger outs at +5 V / 2 ms: two hard-wired to Rim Shot and Clap, the third assignable. Return sums external audio in after the filter bus. Sync is on 3.5 mm, everything else on 1/4\".",
+      "ports": [
+        {
+          "name": "Mono",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "main output, 1/4\" TRS servo-balanced; the RD-9 mix is mono, there is no L/R pair"
+        },
+        {
+          "name": "Phones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "Return",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "sums external audio into the mix after the filter bus"
+        },
+        {
+          "name": "Bass Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Snare Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Low Tom Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Mid Tom Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Hi Tom Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Rim Shot Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Clap Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Hi Hat Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "one jack for both open and closed hats"
+        },
+        {
+          "name": "Crash Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Ride Individual Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Trigger Out 1 (Rim Shot)",
+          "direction": "out",
+          "signal": "gate",
+          "connector": "jack_ts",
+          "note": "+5 V, 2 ms pulse, fixed to Rim Shot"
+        },
+        {
+          "name": "Trigger Out 2 (Clap)",
+          "direction": "out",
+          "signal": "gate",
+          "connector": "jack_ts",
+          "note": "+5 V, 2 ms pulse, fixed to Clap"
+        },
+        {
+          "name": "Trigger Out 3 (BD Assignable)",
+          "direction": "out",
+          "signal": "gate",
+          "connector": "jack_ts",
+          "note": "+5 V, 2 ms pulse; assignable to Bass, Snare, Toms, Rim Shot or Clap — not to the hats, crash or ride"
+        },
+        {
+          "name": "Sync In",
+          "direction": "in",
+          "signal": "clock",
+          "connector": "minijack",
+          "note": "1/8\" TRS: clock on tip, start/stop on ring. Called Clock In in section 4.1 of the manual"
+        },
+        {
+          "name": "Sync Out",
+          "direction": "out",
+          "signal": "clock",
+          "connector": "minijack",
+          "note": "1/8\" TRS: clock on tip, start/stop on ring"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "USB 2.0 Type B, class compliant, MIDI only"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "supplied external PSU, 18 V DC / 1000 mA"
+        }
+      ]
+    },
+    {
+      "id": "roland-td-8",
+      "name": "Roland TD-8 (module only)",
+      "brand": "Roland",
+      "model": "TD-8",
+      "category": "drum_machine",
+      "notes": "Ten trigger-input jacks but twelve trigger channels: inputs 1/2 (Kick) and 11/12 (Aux) are dual jacks that split to two pads with a PCS-31 insert cable, the rest are stereo head/rim. Direct Output is silent until voices are assigned to it. Foot Switch is also a dual jack. Roland's documentation never states the jack sizes.",
+      "ports": [
+        {
+          "name": "Trigger Input 1/2 (Kick 1/2)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual jack: two kick pads via a PCS-31 or insert cable. Takes piezo pad signals, not gate voltages"
+        },
+        {
+          "name": "Trigger Input 3 (Snare)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual: head + rim. Needed for rim shot, cross stick, positional sensing and brush play"
+        },
+        {
+          "name": "Trigger Input 4 (Tom 1)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual: head + rim"
+        },
+        {
+          "name": "Trigger Input 5 (Tom 2)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual: head + rim"
+        },
+        {
+          "name": "Trigger Input 6 (Tom 3)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual: head + rim"
+        },
+        {
+          "name": "Trigger Input 7 (Hi-Hat)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual"
+        },
+        {
+          "name": "Trigger Input 8 (Crash 1)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual: bow + edge"
+        },
+        {
+          "name": "Trigger Input 9 (Crash 2)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual: bow + edge"
+        },
+        {
+          "name": "Trigger Input 10 (Ride)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual: bow + edge"
+        },
+        {
+          "name": "Trigger Input 11/12 (Aux 1/2)",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_trs",
+          "note": "dual jack: two pads via a PCS-31 or insert cable"
+        },
+        {
+          "name": "HH Ctrl",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_trs",
+          "note": "hi-hat control pedal (FD-7)"
+        },
+        {
+          "name": "Master Output L (Mono)",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "use this jack alone for mono"
+        },
+        {
+          "name": "Master Output R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Direct Output L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "isolated voices for external effects; silent at factory settings until voices are assigned"
+        },
+        {
+          "name": "Direct Output R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "isolated voices for external effects; silent at factory settings"
+        },
+        {
+          "name": "Phones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "Mix In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "stereo; feeds Master Output and Phones only, not the Direct Outputs"
+        },
+        {
+          "name": "Foot Switch",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_trs",
+          "note": "dual jack: two switches (FS-5U) via a PCS-31 or insert cable"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out/Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "one socket, switchable between Out and Thru"
+        },
+        {
+          "name": "DC In",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "AC adaptor, DC 9 V, 600 mA"
+        }
+      ]
+    },
+    {
+      "id": "elysia-xpressor-500",
+      "name": "elysia xpressor 500",
+      "brand": "elysia",
+      "model": "xpressor 500",
+      "category": "dynamics_eq",
+      "notes": "A double-wide 500-series module with no sockets of its own: both channels and power come from the API 500 frame's edge connector, so you patch at the frame. Unlike the rack version it has no external sidechain or EXT jack — the sidechain filter is internal only.",
+      "ports": [
+        {
+          "each": [
+            1,
+            2
+          ],
+          "name": "Input {n}",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "other",
+          "balanced": true,
+          "note": "+4 dBu, pin 2 hot; no socket on the module — arrives on the API 500 frame edge connector, patched at the frame (normally XLR)"
+        },
+        {
+          "each": [
+            1,
+            2
+          ],
+          "name": "Output {n}",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "other",
+          "balanced": true,
+          "note": "+4 dBu, pin 2 hot; leaves via the API 500 frame edge connector, patched at the frame (normally XLR)"
+        },
+        {
+          "name": "Frame Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "other",
+          "note": "±16 V DC, 125 mA, from the 500-series frame edge connector; occupies two slots and will not run standalone"
+        }
+      ]
+    },
+    {
+      "id": "pedal-mono",
+      "name": "Pedal, mono in/out",
+      "category": "effect",
+      "ports": [
+        {
+          "name": "In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Out",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc"
+        }
+      ]
+    },
+    {
+      "id": "roland-re-201",
+      "name": "Roland RE-201 Space Echo",
+      "brand": "Roland",
+      "model": "RE-201",
+      "category": "effect",
+      "notes": "Four inputs, each with its own level control (Mic x2, Instrument, P.A.), but only ONE output: echo, reverb and dry are balanced internally, so the wet signal cannot be taken separately. Remote foot switch jack. Mains lead is captive and the unit is wired for one voltage range.",
+      "ports": [
+        {
+          "name": "Mic 1 In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "own Mic Volume control"
+        },
+        {
+          "name": "Mic 2 In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "own Mic Volume control"
+        },
+        {
+          "name": "Instrument In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "own Instrument Volume; the Instrument Echo cancel switch removes echo from this channel only"
+        },
+        {
+          "name": "P.A. In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "line level, e.g. from a mixer"
+        },
+        {
+          "name": "Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "single mixed output (dry + echo + reverb); a 3-step output level switch sets its level"
+        },
+        {
+          "name": "Foot Switch",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_ts",
+          "note": "remote foot switch, supplied with the unit; interlocked with the level meter lamp"
+        },
+        {
+          "name": "Mains",
+          "direction": "in",
+          "signal": "power",
+          "connector": "other",
+          "note": "captive mains lead, no inlet; unit is built for 100/117 V or for 230/250 V, 50/60 Hz, 14 VA"
+        }
+      ]
+    },
+    {
+      "id": "mam-mb33-retro",
+      "name": "MAM MB33 Retro",
+      "brand": "MAM",
+      "model": "MB33 Retro",
+      "category": "expander",
+      "notes": "Almost nothing on the back: one audio out, a VCF In for running external audio through the filter, and MIDI In only — no MIDI Out, no Thru, no headphones, no CV or clock. The power socket is labelled 12 V AC and wants an AC adapter, not a DC one.",
+      "ports": [
+        {
+          "name": "Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "the only audio output; there is no headphone jack"
+        },
+        {
+          "name": "VCF In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "external audio routed through the VCF"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "the only MIDI socket — no Out and no Thru, so it cannot be daisy-chained onward"
+        },
+        {
+          "name": "12 V AC",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "barrel socket for the external adapter, labelled 12 V AC — it takes an AC adapter; do not substitute a DC supply"
+        }
       ]
     },
     {
@@ -50,64 +1032,478 @@
       "brand": "Allen & Heath",
       "model": "GS3 16/8/2",
       "category": "mixer",
-      "console": { "channels": 16, "groups": 8, "auxes": 4, "fx_returns": 4, "groups_on_track_outs": true },
+      "console": {
+        "channels": 16,
+        "groups": 8,
+        "auxes": 4,
+        "fx_returns": 4,
+        "groups_on_track_outs": true
+      },
       "extends": "allen-heath-gs3-24",
-      "params": { "channels": 16 }
+      "params": {
+        "channels": 16
+      }
+    },
+    {
+      "id": "allen-heath-gs3-24",
+      "name": "Allen & Heath GS3 24/8/2",
+      "brand": "Allen & Heath",
+      "model": "GS3 24/8/2",
+      "category": "mixer",
+      "console": {
+        "channels": 24,
+        "groups": 8,
+        "auxes": 4,
+        "fx_returns": 4,
+        "groups_on_track_outs": true
+      },
+      "notes": "In-line 24:8:2. Each channel's Track Out carries its direct out, or its group: groups are paralleled on channels 1/9/17, 2/10/18… Aux 1–4 post-fade; Aux 3/4 can follow the monitor path. Mute processor on MIDI channel 16.",
+      "ports": [
+        {
+          "each": [
+            1,
+            24
+          ],
+          "name": "Ch {n} Mic",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "xlr",
+          "balanced": true
+        },
+        {
+          "each": [
+            1,
+            24
+          ],
+          "name": "Ch {n} Line",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "each": [
+            1,
+            24
+          ],
+          "name": "Ch {n} Tape In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "monitor path / track return"
+        },
+        {
+          "each": [
+            1,
+            24
+          ],
+          "name": "Ch {n} Insert",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "tip send, ring return, pre-EQ"
+        },
+        {
+          "each": [
+            1,
+            24
+          ],
+          "name": "Ch {n} Track Out",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "direct out, or group {g}"
+        },
+        {
+          "each": [
+            1,
+            8
+          ],
+          "name": "Group {n} Insert",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "each": [
+            1,
+            4
+          ],
+          "name": "Aux {n} Out",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Cue Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Cue Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Mix Insert L",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "Mix Insert R",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "Mix Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Mix Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "each": [
+            1,
+            4
+          ],
+          "name": "FX Return {n} L",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "each": [
+            1,
+            4
+          ],
+          "name": "FX Return {n} R",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "2-Track A In L",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "2-Track A In R",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "2-Track A Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "2-Track A Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "2-Track B In L",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "2-Track B In R",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "2-Track B Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "2-Track B Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Monitor Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Monitor Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Alt Monitor Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Alt Monitor Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "mute processor"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "PSU",
+          "direction": "in",
+          "signal": "power",
+          "connector": "other",
+          "note": "external power supply"
+        }
+      ]
     },
     {
       "id": "generic-console",
       "name": "Console (choose channels, groups, auxes)",
       "category": "mixer",
-      "params": { "channels": 16, "groups": 4, "auxes": 4, "fx_returns": 2 },
-      "console": { "channels": "{channels}", "groups": "{groups}", "auxes": "{auxes}", "fx_returns": "{fx_returns}", "groups_on_track_outs": false },
+      "params": {
+        "channels": 16,
+        "groups": 4,
+        "auxes": 4,
+        "fx_returns": 2
+      },
+      "console": {
+        "channels": "{channels}",
+        "groups": "{groups}",
+        "auxes": "{auxes}",
+        "fx_returns": "{fx_returns}",
+        "groups_on_track_outs": false
+      },
       "ports": [
-        { "each": [1, "{channels}"], "name": "Ch {n} Mic", "direction": "in", "signal": "audio", "connector": "xlr", "balanced": true },
-        { "each": [1, "{channels}"], "name": "Ch {n} Line", "direction": "in", "signal": "audio", "connector": "jack_trs", "balanced": true },
-        { "each": [1, "{channels}"], "name": "Ch {n} Insert", "direction": "io", "signal": "audio", "connector": "jack_trs" },
-        { "each": [1, "{channels}"], "name": "Ch {n} Direct Out", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
-        { "each": [1, "{groups}"], "name": "Group {n} Insert", "direction": "io", "signal": "audio", "connector": "jack_trs" },
-        { "each": [1, "{groups}"], "name": "Group {n} Out", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
-        { "each": [1, "{auxes}"], "name": "Aux {n} Out", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
-        { "each": [1, "{fx_returns}"], "name": "FX Return {n} L", "direction": "in", "signal": "audio", "connector": "jack_trs" },
-        { "each": [1, "{fx_returns}"], "name": "FX Return {n} R", "direction": "in", "signal": "audio", "connector": "jack_trs" },
-        { "name": "Mix Insert L", "direction": "io", "signal": "audio", "connector": "jack_trs" },
-        { "name": "Mix Insert R", "direction": "io", "signal": "audio", "connector": "jack_trs" },
-        { "name": "Mix Out L", "direction": "out", "signal": "audio", "connector": "xlr", "balanced": true },
-        { "name": "Mix Out R", "direction": "out", "signal": "audio", "connector": "xlr", "balanced": true },
-        { "name": "Monitor Out L", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
-        { "name": "Monitor Out R", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
-        { "name": "2-Track In L", "direction": "in", "signal": "audio", "connector": "rca" },
-        { "name": "2-Track In R", "direction": "in", "signal": "audio", "connector": "rca" },
-        { "name": "Headphones", "direction": "out", "signal": "audio", "connector": "jack_trs" },
-        { "name": "Power", "direction": "in", "signal": "power", "connector": "iec" }
+        {
+          "each": [
+            1,
+            "{channels}"
+          ],
+          "name": "Ch {n} Mic",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "xlr",
+          "balanced": true
+        },
+        {
+          "each": [
+            1,
+            "{channels}"
+          ],
+          "name": "Ch {n} Line",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true
+        },
+        {
+          "each": [
+            1,
+            "{channels}"
+          ],
+          "name": "Ch {n} Insert",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "each": [
+            1,
+            "{channels}"
+          ],
+          "name": "Ch {n} Direct Out",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true
+        },
+        {
+          "each": [
+            1,
+            "{groups}"
+          ],
+          "name": "Group {n} Insert",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "each": [
+            1,
+            "{groups}"
+          ],
+          "name": "Group {n} Out",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true
+        },
+        {
+          "each": [
+            1,
+            "{auxes}"
+          ],
+          "name": "Aux {n} Out",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true
+        },
+        {
+          "each": [
+            1,
+            "{fx_returns}"
+          ],
+          "name": "FX Return {n} L",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "each": [
+            1,
+            "{fx_returns}"
+          ],
+          "name": "FX Return {n} R",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "Mix Insert L",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "Mix Insert R",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "Mix Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "xlr",
+          "balanced": true
+        },
+        {
+          "name": "Mix Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "xlr",
+          "balanced": true
+        },
+        {
+          "name": "Monitor Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true
+        },
+        {
+          "name": "Monitor Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true
+        },
+        {
+          "name": "2-Track In L",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "rca"
+        },
+        {
+          "name": "2-Track In R",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "rca"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "iec"
+        }
       ]
     },
     {
-      "id": "generic-interface",
-      "name": "Audio interface (choose ins and outs)",
-      "category": "audio_interface",
-      "params": { "mic_ins": 4, "line_ins": 8, "line_outs": 8, "adat": 1 },
+      "id": "adam-audio-a7x",
+      "name": "ADAM Audio A7X",
+      "brand": "ADAM Audio",
+      "model": "A7X",
+      "category": "monitor",
+      "notes": "Inputs only, as expected for an active monitor: one balanced XLR and one unbalanced RCA, wired in parallel on the AX series, so feed only one of them at a time. Power switch and volume are on the front baffle, everything else on the rear plate.",
       "ports": [
-        { "each": [1, "{mic_ins}"], "name": "Mic/Line In {n}", "direction": "in", "signal": "audio", "connector": "xlr", "balanced": true },
-        { "each": ["{mic_ins}+1", "{mic_ins}+{line_ins}"], "name": "Line In {n}", "direction": "in", "signal": "audio", "connector": "jack_trs", "balanced": true },
-        { "each": [1, "{line_outs}"], "name": "Line Out {n}", "direction": "out", "signal": "audio", "connector": "jack_trs", "balanced": true },
-        { "each": [1, "{adat}"], "name": "ADAT In {n}", "direction": "in", "signal": "digital_audio", "connector": "adat" },
-        { "each": [1, "{adat}"], "name": "ADAT Out {n}", "direction": "out", "signal": "digital_audio", "connector": "adat" },
-        { "name": "Word Clock In", "direction": "in", "signal": "clock", "connector": "bnc" },
-        { "name": "MIDI In", "direction": "in", "signal": "midi", "connector": "din5" },
-        { "name": "MIDI Out", "direction": "out", "signal": "midi", "connector": "din5" },
-        { "name": "USB", "direction": "io", "signal": "usb", "connector": "usb_c" },
-        { "name": "Power", "direction": "in", "signal": "power", "connector": "iec" }
-      ]
-    },
-    {
-      "id": "patchbay-48",
-      "name": "Patchbay, 48 points (24 columns)",
-      "category": "patchbay",
-      "patch_columns": 24,
-      "ports": [
-        { "each": [1, 24], "name": "Top {n}", "direction": "io", "signal": "audio", "connector": "jack_trs", "balanced": true, "note": "rear" },
-        { "each": [1, 24], "name": "Bottom {n}", "direction": "io", "signal": "audio", "connector": "jack_trs", "balanced": true, "note": "rear" }
+        {
+          "name": "Balanced Input",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "xlr",
+          "balanced": true,
+          "note": "30 kOhm input impedance"
+        },
+        {
+          "name": "Unbalanced Input",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "rca",
+          "note": "parallel with the XLR input on the AX series — only one source at a time"
+        },
+        {
+          "name": "Mains",
+          "direction": "in",
+          "signal": "power",
+          "connector": "iec",
+          "note": "rear mains receptacle, 100-240 V; power switch is on the front"
+        }
       ]
     },
     {
@@ -116,8 +1512,630 @@
       "category": "patchbay",
       "patch_columns": 16,
       "ports": [
-        { "each": [1, 16], "name": "Top {n}", "direction": "io", "signal": "audio", "connector": "jack_trs", "balanced": true, "note": "rear" },
-        { "each": [1, 16], "name": "Bottom {n}", "direction": "io", "signal": "audio", "connector": "jack_trs", "balanced": true, "note": "rear" }
+        {
+          "each": [
+            1,
+            16
+          ],
+          "name": "Top {n}",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "rear"
+        },
+        {
+          "each": [
+            1,
+            16
+          ],
+          "name": "Bottom {n}",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "rear"
+        }
+      ]
+    },
+    {
+      "id": "patchbay-48",
+      "name": "Patchbay, 48 points (24 columns)",
+      "category": "patchbay",
+      "patch_columns": 24,
+      "ports": [
+        {
+          "each": [
+            1,
+            24
+          ],
+          "name": "Top {n}",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "rear"
+        },
+        {
+          "each": [
+            1,
+            24
+          ],
+          "name": "Bottom {n}",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "rear"
+        }
+      ]
+    },
+    {
+      "id": "access-virus-ti2-desktop",
+      "name": "Access Virus TI2 Desktop",
+      "brand": "Access",
+      "model": "Virus TI2 Desktop",
+      "category": "synth",
+      "notes": "Three balanced stereo output pairs (+4 dBu) plus S/PDIF, and the USB port carries audio as well as MIDI, so the Virus doubles as a 6-out audio interface. No pedal jacks (those are on the Keyboard/Polar models) and no power switch: standby is held from the front panel.",
+      "ports": [
+        {
+          "each": [
+            1,
+            3
+          ],
+          "name": "Out {n} L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "1/4 inch, +4 dBu, panel labels OUTPUT 1 and OUTPUT 2/3; switchable soft limiter"
+        },
+        {
+          "each": [
+            1,
+            3
+          ],
+          "name": "Out {n} R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "1/4 inch, +4 dBu; Out 1 R also carries a summed mono signal"
+        },
+        {
+          "name": "In L",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "1/4 inch line input, 24-bit A/D, four software-selectable sensitivities; no documented instrument/Hi-Z setting"
+        },
+        {
+          "name": "In R",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "1/4 inch line input, 24-bit A/D, four software-selectable sensitivities"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "rear panel, stereo; jack size not stated in Access documentation — assumed 1/4 inch"
+        },
+        {
+          "name": "S/PDIF In",
+          "direction": "in",
+          "signal": "digital_audio",
+          "connector": "spdif_coax",
+          "note": "coaxial RCA, 44.1/48 kHz"
+        },
+        {
+          "name": "S/PDIF Out",
+          "direction": "out",
+          "signal": "digital_audio",
+          "connector": "spdif_coax",
+          "note": "coaxial RCA, 44.1/48 kHz"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "audio + MIDI + data; socket type not stated in the TI manual, type B documented for the TI Snow"
+        },
+        {
+          "name": "12V DC In",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "external 100-240 V supply, 30 W max; unit has no mains switch"
+        }
+      ]
+    },
+    {
+      "id": "arp-solina-string-ensemble",
+      "name": "ARP / Eminent Solina String Ensemble",
+      "brand": "Eminent",
+      "model": "Solina String Ensemble",
+      "category": "synth",
+      "notes": "Built by Eminent, rebadged by ARP for the US — same machine, and the I/O follows the revision rather than the badge. SE-I and SE-II are mono; SE-III and SE-IV have stereo outputs, so a stereo unit has a second output jack to add here. The keyboard also puts out gate and trigger, which is how it was paired with an ARP Axxe.",
+      "ports": [
+        {
+          "name": "Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "mono; stereo revisions (SE-III/SE-IV) have a second output jack"
+        },
+        {
+          "name": "Gate Out",
+          "direction": "out",
+          "signal": "gate",
+          "connector": "jack_ts",
+          "note": "keyboard gate, to drive an external synth"
+        },
+        {
+          "name": "Trigger Out",
+          "direction": "out",
+          "signal": "gate",
+          "connector": "jack_ts",
+          "note": "keyboard trigger pulse"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "other",
+          "note": "mains cable"
+        }
+      ]
+    },
+    {
+      "id": "behringer-ms-1",
+      "name": "Behringer MS-1",
+      "brand": "Behringer",
+      "model": "MS-1",
+      "category": "synth",
+      "notes": "The SH-101's control voltages land on 3.5 mm minijacks here, not the original's 1/4\" — but Main Output, Phones, Ext Audio Input and the Hold footswitch are all 1/4\". The performance grip plugs into its own pair of minijacks. USB carries MIDI only and does not power or pass audio.",
+      "ports": [
+        {
+          "name": "Main Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "1/4\" TS, max +10 dBu"
+        },
+        {
+          "name": "Phones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "1/4\" TRS, max +2 dBu into 32 ohm"
+        },
+        {
+          "name": "Ext Audio Input",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "1/4\" TS, max +20 dBu; runs external audio through the filter"
+        },
+        {
+          "name": "Hold",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_ts",
+          "note": "optional footswitch, holds the sequencer; 1/4\" TS"
+        },
+        {
+          "name": "VCF CV Input",
+          "direction": "in",
+          "signal": "cv",
+          "connector": "minijack",
+          "note": "filter cutoff, 0.7 V"
+        },
+        {
+          "name": "Sync Input",
+          "direction": "in",
+          "signal": "clock",
+          "connector": "minijack",
+          "note": "external clock, +2.5 V or greater. Retailers often call it Ext Clk In"
+        },
+        {
+          "name": "CV In",
+          "direction": "in",
+          "signal": "cv",
+          "connector": "minijack",
+          "note": "pitch, 1 V/oct; the manual groups this with Gate In under one CV/GATE INPUT heading"
+        },
+        {
+          "name": "Gate In",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "minijack",
+          "note": "grouped with CV In under the manual's CV/GATE INPUT heading"
+        },
+        {
+          "name": "CV Out",
+          "direction": "out",
+          "signal": "cv",
+          "connector": "minijack",
+          "note": "pitch, 1 V/oct; the manual groups this with Gate Out under one CV/GATE OUTPUT heading"
+        },
+        {
+          "name": "Gate Out",
+          "direction": "out",
+          "signal": "gate",
+          "connector": "minijack",
+          "note": "0 V off, 10 V on"
+        },
+        {
+          "name": "Velocity Out",
+          "direction": "out",
+          "signal": "cv",
+          "connector": "minijack",
+          "note": "key velocity, 0.5 V"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "USB 2.0 Type B, MIDI only — no audio, no bus power"
+        },
+        {
+          "name": "Grip",
+          "direction": "in",
+          "signal": "control",
+          "connector": "minijack",
+          "note": "live performance grip (the keytar handle)"
+        },
+        {
+          "name": "Mod",
+          "direction": "in",
+          "signal": "control",
+          "connector": "minijack",
+          "note": "modulation lead from the live performance grip"
+        },
+        {
+          "name": "DC Input",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "supplied external PSU, 9 V DC"
+        }
+      ]
+    },
+    {
+      "id": "korg-minilogue",
+      "name": "Korg minilogue",
+      "brand": "Korg",
+      "model": "minilogue",
+      "category": "synth",
+      "notes": "Original 2016 4-voice analogue polysynth: audio out and audio in are mono 6.3 mm, while Sync In/Out are 3.5 mm minijacks (20 V max in, 5 V out). MIDI In and Out only, no Thru, and no damper or pedal jack.",
+      "ports": [
+        {
+          "name": "Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "6.3 mm monaural phone jack; whole synth is mono out"
+        },
+        {
+          "name": "Audio In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "6.3 mm monaural phone jack, mono signal into the audio path"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "6.3 mm stereo phone jack; carries the same signal as Output"
+        },
+        {
+          "name": "Sync In",
+          "direction": "in",
+          "signal": "clock",
+          "connector": "minijack",
+          "note": "3.5 mm, 20 V maximum input level; Korg's web spec says monaural, the manual says stereo mini-phone"
+        },
+        {
+          "name": "Sync Out",
+          "direction": "out",
+          "signal": "clock",
+          "connector": "minijack",
+          "note": "3.5 mm, 5 V output level"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "USB type B, MIDI only — no USB audio"
+        },
+        {
+          "name": "DC 9V",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "9 V AC adapter, 8 W; polarity not stated in the manual"
+        }
+      ]
+    },
+    {
+      "id": "moog-minitaur",
+      "name": "Moog Minitaur",
+      "brand": "Moog",
+      "model": "Minitaur",
+      "category": "synth",
+      "notes": "Described as the Rev 2 (manual REV 2.2) Minitaur: Rev 2 is a firmware/feature revision — presets, Decay/Release mode, CV-to-MIDI and remappable controller inputs — and the socket panel is the same as Rev 1. All CV jacks are 1/4 inch, not 3.5 mm; Pitch/Filter/Volume are TRS so they also power a Moog EP-2 expression pedal. MIDI DIN is input only; MIDI out exists over USB only.",
+      "ports": [
+        {
+          "name": "Audio Out",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "1/4 inch unbalanced, line level, mono"
+        },
+        {
+          "name": "Audio In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "1/4 inch unbalanced, +4 dBu line level, into the filter/VCA path"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "minijack",
+          "note": "1/8 inch stereo, 32 ohm or higher recommended"
+        },
+        {
+          "name": "Pitch CV",
+          "direction": "in",
+          "signal": "cv",
+          "connector": "jack_trs",
+          "note": "1/4 inch TRS, 0 to +5 V, scaled internally to 1 V/oct; also takes an expression pedal. Rev 2 firmware can remap it"
+        },
+        {
+          "name": "Filter CV",
+          "direction": "in",
+          "signal": "cv",
+          "connector": "jack_trs",
+          "note": "1/4 inch TRS, 0 to +5 V, summed with the Cutoff knob; also takes an expression pedal"
+        },
+        {
+          "name": "Volume CV",
+          "direction": "in",
+          "signal": "cv",
+          "connector": "jack_trs",
+          "note": "1/4 inch TRS, 0 to +5 V, controls the VCA; also takes an expression pedal. Rev 2 firmware can remap it"
+        },
+        {
+          "name": "Gate",
+          "direction": "in",
+          "signal": "gate",
+          "connector": "jack_ts",
+          "note": "1/4 inch, 0 V off / +5 V on, triggers both envelopes. Rev 2 firmware can remap it"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "DIN MIDI in only — there is no MIDI Out or Thru socket"
+        },
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "USB type B, MIDI in and out; no USB audio"
+        },
+        {
+          "name": "12V DC",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "+12 V DC, tip positive, external 100-240 V adaptor"
+        }
+      ]
+    },
+    {
+      "id": "roland-juno-106",
+      "name": "Roland Juno-106",
+      "brand": "Roland",
+      "model": "Juno-106",
+      "category": "synth",
+      "notes": "Two mono output jacks: either one alone gives the mono sum, both together give the stereo chorus. Patch memory goes to cassette over the Save/Load jacks, not over MIDI only. Mains cord is a detachable 2-pin Roland type (2P-AC1), not IEC — keep a spare.",
+      "ports": [
+        {
+          "name": "Output L/Mono",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "mono sum when used alone"
+        },
+        {
+          "name": "Output R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "stereo chorus needs both output jacks"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "stereo"
+        },
+        {
+          "name": "Pedal Hold",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_ts",
+          "note": "foot switch, momentary (DP-2)"
+        },
+        {
+          "name": "Patch Shift",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_ts",
+          "note": "foot switch, steps through patches (DP-2)"
+        },
+        {
+          "name": "Tape Save",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "patch dump to a cassette recorder"
+        },
+        {
+          "name": "Tape Load",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "patch load from a cassette recorder"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "other",
+          "note": "detachable 2-pin Roland AC cord (2P-AC1), not IEC"
+        }
+      ]
+    },
+    {
+      "id": "roland-juno-6",
+      "name": "Roland Juno-6",
+      "brand": "Roland",
+      "model": "Juno-6",
+      "category": "synth",
+      "notes": "No MIDI, no DCB and no patch memory, so no tape jacks either — the only sync in is the arpeggio clock input, one step per pulse above +2.5V. Filter cutoff can be pedalled from the VCF Control jack. Mains cord is hard-wired to the chassis and the transformer is region-specific.",
+      "ports": [
+        {
+          "name": "Output L/Mono",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "mono sum when used alone; level switch L/M/H, -30/-15/0 dBm"
+        },
+        {
+          "name": "Output R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "stereo chorus needs both output jacks"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "stereo, 8-200 ohm"
+        },
+        {
+          "name": "VCF Control",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_ts",
+          "note": "filter cutoff pedal (Roland FV-200)"
+        },
+        {
+          "name": "Pedal Hold",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_ts",
+          "note": "foot switch, momentary (DP-2)"
+        },
+        {
+          "name": "Arpeggio Clock In",
+          "direction": "in",
+          "signal": "clock",
+          "connector": "jack_ts",
+          "note": "1 pulse = 1 step, +2.5V or more"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "other",
+          "note": "captive mains cable, region-specific voltage"
+        }
       ]
     },
     {
@@ -125,24 +2143,132 @@
       "name": "Synth, stereo out + MIDI + USB",
       "category": "synth",
       "ports": [
-        { "name": "Out L", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Out R", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Headphones", "direction": "out", "signal": "audio", "connector": "jack_trs" },
-        { "name": "MIDI In", "direction": "in", "signal": "midi", "connector": "din5" },
-        { "name": "MIDI Out", "direction": "out", "signal": "midi", "connector": "din5" },
-        { "name": "MIDI Thru", "direction": "out", "signal": "midi", "connector": "din5" },
-        { "name": "USB", "direction": "io", "signal": "usb", "connector": "usb_b" },
-        { "name": "Power", "direction": "in", "signal": "power", "connector": "dc" }
+        {
+          "name": "Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc"
+        }
       ]
     },
     {
-      "id": "pedal-mono",
-      "name": "Pedal, mono in/out",
-      "category": "effect",
+      "id": "yamaha-dx7",
+      "name": "Yamaha DX7",
+      "brand": "Yamaha",
+      "model": "DX7",
+      "category": "synth",
+      "notes": "Mono only: one unbalanced output jack, no stereo. Four control jacks on the rear, in two pairs — Volume and Modulation take TRS foot controllers (FC-3A), Sustain and Portamento take TS foot switches (FC-4/FC-5). Headphone and breath controller jacks are at the front left, the breath jack being a mini TRS that takes nothing but a BC-1. Voices load from a cartridge slot by the right of the keyboard, not from a cable.",
       "ports": [
-        { "name": "In", "direction": "in", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Out", "direction": "out", "signal": "audio", "connector": "jack_ts" },
-        { "name": "Power", "direction": "in", "signal": "power", "connector": "dc" }
+        {
+          "name": "Output",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "mono, unbalanced line level"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "front panel, left of keyboard"
+        },
+        {
+          "name": "Breath Control",
+          "direction": "in",
+          "signal": "control",
+          "connector": "minijack",
+          "note": "front panel; BC-1 breath controller only"
+        },
+        {
+          "name": "Foot Control Volume",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_trs",
+          "note": "foot controller (FC-3A), tip/ring/sleeve"
+        },
+        {
+          "name": "Foot Control Modulation",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_trs",
+          "note": "foot controller (FC-3A), tip/ring/sleeve"
+        },
+        {
+          "name": "Foot Switch Sustain",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_ts",
+          "note": "foot switch (FC-4/FC-5)"
+        },
+        {
+          "name": "Foot Switch Portamento",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_ts",
+          "note": "foot switch (FC-4/FC-5)"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "other",
+          "note": "internal transformer, mains cord; region-specific voltage"
+        }
       ]
     }
   ]
