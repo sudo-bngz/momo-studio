@@ -72,7 +72,10 @@ npm run studio:bootstrap                # create it
 A line that names a `template` arrives with every socket already on it, from the same expander
 the app's *Fill the ports* button uses. Matching is by the device `code`, so adding a line and
 running it again creates only what is missing — it never edits or deletes what is already
-there. `--dry-run` checks the file against `gohead/model.json` first, so a misspelt field is a
+there. Rename a machine, move it, repatch it, add ports by hand: a later run leaves all of it
+alone. `-- --fill-ports` is the one exception and is opt-in — it gives ports to a machine whose
+port list is empty and whose line names a known template, which is what you want for something
+created before its template existed. Anything with even one port is left alone. `--dry-run` checks the file against `gohead/model.json` first, so a misspelt field is a
 message about the file rather than a half-created studio. Then the patchbay modes and the
 cables, in the app: the patch is what changes weekly, and it belongs where the plan can check
 it. If it already lives in a spreadsheet, paste it a column at a time into the patchbay and
@@ -206,7 +209,7 @@ needs, until it does.
 | `npm run gohead:access` | The `studio-staff` role (and a user with `-- --user <name>`) |
 | `npm run gohead:seed` | Sample studio from `gohead/seed.json`: 2 rooms, 8 places, 24 devices (a GS3 24/8/2, 3 patchbays, pedals), 80 cables, bookings |
 | `npm run gohead:setup` | `push`, `types` and `access` |
-| `npm run studio:bootstrap` | Creates the studio in `gohead/inventory.json` — rooms, places, machines with their ports from the templates. Idempotent by device code; `-- --dry-run` first |
+| `npm run studio:bootstrap` | Creates the studio in `gohead/inventory.json` — rooms, places, machines with their ports from the templates. Idempotent by device code and never edits what is there; `-- --dry-run` first, `-- --fill-ports` for a machine that has none |
 | `npm run docs` | Rebuilds the documentation site in `docs/` from `src/lib/help/en.ts` and `src/lib/tutorials/en.ts` |
 
 The setup scripts sign in with `GOHEAD_USERNAME` / `GOHEAD_PASSWORD` from `.env.local`.

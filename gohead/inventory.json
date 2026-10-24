@@ -8,6 +8,10 @@
     "Leave it out and the machine is created with no ports, for you to add by hand.",
     "`check: true` marks something I could not confirm: open it and look at the back panel.",
     "",
+    "Adding a line here and running it again only creates that one: everything already in",
+    "the CMS is left exactly as it is, renames and hand-added ports included. The one",
+    "exception is `--fill-ports`, which gives ports to a machine whose port list is empty.",
+    "",
     "Field names are the ones in gohead/model.json — --dry-run checks them before anything",
     "is created, so a typo is a message about this file rather than half a studio.",
     "Cables are deliberately not here: the patch changes weekly and belongs in the app,",
@@ -53,6 +57,8 @@
     { "code": "SYN-08", "name": "Behringer MS-1", "template": "behringer-ms-1", "location": "Keyboards", "check": true },
 
     { "code": "EXP-01", "name": "MAM MB33 Retro", "template": "mam-mb33-retro", "location": "Rack B", "check": true },
+    { "code": "EXP-02", "name": "Waldorf Micro Q", "template": "waldorf-microq", "location": "Rack B" },
+    { "code": "EXP-03", "name": "E-mu Proteus 2000", "template": "emu-proteus-2000", "location": "Rack B" },
 
     { "code": "DRM-01", "name": "Behringer RD-9", "template": "behringer-rd-9", "location": "Desk" },
     { "code": "DRM-02", "name": "Behringer RD-8", "template": "behringer-rd-8", "location": "Desk" },

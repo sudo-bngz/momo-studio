@@ -989,6 +989,108 @@
       ]
     },
     {
+      "id": "emu-proteus-2000",
+      "name": "E-mu Proteus 2000",
+      "brand": "E-mu",
+      "model": "Proteus 2000 (model 9094)",
+      "category": "expander",
+      "notes": "1U rack ROMpler, not the Proteus/1-2-3, not the Proteus 2500 (which adds two footswitch jacks and a second MIDI Out), not Vintage Keys. Six analogue outputs in three pairs: Main Left/Right plus Sub 1 and Sub 2, and the four Sub jacks are stereo send/return points - tip sends out, ring returns and sums back into the Main outputs, so they are the only way audio gets into the machine. MIDI is asymmetric: TWO MIDI Ins (A and B, for 32 channels) each with its OWN MIDI Thru, but only ONE MIDI Out, and that Out is a socket of its own, not a switched Out/Thru. The S/PDIF output is STANDARD on the Proteus 2000, not an option board: it is an RCA socket duplicating the main outs, switchable to AES/EBU format. There is no digital input, no USB, and no footswitch or pedal jack at all - footswitches reach it over MIDI (Master menu 'MIDI Footswitch assign'). The ROM expansion is internal SIMM sockets (one filled by the stock 32 MB set, up to 128 MB total), reached by opening the lid - no rear-panel socket, so no port here. Headphone jack is on the front panel, left side.",
+      "ports": [
+        {
+          "name": "Main Out Left",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "'a stereo jack carrying both channels when the right output jack is empty' (manual), so tip = left, ring = right with a TRS plug. Jack size is not stated in the manual - 1/4 inch assumed. Balanced status not stated - assumed unbalanced; E-mu's spec sheet gives max level +4 dB and 1 kohm output impedance"
+        },
+        {
+          "name": "Main Out Right",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "'serves as a mono output when the Left Main plug is not plugged in' (manual). Size and socket type not stated - 1/4 inch TS assumed"
+        },
+        {
+          "each": [
+            1,
+            2
+          ],
+          "name": "Sub {n} Left",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "stereo jack used as a send/return insert: tip carries the sub-mix out, ring is a Return that sums into the Main outputs. Inserting a plug disconnects that sub-mix's dry signal from the effects processor. Jack size not stated in the manual - 1/4 inch assumed; balanced status not stated - assumed unbalanced"
+        },
+        {
+          "each": [
+            1,
+            2
+          ],
+          "name": "Sub {n} Right",
+          "direction": "io",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "stereo jack used as a send/return insert: tip carries the sub-mix out, ring is a Return that sums into the Main outputs. Jack size not stated in the manual - 1/4 inch assumed; balanced status not stated - assumed unbalanced"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "FRONT panel, left side, stereo, same signal as the Main outputs. The manual does not state the jack size - 1/4 inch assumed (E-mu service part AP637-HP covers the whole 2000-family headphone board)"
+        },
+        {
+          "name": "MIDI A In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "the main control input; the manual labels the socket just 'MIDI A'. Channels 1-16 of the 32-channel setup"
+        },
+        {
+          "name": "MIDI A Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "exact copy of what arrives at MIDI A In; its own socket, not shared with MIDI Out"
+        },
+        {
+          "name": "MIDI B In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "second MIDI input, giving 32 MIDI channels in all; the manual labels the socket just 'MIDI B'"
+        },
+        {
+          "name": "MIDI B Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "exact copy of what arrives at MIDI B In"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "the only MIDI Out - it belongs to port A, there is no B Out. Sends program/SysEx data to a computer. Not a switched Out/Thru socket: the two Thrus are separate jacks"
+        },
+        {
+          "name": "S/PDIF Out",
+          "direction": "out",
+          "signal": "digital_audio",
+          "connector": "spdif_coax",
+          "note": "STANDARD on the Proteus 2000, not an option board. Coaxial RCA ('S/PDIF phono out', Sound On Sound), duplicates the Main analogue outputs, and the format can be switched to AES/EBU in software. 44.1 kHz. There is no digital input - the 'S/PDIF In' text that appears in one manual diagram refers to the receiving device, not to a socket on the Proteus"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "iec",
+          "note": "internal auto-ranging supply - 'there is no 110/220 Volt power selector switch on Proteus 2000', it 'automatically switches itself to the proper line voltage'; E-mu's spec sheet gives 90-260 V AC, 50-60 Hz, 15 W, and a detachable power cable is in the box. UNCONFIRMED: no source consulted names the inlet standard - a 3-pin IEC C14 inlet is assumed from the detachable cable and the auto-ranging internal supply. Mains switch is on the front panel, right side"
+        }
+      ]
+    },
+    {
       "id": "mam-mb33-retro",
       "name": "MAM MB33 Retro",
       "brand": "MAM",
@@ -1023,6 +1125,99 @@
           "signal": "power",
           "connector": "dc",
           "note": "barrel socket for the external adapter, labelled 12 V AC — it takes an AC adapter; do not substitute a DC supply"
+        }
+      ]
+    },
+    {
+      "id": "waldorf-microq",
+      "name": "Waldorf microQ (desktop/rack)",
+      "brand": "Waldorf",
+      "model": "microQ",
+      "category": "expander",
+      "notes": "The desktop/rack microQ, not the microQ Keyboard: compared with the big Q it loses the digital output and the pedal/CV jacks, and compared with its own Keyboard sibling it loses the Hold pedal and Control Pedal/CV In sockets as well. Rear panel is exactly eight items (manual, 'Rear Panel microQ Rack version'): Stereo External In, Main Out, Sub Out 1, Sub Out 2, MIDI In, MIDI Thru, MIDI Out, power supply socket. The stereo headphone jack is on the FRONT panel, not the rear. Three stereo output pairs, 1/4 inch; in each pair the Left jack doubles as a stereo jack (tip left, ring right) so one TRS cable carries the pair, and the Right jack alone gives mono. No USB, no digital I/O, no pedal, no CV, no clock. The microQ Omega is a dealer-fitted hardware polyphony upgrade (25 voices -> 75) and the microQ lite a software-limited version; the manual's rear-panel lists show no I/O difference between them, so this template covers all three rack variants.",
+      "ports": [
+        {
+          "name": "Stereo External In",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "one 1/4 inch stereo jack, tip = left / ring = right, feeding the Mixer section; the manual gives no input level or impedance, and does not say what happens if only one side is driven"
+        },
+        {
+          "name": "Main Out Left/Stereo",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "1/4 inch, line level. Used alone with a TRS plug it carries the whole stereo pair (tip left, ring right). Balanced or not is not stated in the manual - assumed unbalanced, like the Waldorf Q"
+        },
+        {
+          "name": "Main Out Right/Mono",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "1/4 inch, line level. Used alone with a mono plug it gives the mono sum. The manual does not say whether the socket itself is TS or TRS - TS assumed"
+        },
+        {
+          "name": "Sub Out 1 Left/Stereo",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "1/4 inch, line level, second stereo pair; TRS plug here alone carries both channels. Balanced status not stated - assumed unbalanced"
+        },
+        {
+          "name": "Sub Out 1 Right/Mono",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "1/4 inch, line level; alone it gives the mono sum of the pair. Socket TS/TRS not stated - TS assumed"
+        },
+        {
+          "name": "Sub Out 2 Left/Stereo",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "1/4 inch, line level, third stereo pair; TRS plug here alone carries both channels. Balanced status not stated - assumed unbalanced"
+        },
+        {
+          "name": "Sub Out 2 Right/Mono",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "1/4 inch, line level; alone it gives the mono sum of the pair. Socket TS/TRS not stated - TS assumed"
+        },
+        {
+          "name": "Headphones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "FRONT panel, stereo; its signal is always identical to the Main Out jacks. The manual does not state the jack size - 1/4 inch assumed"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "receives MIDI data from an external device"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "echoes the data received at MIDI In; a real third socket, not shared with MIDI Out"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "Power Supply Socket",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "external power supply (the Keyboard version instead has an internal supply and a mains cable). The manual labels the socket '100...240V AC' - that is the adapter's mains range - and never gives the socket's connector type or its output voltage. Secondary sources (polynominal.com, Sonic State) say the adapter is 12 V DC, centre-positive; treat the barrel type and polarity as UNCONFIRMED and check the original adapter before substituting one"
         }
       ]
     },

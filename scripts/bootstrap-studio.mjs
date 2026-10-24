@@ -1,11 +1,18 @@
 /**
- * npm run studio:bootstrap [-- --file gohead/inventory.json] [--dry-run]
+ * npm run studio:bootstrap [-- --file gohead/inventory.json] [--dry-run] [--fill-ports]
  *
  * Creates the studio described by gohead/inventory.json: the rooms, the places
  * in them, and every machine with its sockets filled in from the template
  * library. Matching is by code, so adding a line to the file and running this
  * again creates only what is missing — it never edits or deletes what is
- * already there.
+ * already there. Rename a machine, move it, repatch it, add ports by hand: a
+ * later run leaves all of it alone.
+ *
+ * --fill-ports is the one exception, and it is opt-in. A machine created
+ * before its template existed sits there with an empty port list; with the
+ * flag, a machine whose port list is empty AND whose line names a known
+ * template gets those ports. Anything with even one port is left alone, so
+ * the flag cannot overwrite work. Without it, those machines are only listed.
  *
  * The sockets come from src/lib/templates.ts, the same expander the app's
  * "Fill the ports" button uses, so a template fix reaches both at once.
@@ -21,6 +28,7 @@ const flag = (name) => {
   return i >= 0 ? args[i + 1] : undefined;
 };
 const dryRun = args.includes("--dry-run");
+const fillPorts = args.includes("--fill-ports");
 const file = flag("file") ?? "gohead/inventory.json";
 
 const plan = JSON.parse(readFileSync(file, "utf8"));
@@ -152,8 +160,33 @@ let skipped = 0;
 const missing = [];
 const toCheck = [];
 
+const couldFill = [];
+let filled = 0;
+
 for (const item of plan.devices ?? []) {
-  if (devices.get(String(item.code).toLowerCase())) {
+  const there = devices.get(String(item.code).toLowerCase());
+  if (there) {
+    // The one case where something already there is worth touching: it has no
+    // ports at all and its line names a template — which happens when the
+    // machine was created before its template existed. Adding ports to an
+    // empty list cannot overwrite anything, so it is offered, behind a flag.
+    const empty = !there.ports?.length;
+    if (empty && item.template && known.has(item.template)) {
+      const ports = expandTemplate(item.template).ports;
+      if (fillPorts && !dryRun) {
+        // Send back what is there, minus what the CMS writes itself, with the
+        // relation flattened to its id — a PUT replaces the whole entry.
+        const WROTE_ITSELF = ["id", "createdAt", "updatedAt", "photo", "photos", "location"];
+        const rest = Object.fromEntries(Object.entries(there).filter(([k]) => !WROTE_ITSELF.includes(k)));
+        await api("PUT", `/api/collections/devices/${there.id}`, {
+          data: { ...rest, ...(there.location?.id ? { location: there.location.id } : {}), ports },
+        });
+        log(`fill ${item.code} ${item.name} (${ports.length} ports)`);
+        filled++;
+        continue;
+      }
+      couldFill.push(`${item.code} ${item.name}: ${ports.length} ports from "${item.template}"`);
+    }
     log(`keep ${item.code} ${item.name}`);
     skipped++;
     continue;
@@ -205,10 +238,18 @@ for (const item of plan.devices ?? []) {
   made++;
 }
 
-console.log(`\n${dryRun ? "Would create" : "Created"} ${made} machine(s); ${skipped} already there.`);
+const verb = dryRun ? "Would create" : "Created";
+const fill = filled ? `, filled the ports of ${filled}` : "";
+console.log(`\n${verb} ${made} machine(s)${fill}; ${skipped} already there.`);
 if (missing.length) {
   console.log("\nTemplates not found — these were created without ports:");
   for (const m of missing) console.log(`  ${m}`);
+}
+if (couldFill.length) {
+  console.log(`\nAlready there with no ports, and a template that would fill them:`);
+  for (const c of couldFill) console.log(`  ${c}`);
+  console.log("  Run again with --fill-ports to add them. It only ever touches a machine");
+  console.log("  whose port list is empty, so nothing you have entered can be overwritten.");
 }
 if (toCheck.length) {
   console.log("\nWorth a look at the back panel before you trust the ports:");

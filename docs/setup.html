@@ -60,8 +60,13 @@ npm run studio:bootstrap                # create it</code></pre>
 <p>A line names a <code>template</code> and the machine arrives with every socket already on it, from the same expander
 the app's <em>Fill the ports</em> button uses — so a template fix reaches both at once. Matching is by the device
 <code>code</code>, so adding a line and running it again creates only what is missing; it never edits or deletes what is
-already there. <code>--dry-run</code> checks the file against <code>gohead/model.json</code> first, so a misspelt field is
+already there. Rename a machine, move it, repatch it, add ports by hand — a later run leaves all of it alone.
+<code>--dry-run</code> checks the file against <code>gohead/model.json</code> first, so a misspelt field is
 a message about the file rather than a half-created studio, and <code>-- --file other.json</code> runs a different one.</p>
+<p><code>-- --fill-ports</code> is the one exception, and it is opt-in. A machine created before its template existed sits
+there with an empty port list; with the flag, a machine whose ports are empty <em>and</em> whose line names a known
+template gets them. Anything with even one port is left alone, so the flag cannot overwrite work. Without it, those
+machines are simply listed at the end of the run.</p>
 <p class="note">Mark anything you are unsure of with <code>"check": true</code> and the run lists it at the end, under
 <em>worth a look at the back panel before you trust the ports</em>. Cables are deliberately not in the file: the patch is
 what changes weekly, and it belongs in the app where the plan can check it.</p>
@@ -79,7 +84,8 @@ what changes weekly, and it belongs in the app where the plan can check it.</p>
   compiling when the two disagree.</dd>
   <dt><code>npm run gohead:seed</code></dt><dd>Loads <code>gohead/seed.json</code>: the sample studio.</dd>
   <dt><code>npm run studio:bootstrap</code></dt><dd>Creates the studio in <code>gohead/inventory.json</code> — rooms, places and
-  machines with their ports filled from the templates. Idempotent by device code; <code>-- --dry-run</code> first.</dd>
+  machines with their ports filled from the templates. Idempotent by device code, and it never edits what is already there;
+  <code>-- --dry-run</code> first, <code>-- --fill-ports</code> to give ports to a machine that has none.</dd>
   <dt><code>npm run gohead:access</code></dt><dd>Creates the <code>studio-staff</code> role, the read-only
   <code>calendar-feed</code> role, its token and the calendar URL's secret. With <code>-- --user alex</code> it also creates a
   person and prints their password once.</dd>
