@@ -46,12 +46,13 @@
     { "code": "INT-01", "name": "RME Fireface UFX II", "template": "rme-fireface-ufx-ii", "location": "Rack A" },
     { "code": "CPU-01", "name": "Mac mini M2 Pro", "template": "apple-mac-mini-m2-pro", "location": "Desk" },
     { "code": "CTL-01", "name": "Ableton Push 2", "template": "ableton-push-2", "location": "Desk" },
+    { "code": "CTL-02", "name": "Arturia KeyLab Essential 49", "template": "arturia-keylab-essential-49", "location": "Keyboards" },
 
     { "code": "SYN-01", "name": "Roland Juno-106", "template": "roland-juno-106", "location": "Keyboards" },
     { "code": "SYN-02", "name": "Roland Juno-6", "template": "roland-juno-6", "location": "Keyboards" },
     { "code": "SYN-03", "name": "Yamaha DX7", "template": "yamaha-dx7", "location": "Keyboards" },
     { "code": "SYN-04", "name": "ARP Solina String Ensemble", "template": "arp-solina-string-ensemble", "location": "Keyboards", "check": true },
-    { "code": "SYN-05", "name": "Access Virus TI2 Desktop", "template": "access-virus-ti2-desktop", "location": "Rack B" },
+    { "code": "SYN-05", "name": "Access Virus C Desktop", "template": "access-virus-c-desktop", "location": "Rack B" },
     { "code": "SYN-06", "name": "Korg Minilogue", "template": "korg-minilogue", "location": "Keyboards" },
     { "code": "SYN-07", "name": "Moog Minitaur", "template": "moog-minitaur", "location": "Rack B" },
     { "code": "SYN-08", "name": "Behringer MS-1", "template": "behringer-ms-1", "location": "Keyboards", "check": true },
@@ -63,6 +64,7 @@
     { "code": "DRM-01", "name": "Behringer RD-9", "template": "behringer-rd-9", "location": "Desk" },
     { "code": "DRM-02", "name": "Behringer RD-8", "template": "behringer-rd-8", "location": "Desk" },
     { "code": "DRM-03", "name": "Roland TD-8", "template": "roland-td-8", "location": "Rack B", "check": true },
+    { "code": "DRM-04", "name": "Jomox Alpha Base", "template": "jomox-alpha-base", "location": "Keyboards" },
 
     {
       "code": "SMP-01",

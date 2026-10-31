@@ -377,6 +377,44 @@
       ]
     },
     {
+      "id": "arturia-keylab-essential-49",
+      "name": "Arturia KeyLab Essential 49",
+      "brand": "Arturia",
+      "model": "KeyLab Essential 49 (first generation)",
+      "category": "controller",
+      "notes": "The first-generation KeyLab Essential 49 (white, 'KEYLAB 49' over 'ESSENTIAL', 8 pads, 9 encoders, 9 faders, twin-line LCD) - not the mk3, not the plain KeyLab 49 and not the KeyLab mkII 49. Only four sockets, and the big asymmetry is MIDI: there is a 5-pin MIDI OUT and NO MIDI IN. Arturia's own manual lists only the Out ('can be used to send MIDI information to outboard synths & modules'), and Long & McQuade's spec sheet likewise lists '1 x 5-pin DIN MIDI out' with no input. No audio sockets, no CV/Gate, one pedal input only. The unit is USB bus-powered; the DC socket exists so it can run the MIDI Out without a computer attached, and the 9 V PSU is an optional extra, not in the box. GENERATION DIFFERENCES: the mk3 moves to USB-C, is USB-C powered with no DC inlet listed, and still has only a MIDI DIN output plus one pedal control input (Arturia dealer spec). The plain KeyLab 49 and the KeyLab mkII 49 are the fuller controllers - they add a MIDI DIN input alongside the output and more pedal jacks (expression and auxiliary as well as sustain), and the mkII adds CV/Gate outputs; those were not templated here and their exact socket sets were not researched.",
+      "ports": [
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "the computer connection and the unit's normal power source - Arturia's manual says it 'provides both power, MIDI data, and control information' and 'Power is also supplied through this connection'; class compliant. The manual does not name the connector type; USB Type-B is from Long & McQuade's spec sheet ('1 x USB Type-B'). The mk3 uses USB-C instead"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "the ONLY MIDI DIN on this model - there is no MIDI In (confirmed by both Arturia's manual rear-panel section and the dealer spec sheet). Useful mainly with the optional PSU, to drive outboard gear with no computer in the chain"
+        },
+        {
+          "name": "Sustain",
+          "direction": "in",
+          "signal": "control",
+          "connector": "jack_ts",
+          "note": "single pedal input, 1/4 inch / 6.35 mm per Long & McQuade's spec ('1 x 1/4\" / 6.35 mm sustain pedal input'); it 'automatically detects the polarity of your sustain pedal when KeyLab Essential is turned on' (Arturia manual). UNCONFIRMED: neither the manual nor the dealer says whether the socket is TS or TRS - mono TS assumed, as it is a simple switch input; a continuous expression pedal is not documented as supported here"
+        },
+        {
+          "name": "DC In",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "for the OPTIONAL 9 V DC 500 mA power supply (Arturia manual), sold separately - the keyboard is normally USB bus-powered and the socket is only needed to use it standalone. UNCONFIRMED: the manual does not state the barrel polarity or the plug diameter, so check Arturia's own adapter before substituting one. The mk3 has no DC inlet"
+        }
+      ]
+    },
+    {
       "id": "behringer-rd-8",
       "name": "Behringer RD-8",
       "brand": "Behringer",
@@ -706,6 +744,99 @@
           "signal": "power",
           "connector": "dc",
           "note": "supplied external PSU, 18 V DC / 1000 mA"
+        }
+      ]
+    },
+    {
+      "id": "jomox-alpha-base",
+      "name": "Jomox Alpha Base",
+      "brand": "Jomox",
+      "model": "Alpha Base",
+      "category": "drum_machine",
+      "notes": "Ten balanced 1/4\" TRS analogue outputs: eight individual instrument outs plus a stereo mix pair. Plugging a cable into an individual out lifts that instrument out of the stereo mix. The audio input is a separate, dedicated stereo pair (In L / In R) — it is NOT shared with any output jack — and it is Hi-Z, so it takes guitar or bass as well as line level up to +20 dBu; it feeds the two sampling instruments, the FX and the sidechain. Output level is about +14 dBu unbalanced, +20 dBu balanced. Three 5-pin DIN MIDI sockets (In, Out, Thru) are all present at once; there is no separate sync socket, because DIN sync (5 V clock and run/stop) is instead switched onto the MIDI Out or MIDI Thru DIN. USB is a MIDI device only — it carries no audio. The MkII (2024) changes the display to OLED, adds knobs and RGB sequencer LEDs, swaps the converters, adds analogue VCA panning and raises the sample count; no source found states any change to the socket set, so this template covers both revisions. There is also an SD card slot, left out of the ports because nothing patches into it.",
+      "ports": [
+        {
+          "each": [
+            1,
+            8
+          ],
+          "name": "Out {n}",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "individual instrument out, 1/4\" TRS balanced, max ca. +14 dBu unbalanced / +20 dBu balanced; inserting a jack removes that instrument from the stereo mix. Which instrument sits on which numbered jack is not stated in any source reachable here — verify against the panel silkscreen"
+        },
+        {
+          "name": "Main Out L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "stereo mix output, 1/4\" TRS balanced, with its own analogue mix volume pot"
+        },
+        {
+          "name": "Main Out R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": true,
+          "note": "stereo mix output, 1/4\" TRS balanced, with its own analogue mix volume pot"
+        },
+        {
+          "name": "In L",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "dedicated socket, not shared with an output. Hi-Z, takes guitar/bass or line up to +20 dBu, with its own analogue input volume pot; feeds the sampling instruments, FX and sidechain. Thomann gives the size as 6.3 mm but no source states TS vs TRS — unbalanced TS assumed from the Hi-Z instrument-level spec"
+        },
+        {
+          "name": "In R",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "note": "dedicated socket, not shared with an output. Hi-Z, takes guitar/bass or line up to +20 dBu; feeds the sampling instruments, FX and sidechain. Thomann gives the size as 6.3 mm but no source states TS vs TRS — unbalanced TS assumed from the Hi-Z instrument-level spec"
+        },
+        {
+          "name": "Phones",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "note": "6.3 mm, with its own analogue phones volume pot. Music Store's spec table confirms the 6.3 mm size; one review places this jack on the front/side rather than the rear panel, which no other source confirms — assumed 1/4\" stereo TRS"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "can be switched to carry DIN sync out instead of MIDI (5 V run/stop and clock). Jomox's spec line reads \"DIN sync out 2x integrated in the jacks Midi Out or Midi Thru\"; whether both DINs can be set to sync at the same time, or only one at a time, is not stated — assumed either jack can be assigned"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "a real Thru, present alongside MIDI Out rather than switched with it. Can also be switched to carry DIN sync out (5 V run/stop and clock) instead of MIDI Thru"
+        },
+        {
+          "name": "USB",
+          "direction": "io",
+          "signal": "usb",
+          "connector": "usb_b",
+          "note": "class-compliant USB MIDI device only — no audio over USB. Thomann documents the socket as USB-B on the MkII; the original Alpha Base's socket type is not stated anywhere reachable — USB-B assumed for both"
+        },
+        {
+          "name": "Power",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "external 12 V DC / 2 A supply, included. No IEC inlet. Barrel size and polarity are not documented in any source reachable here — use the supplied PSU"
         }
       ]
     },
@@ -1762,6 +1893,83 @@
           "connector": "jack_trs",
           "balanced": true,
           "note": "rear"
+        }
+      ]
+    },
+    {
+      "id": "access-virus-c-desktop",
+      "name": "Access Virus C Desktop",
+      "brand": "Access",
+      "model": "Virus C (desktop module)",
+      "category": "synth",
+      "notes": "The sloped black desktop module of the Virus C generation (2002, OS5), not the TI/TI2, not the Virus kC keyboard, not the Indigo 2, not the Virus B, and not the Virus Rack / Rack XL. Twelve sockets in all: six analogue outputs as three stereo pairs, a stereo audio input (two jacks), the full MIDI trio, and the external power inlet. Three things it does NOT have, and that catch people out: no headphone socket (Sound On Sound's review lists 'Still no separate headphone socket!' among the cons, and the SOS Virus B review explains the workaround is 'plugging your phones into the left channel'), no digital I/O of any kind (no S/PDIF, no USB - S/PDIF and USB arrived with the Virus TI), and no pedal jacks (hold and assignable pedal sockets exist only on the keyboard models, the Virus kC and Indigo 2). From the Virus B onwards there IS a real hardware MIDI Thru socket: SOS notes 'a hardware MIDI Thru (unlike the old Virus)', where the Virus A had only In and an Out switchable to Thru. DIFFERENCES vs the Virus Rack XL: the Rack XL is the same engine in 1U and carries the same three stereo outs, stereo in and MIDI In/Out/Thru, but it has an INTERNAL mains power supply (Sonic State: 'a single-rack-space unit with a built-in power supply') where this desktop runs from an external DC brick - that is the one I/O difference found. The smaller Virus Rack (not XL) is more different again: only 2 main outs plus 2 aux, with the third stereo pair fitted as blanking plates. No reachable copy of the Access Virus C manual was found, so socket sizes, levels and balanced/unbalanced status are assumptions - see the per-port notes.",
+      "ports": [
+        {
+          "each": [
+            1,
+            3
+          ],
+          "name": "Out {n} L",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_trs",
+          "balanced": false,
+          "note": "one of three stereo output pairs (six analogue outputs in all). UNCONFIRMED: no reachable source states the jack size, the socket type or the exact panel legend - 1/4 inch assumed, and TRS assumed because on the Virus A the left output of a pair doubles as the headphone/stereo jack (polynominal: 'headphones using first left main out'). Assumed UNBALANCED: Wikipedia lists 'balanced inputs/outputs' among the hardware changes introduced on the TI, which implies the C was not balanced. SOS warns these rear jacks 'appear to be soldered onto the circuit board rather than being bolted to the chassis', so avoid lateral pressure on the leads"
+        },
+        {
+          "each": [
+            1,
+            3
+          ],
+          "name": "Out {n} R",
+          "direction": "out",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "balanced": false,
+          "note": "right half of each stereo pair. UNCONFIRMED: jack size, socket type and panel legend are not stated in any reachable source - 1/4 inch TS assumed, unbalanced assumed (balanced I/O was a TI-era change). With no headphone socket on this model, SOS's documented workaround is to pull both main leads and plug the phones into the left channel instead"
+        },
+        {
+          "name": "Audio In L",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "balanced": false,
+          "note": "left of the stereo audio input pair; feeds the filters, envelopes, FX, vocoder, FM and ring modulator ('2 audio inputs to process your signals', Access via polynominal). UNCONFIRMED: level is assumed LINE level and the jack 1/4 inch TS unbalanced - no reachable source gives the input level, sensitivity, impedance or socket type for the C. On the Virus A the pair could be used as 'one stereo or 2 independent mono inputs' (polynominal); assumed the same here"
+        },
+        {
+          "name": "Audio In R",
+          "direction": "in",
+          "signal": "audio",
+          "connector": "jack_ts",
+          "balanced": false,
+          "note": "right of the stereo audio input pair. UNCONFIRMED: assumed line level, 1/4 inch TS, unbalanced - the input level and socket type are not documented in any reachable source"
+        },
+        {
+          "name": "MIDI In",
+          "direction": "in",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "also the only route for OS updates and patch dumps - this generation has no USB and, as SOS says of the Indigo 2, 'no other means to import data'"
+        },
+        {
+          "name": "MIDI Out",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5"
+        },
+        {
+          "name": "MIDI Thru",
+          "direction": "out",
+          "signal": "midi",
+          "connector": "din5",
+          "note": "a real third socket from the Virus B onwards - 'a hardware MIDI Thru (unlike the old Virus)' (SOS); the Virus A instead had an Out switchable to Thru"
+        },
+        {
+          "name": "DC In",
+          "direction": "in",
+          "signal": "power",
+          "connector": "dc",
+          "note": "external power supply - the desktop C is the model that kept it (Audiofanzine: 'seul le Virus C console conserve cette mauvaise manie de l'alimentation externe'; SOS lists 'External power supply (B)' as a con of the desktop B while the keyboard's 'power supply is internal!'). There is NO IEC mains inlet on this box. UNCONFIRMED: no reachable source gives the C's voltage, current or barrel polarity - 12 V DC centre-positive is assumed from the rest of the family (polynominal gives the Virus Rack '12VDC 500mA positive center' and 12 V DC 1 A for the Virus A; the TI desktop's inlet is labelled 12V DC IN). Check the original brick before substituting one"
         }
       ]
     },
